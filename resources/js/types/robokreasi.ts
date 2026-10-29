@@ -246,7 +246,7 @@ export interface SimulatorAPI {
 // ─── Pesan antara Main Thread dan Worker ─────────────────────────────────────
 
 export type WorkerInMessage =
-  | { type: 'RUN'; code: string; config: RuntimeConfig }
+  | { type: 'RUN'; code: string; config: RuntimeConfig; sensors?: { obstacle: boolean; line: boolean } }
   | { type: 'STOP' };
 
 export type WorkerOutMessage =
@@ -256,7 +256,7 @@ export type WorkerOutMessage =
   | { type: 'LOG'; message: string; level: 'info' | 'warn' | 'error' };
 
 export type MainToWorkerReply =
-  | { type: 'API_RESULT'; id: number; result: unknown }
+  | { type: 'API_RESULT'; id: number; result: unknown; sensors?: { obstacle: boolean; line: boolean } }
   | { type: 'API_ERROR'; id: number; error: string };
 
 export interface RuntimeConfig {

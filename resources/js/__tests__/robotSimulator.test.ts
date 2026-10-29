@@ -188,4 +188,36 @@ describe('RobotSimulator — sensor rintangan', () => {
     const allSame = results.every((r) => r === results[0]);
     expect(allSame).toBe(true);
   });
+
+  it('arena tantangan tidak menempatkan rintangan menimpa posisi awal robot', () => {
+    const arena = createChallengeArena('obstacles');
+    const sim = new RobotSimulator(arena, () => {});
+    // Robot berada di (250, 200) menghadap Utara (angle=0)
+    // Di posisi awal, robot tidak boleh menabrak rintangan
+    const state = sim.getState();
+    for (const obs of arena.obstacles) {
+      const cx = Math.max(obs.x, Math.min(state.robot.x, obs.x + obs.width));
+      const cy = Math.max(obs.y, Math.min(state.robot.y, obs.y + obs.height));
+      const dist = Math.sqrt((state.robot.x - cx) ** 2 + (state.robot.y - cy) ** 2);
+      expect(dist).toBeGreaterThanOrEqual(20); // 20 adalah ROBOT_RADIUS
+    }
+  });
+
+  it('sensor rintangan mendeteksi rintangan di depan robot secara akurat', async () => {
+    const arena = createChallengeArena('obstacles');
+    const sim = new RobotSimulator(arena, () => {});
+    // Di (250, 200), obs1 berada di (210, 50, w:80, h:50) -> bottom edge di y=100
+    // Jarak awal dari robot y=200 ke obstacle y=100 adalah 100px (belum terdeteksi saat spawn)
+    expect(sim.cekRintangan()).toBe(false);
+
+    // Maju 1 langkah (20px) -> robot di y=180
+    await sim.maju(1);
+    // Jarak robot ke obstacle sekarang masuk jangkauan sensor -> HARUS TERDETEKSI!
+    expect(sim.cekRintangan()).toBe(true);
+
+    // Belok kanan 90 derajat -> robot menghadap Timur (angle=90)
+    await sim.belokKanan(90);
+    // Di arah Timur tidak ada rintangan dekat -> harus false!
+    expect(sim.cekRintangan()).toBe(false);
+  });
 });
