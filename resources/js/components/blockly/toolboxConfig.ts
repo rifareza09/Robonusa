@@ -24,11 +24,25 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
         colour: COLORS.GERAKAN,
         contents: [
           {
+            kind: 'label',
+            text: 'Gerakan',
+            'web-class': 'flyout-title',
+          },
+          {
+            kind: 'label',
+            text: 'Tarik blok ke area kerja',
+            'web-class': 'flyout-subtitle',
+          },
+          {
+            kind: 'sep',
+            gap: 12,
+          },
+          {
             kind: 'block',
             type: BLOCK_TYPES.MOTION_FORWARD,
             inputs: {
               STEPS: {
-                block: {
+                shadow: {
                   type: BLOCK_TYPES.OPERATOR_NUMBER,
                   fields: { NUM: 10 },
                 },
@@ -40,7 +54,7 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
             type: BLOCK_TYPES.MOTION_BACKWARD,
             inputs: {
               STEPS: {
-                block: {
+                shadow: {
                   type: BLOCK_TYPES.OPERATOR_NUMBER,
                   fields: { NUM: 10 },
                 },
@@ -50,42 +64,23 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
           {
             kind: 'block',
             type: BLOCK_TYPES.MOTION_TURN_RIGHT,
-            inputs: {
-              DEGREES: {
-                block: {
-                  type: BLOCK_TYPES.OPERATOR_NUMBER,
-                  fields: { NUM: 90 },
-                },
-              },
-            },
           },
           {
             kind: 'block',
             type: BLOCK_TYPES.MOTION_TURN_LEFT,
-            inputs: {
-              DEGREES: {
-                block: {
-                  type: BLOCK_TYPES.OPERATOR_NUMBER,
-                  fields: { NUM: 90 },
-                },
-              },
-            },
           },
           {
             kind: 'block',
             type: BLOCK_TYPES.MOTION_STOP,
           },
           {
-            kind: 'block',
-            type: BLOCK_TYPES.MOTION_SET_SPEED,
-            inputs: {
-              SPEED: {
-                block: {
-                  type: BLOCK_TYPES.OPERATOR_NUMBER,
-                  fields: { NUM: 5 },
-                },
-              },
-            },
+            kind: 'sep',
+            gap: 20,
+          },
+          {
+            kind: 'label',
+            text: '⇲ Klik angka pada blok untuk mengubah nilainya.',
+            'web-class': 'flyout-tip',
           },
         ],
       },
@@ -98,11 +93,25 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
         colour: COLORS.KONTROL,
         contents: [
           {
+            kind: 'label',
+            text: 'Kontrol',
+            'web-class': 'flyout-title',
+          },
+          {
+            kind: 'label',
+            text: 'Atur perulangan dan percabangan',
+            'web-class': 'flyout-subtitle',
+          },
+          {
+            kind: 'sep',
+            gap: 12,
+          },
+          {
             kind: 'block',
             type: BLOCK_TYPES.CONTROL_REPEAT,
             inputs: {
               TIMES: {
-                block: {
+                shadow: {
                   type: BLOCK_TYPES.OPERATOR_NUMBER,
                   fields: { NUM: 3 },
                 },
@@ -132,6 +141,20 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
         colour: COLORS.SENSOR,
         contents: [
           {
+            kind: 'label',
+            text: 'Sensor',
+            'web-class': 'flyout-title',
+          },
+          {
+            kind: 'label',
+            text: 'Membaca kondisi arena robot',
+            'web-class': 'flyout-subtitle',
+          },
+          {
+            kind: 'sep',
+            gap: 12,
+          },
+          {
             kind: 'block',
             type: BLOCK_TYPES.SENSOR_OBSTACLE,
           },
@@ -150,6 +173,20 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
         colour: COLORS.OPERATOR,
         contents: [
           {
+            kind: 'label',
+            text: 'Logika',
+            'web-class': 'flyout-title',
+          },
+          {
+            kind: 'label',
+            text: 'Operasi logika dan matematika',
+            'web-class': 'flyout-subtitle',
+          },
+          {
+            kind: 'sep',
+            gap: 12,
+          },
+          {
             kind: 'block',
             type: BLOCK_TYPES.OPERATOR_NUMBER,
           },
@@ -158,10 +195,10 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
             type: BLOCK_TYPES.OPERATOR_ADD,
             inputs: {
               A: {
-                block: { type: BLOCK_TYPES.OPERATOR_NUMBER, fields: { NUM: 0 } },
+                shadow: { type: BLOCK_TYPES.OPERATOR_NUMBER, fields: { NUM: 0 } },
               },
               B: {
-                block: { type: BLOCK_TYPES.OPERATOR_NUMBER, fields: { NUM: 0 } },
+                shadow: { type: BLOCK_TYPES.OPERATOR_NUMBER, fields: { NUM: 0 } },
               },
             },
           },
@@ -170,10 +207,10 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
             type: BLOCK_TYPES.OPERATOR_SUBTRACT,
             inputs: {
               A: {
-                block: { type: BLOCK_TYPES.OPERATOR_NUMBER, fields: { NUM: 0 } },
+                shadow: { type: BLOCK_TYPES.OPERATOR_NUMBER, fields: { NUM: 0 } },
               },
               B: {
-                block: { type: BLOCK_TYPES.OPERATOR_NUMBER, fields: { NUM: 0 } },
+                shadow: { type: BLOCK_TYPES.OPERATOR_NUMBER, fields: { NUM: 0 } },
               },
             },
           },
@@ -182,10 +219,10 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
             type: BLOCK_TYPES.OPERATOR_COMPARE,
             inputs: {
               A: {
-                block: { type: BLOCK_TYPES.OPERATOR_NUMBER, fields: { NUM: 0 } },
+                shadow: { type: BLOCK_TYPES.OPERATOR_NUMBER, fields: { NUM: 0 } },
               },
               B: {
-                block: { type: BLOCK_TYPES.OPERATOR_NUMBER, fields: { NUM: 0 } },
+                shadow: { type: BLOCK_TYPES.OPERATOR_NUMBER, fields: { NUM: 0 } },
               },
             },
           },
@@ -212,11 +249,25 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
         colour: COLORS.VARIABEL,
         contents: [
           {
+            kind: 'label',
+            text: 'Variabel',
+            'web-class': 'flyout-title',
+          },
+          {
+            kind: 'label',
+            text: 'Simpan dan ubah nilai program',
+            'web-class': 'flyout-subtitle',
+          },
+          {
+            kind: 'sep',
+            gap: 12,
+          },
+          {
             kind: 'block',
             type: BLOCK_TYPES.VARIABLE_SET,
             inputs: {
               VALUE: {
-                block: { type: BLOCK_TYPES.OPERATOR_NUMBER, fields: { NUM: 0 } },
+                shadow: { type: BLOCK_TYPES.OPERATOR_NUMBER, fields: { NUM: 0 } },
               },
             },
           },
@@ -225,7 +276,7 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
             type: BLOCK_TYPES.VARIABLE_CHANGE,
             inputs: {
               VALUE: {
-                block: { type: BLOCK_TYPES.OPERATOR_NUMBER, fields: { NUM: 1 } },
+                shadow: { type: BLOCK_TYPES.OPERATOR_NUMBER, fields: { NUM: 1 } },
               },
             },
           },
@@ -243,6 +294,20 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
         name: 'Kejadian',
         colour: COLORS.KEJADIAN,
         contents: [
+          {
+            kind: 'label',
+            text: 'Kejadian',
+            'web-class': 'flyout-title',
+          },
+          {
+            kind: 'label',
+            text: 'Pemicu awal jalannya program',
+            'web-class': 'flyout-subtitle',
+          },
+          {
+            kind: 'sep',
+            gap: 12,
+          },
           {
             kind: 'block',
             type: BLOCK_TYPES.EVENT_START,
@@ -262,11 +327,25 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
         colour: COLORS.TAMPILAN,
         contents: [
           {
+            kind: 'label',
+            text: 'Tampilan',
+            'web-class': 'flyout-title',
+          },
+          {
+            kind: 'label',
+            text: 'Umpan balik visual pada robot',
+            'web-class': 'flyout-subtitle',
+          },
+          {
+            kind: 'sep',
+            gap: 12,
+          },
+          {
             kind: 'block',
             type: BLOCK_TYPES.DISPLAY_TEXT,
             inputs: {
               TEXT: {
-                block: {
+                shadow: {
                   type: 'rk_text',
                   fields: { TEXT: 'Halo Robot!' },
                 },
@@ -284,6 +363,20 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
         colour: COLORS.SUARA,
         contents: [
           {
+            kind: 'label',
+            text: 'Suara',
+            'web-class': 'flyout-title',
+          },
+          {
+            kind: 'label',
+            text: 'Efek suara dan nada',
+            'web-class': 'flyout-subtitle',
+          },
+          {
+            kind: 'sep',
+            gap: 12,
+          },
+          {
             kind: 'block',
             type: BLOCK_TYPES.SOUND_PLAY_TONE,
           },
@@ -294,7 +387,7 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
         ],
       },
     ],
-  };
+  } as unknown as Blockly.utils.toolbox.ToolboxDefinition;
 }
 
 // Import Blockly untuk tipe return

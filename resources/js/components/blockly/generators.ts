@@ -74,7 +74,9 @@ javascriptGenerator.forBlock[BLOCK_TYPES.MOTION_TURN_LEFT] = function (
   block: Blockly.Block,
   generator: typeof javascriptGenerator
 ) {
-  const degrees = generator.valueToCode(block, 'DEGREES', Order.ATOMIC) || '90';
+  const degrees = block.getInput('DEGREES')
+    ? generator.valueToCode(block, 'DEGREES', Order.ATOMIC) || '90'
+    : '90';
   return `await __robot__.belokKiri(${degrees});\n`;
 };
 
@@ -82,7 +84,9 @@ javascriptGenerator.forBlock[BLOCK_TYPES.MOTION_TURN_RIGHT] = function (
   block: Blockly.Block,
   generator: typeof javascriptGenerator
 ) {
-  const degrees = generator.valueToCode(block, 'DEGREES', Order.ATOMIC) || '90';
+  const degrees = block.getInput('DEGREES')
+    ? generator.valueToCode(block, 'DEGREES', Order.ATOMIC) || '90'
+    : '90';
   return `await __robot__.belokKanan(${degrees});\n`;
 };
 

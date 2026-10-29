@@ -94,12 +94,9 @@ Blockly.Blocks[BLOCK_TYPES.MOTION_BACKWARD] = {
 
 Blockly.Blocks[BLOCK_TYPES.MOTION_TURN_LEFT] = {
   init(this: Blockly.Block) {
-    this.appendValueInput('DEGREES')
-      .setCheck('Number')
+    this.appendDummyInput()
       .appendField('↰')
       .appendField('Putar ke kiri');
-    this.appendDummyInput().appendField('°');
-    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(COLORS.GERAKAN);
@@ -110,12 +107,9 @@ Blockly.Blocks[BLOCK_TYPES.MOTION_TURN_LEFT] = {
 
 Blockly.Blocks[BLOCK_TYPES.MOTION_TURN_RIGHT] = {
   init(this: Blockly.Block) {
-    this.appendValueInput('DEGREES')
-      .setCheck('Number')
+    this.appendDummyInput()
       .appendField('↱')
       .appendField('Putar ke kanan');
-    this.appendDummyInput().appendField('°');
-    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(COLORS.GERAKAN);

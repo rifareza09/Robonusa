@@ -241,61 +241,88 @@ const Workspace: React.FC<WorkspacePageProps> = ({
             id="block-category-panel"
             className="flex-1 min-w-0 bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-200/90 flex flex-col"
           >
-            {/* Header Editor Sesuai Figma Kit Desain */}
-            <div className="px-4 py-2.5 bg-white border-b border-gray-100 flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2.5">
-                <h2 className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
-                  <span>🧩</span>
-                  <span>Programku</span>
-                </h2>
-                <span className="bg-blue-50 text-blue-700 text-xs px-2.5 py-0.5 rounded-full font-bold border border-blue-200">
-                  {blockCount} blok
-                </span>
+            {/* Header Editor Sesuai Figma: Pustaka Blok di kiri & Programku di kanan */}
+            <div className="bg-white border-b border-gray-100 flex items-stretch flex-wrap sm:flex-nowrap">
+              {/* Kolom Kiri: Pustaka Blok Header & Pencarian Sesuai Figma */}
+              <div className="w-full sm:w-[270px] flex-shrink-0 border-b sm:border-b-0 sm:border-r border-gray-200/80 px-3.5 py-2 flex flex-col justify-center gap-1.5 bg-[#F8FAFC]/60">
+                <div className="flex items-center gap-2 text-xs font-bold text-teal-800">
+                  <svg className="w-4 h-4 text-teal-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
+                    <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="8.5" y="14" width="7" height="7" rx="1.5" />
+                    <path d="M6.5 10v2a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-2" strokeDasharray="2 2" />
+                  </svg>
+                  <span className="font-bold tracking-tight text-gray-900">Pustaka blok</span>
+                </div>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Cari blok..."
+                    className="w-full bg-white border border-gray-200 rounded-lg pl-7 pr-2 py-1 text-xs text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-2xs"
+                  />
+                  <svg className="w-3.5 h-3.5 text-gray-400 absolute left-2 top-2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
+                    <circle cx="11" cy="11" r="7" />
+                    <line x1="21" y1="21" x2="16.5" y2="16.5" />
+                  </svg>
+                </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                {/* Tombol Urungkan & Ulangi Cepat di Editor */}
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={undo}
-                    disabled={!canUndo}
-                    className="px-2.5 py-1 bg-white hover:bg-gray-50 disabled:opacity-35 disabled:cursor-not-allowed border border-gray-200 rounded-lg text-xs font-semibold text-gray-700 transition-colors shadow-2xs"
-                    title="Urungkan aksi (Ctrl+Z)"
-                  >
-                    ↩ Urungkan
-                  </button>
-                  <button
-                    type="button"
-                    onClick={redo}
-                    disabled={!canRedo}
-                    className="px-2.5 py-1 bg-white hover:bg-gray-50 disabled:opacity-35 disabled:cursor-not-allowed border border-gray-200 rounded-lg text-xs font-semibold text-gray-700 transition-colors shadow-2xs"
-                    title="Ulangi aksi (Ctrl+Y)"
-                  >
-                    ↪ Ulangi
-                  </button>
+              {/* Kolom Kanan: Info Kanvas & Kontrol (Programku, Undo, Redo, dsb.) */}
+              <div className="flex-1 min-w-0 px-4 py-2.5 flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-2.5">
+                  <h2 className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
+                    <span>🧩</span>
+                    <span>Programku</span>
+                  </h2>
+                  <span className="bg-blue-50 text-blue-700 text-xs px-2.5 py-0.5 rounded-full font-bold border border-blue-200">
+                    {blockCount} blok
+                  </span>
                 </div>
 
-                <div className="h-4 w-px bg-gray-200 hidden sm:block" />
+                <div className="flex items-center gap-2">
+                  {/* Tombol Urungkan & Ulangi Cepat di Editor */}
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={undo}
+                      disabled={!canUndo}
+                      className="px-2.5 py-1 bg-white hover:bg-gray-50 disabled:opacity-35 disabled:cursor-not-allowed border border-gray-200 rounded-lg text-xs font-semibold text-gray-700 transition-colors shadow-2xs cursor-pointer"
+                      title="Urungkan aksi (Ctrl+Z)"
+                    >
+                      ↩ Urungkan
+                    </button>
+                    <button
+                      type="button"
+                      onClick={redo}
+                      disabled={!canRedo}
+                      className="px-2.5 py-1 bg-white hover:bg-gray-50 disabled:opacity-35 disabled:cursor-not-allowed border border-gray-200 rounded-lg text-xs font-semibold text-gray-700 transition-colors shadow-2xs cursor-pointer"
+                      title="Ulangi aksi (Ctrl+Y)"
+                    >
+                      ↪ Ulangi
+                    </button>
+                  </div>
 
-                {/* Tombol Toggle Kode Teks Sesuai Figma */}
-                <button
-                  type="button"
-                  onClick={handleToggleCodeViewer}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold border transition-colors shadow-2xs ${
-                    isCodeViewerOpen
-                      ? 'bg-blue-600 text-white border-blue-600 shadow-blue-500/20'
-                      : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300'
-                  }`}
-                  title={isCodeViewerOpen ? 'Kembali ke Simulasi Robot' : 'Buka padanan kode JavaScript/teks'}
-                >
-                  <span>{isCodeViewerOpen ? '🤖' : '💻'}</span>
-                  <span>{isCodeViewerOpen ? 'Simulasi' : 'Kode teks'}</span>
-                </button>
+                  <div className="h-4 w-px bg-gray-200 hidden sm:block" />
 
-                <span className="hidden xl:inline text-gray-400 text-[11px] pl-2 border-l border-gray-200">
-                  Ctrl+Z: Batal | Ctrl+Y: Ulangi | Scroll: Zoom
-                </span>
+                  {/* Tombol Toggle Kode Teks Sesuai Figma */}
+                  <button
+                    type="button"
+                    onClick={handleToggleCodeViewer}
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold border transition-colors shadow-2xs cursor-pointer ${
+                      isCodeViewerOpen
+                        ? 'bg-blue-600 text-white border-blue-600 shadow-blue-500/20'
+                        : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300'
+                    }`}
+                    title={isCodeViewerOpen ? 'Kembali ke Simulasi Robot' : 'Buka padanan kode JavaScript/teks'}
+                  >
+                    <span>{isCodeViewerOpen ? '🤖' : '💻'}</span>
+                    <span>{isCodeViewerOpen ? 'Simulasi' : 'Kode teks'}</span>
+                  </button>
+
+                  <span className="hidden xl:inline text-gray-400 text-[11px] pl-2 border-l border-gray-200">
+                    Ctrl+Z: Batal | Ctrl+Y: Ulangi | Scroll: Zoom
+                  </span>
+                </div>
               </div>
             </div>
 
