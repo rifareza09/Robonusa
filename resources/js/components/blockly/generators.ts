@@ -271,7 +271,7 @@ javascriptGenerator.forBlock[BLOCK_TYPES.DISPLAY_TEXT] = function (
   generator: typeof javascriptGenerator
 ) {
   const text = generator.valueToCode(block, 'TEXT', Order.NONE) || '""';
-  return `__robot__.tampilkanTeks(String(${text}));\n`;
+  return `__robot__.tampilkanTeks(String(${text}));\nawait __robot__.tidur(500);\n`;
 };
 
 // ─── SUARA ────────────────────────────────────────────────────────────────────

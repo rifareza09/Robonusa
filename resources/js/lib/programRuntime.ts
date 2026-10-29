@@ -256,7 +256,6 @@ export class ProgramRuntime {
       alert: undefined,
       confirm: undefined,
       prompt: undefined,
-      eval: undefined,
     };
 
     const paramNames = Object.keys(safeScope);
@@ -285,9 +284,18 @@ export class ProgramRuntime {
   /** Menjalankan kode di Web Worker */
   private runInWorker(code: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      // Buat worker baru menggunakan Vite inlined worker constructor
+      // Buat worker baru menggunakan constructor inlined atau Blob URL fallback
       try {
-        this.worker = new ProgramWorker();
+        try {
+          this.worker = new ProgramWorker();
+        } catch {
+          // Bypasses cross-origin dev server mismatch (misal: robonusa.test vs localhost:5173)
+          const workerUrl = new URL('./programWorker.ts', import.meta.url).href;
+          const blobCode = `import "${workerUrl}";`;
+          const blob = new Blob([blobCode], { type: 'application/javascript' });
+          const blobUrl = URL.createObjectURL(blob);
+          this.worker = new Worker(blobUrl, { type: 'module' });
+        }
       } catch (err) {
         reject(err);
         return;

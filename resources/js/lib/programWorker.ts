@@ -140,7 +140,6 @@ async function runProgram(code: string, config: RuntimeConfig): Promise<void> {
     alert: undefined,
     confirm: undefined,
     prompt: undefined,
-    eval: undefined,
     Function: undefined,
     importScripts: undefined,
     self: undefined,
