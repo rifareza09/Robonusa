@@ -274,14 +274,14 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
         </div>
 
         {/* ─── Kanvas SVG Arena ────────────────────────────────────────── */}
-        <div className="relative bg-slate-50 rounded-xl border border-gray-200 overflow-hidden flex items-center justify-center p-1">
+        <div
+          className="relative w-full bg-slate-50 rounded-xl border border-gray-200 overflow-hidden p-1 flex-shrink-0"
+          style={{ aspectRatio: `${width} / ${height}` }}
+        >
           <svg
             ref={svgRef}
             viewBox={`0 0 ${width} ${height}`}
-            width="100%"
-            height="100%"
-            style={{ maxWidth: width, maxHeight: height }}
-            className="rounded-lg"
+            className="w-full h-full rounded-lg block"
             aria-label="Arena Robot"
           >
             {/* Background */}

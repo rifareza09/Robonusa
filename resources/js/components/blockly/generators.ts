@@ -38,7 +38,7 @@ javascriptGenerator.forBlock[BLOCK_TYPES.EVENT_START] = function (
 ) {
   const nextBlock = block.getNextBlock();
   const body = nextBlock ? generator.blockToCode(nextBlock) : '';
-  return `// [event_start]\nasync function __program__() {\n${body}}\nawait __program__();\n`;
+  return `// [event_start]\n{\n  const __program__ = async () => {\n${body}  };\n  __tasks__.push(__program__());\n}\n`;
 };
 
 // Catatan: event_key_pressed diimplementasikan sebagai event handler di runtime
@@ -49,7 +49,7 @@ javascriptGenerator.forBlock[BLOCK_TYPES.EVENT_KEY_PRESSED] = function (
   const key = block.getFieldValue('KEY');
   const nextBlock = block.getNextBlock();
   const body = nextBlock ? generator.blockToCode(nextBlock) : '';
-  return `// [event_key_pressed: ${key}]\nasync function __onKey_${key.replace(/[^a-zA-Z0-9]/g, '_')}__() {\n${body}}\n__robot__.daftarkanKeyHandler('${key}', __onKey_${key.replace(/[^a-zA-Z0-9]/g, '_')}__);\n`;
+  return `// [event_key_pressed: ${key}]\n{\n  const __onKey_${key.replace(/[^a-zA-Z0-9]/g, '_')}__ = async () => {\n${body}  };\n  __robot__.daftarkanKeyHandler('${key}', __onKey_${key.replace(/[^a-zA-Z0-9]/g, '_')}__);\n}\n`;
 };
 
 // ─── GERAKAN ──────────────────────────────────────────────────────────────────
@@ -325,10 +325,11 @@ export function generateProgramCode(workspace: Blockly.Workspace): {
       b.type === BLOCK_TYPES.EVENT_KEY_PRESSED
   );
 
-  let rawCode = '';
+  let rawCode = 'const __tasks__ = [];\n';
   for (const eventBlock of eventBlocks) {
     rawCode += javascriptGenerator.blockToCode(eventBlock) + '\n';
   }
+  rawCode += 'await Promise.all(__tasks__);\n';
 
   // Bungkus dengan header keamanan
   const wrappedCode = wrapWithSafetyHeader(rawCode);

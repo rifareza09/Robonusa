@@ -93,3 +93,4 @@ export const CodeViewerPanel: React.FC<CodeViewerPanelProps> = ({ code, onClose 
     </div>
   );
 };
+

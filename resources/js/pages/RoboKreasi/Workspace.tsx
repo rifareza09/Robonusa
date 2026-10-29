@@ -311,7 +311,7 @@ const Workspace: React.FC<WorkspacePageProps> = ({
               />
             ) : (
               <>
-                <div className="flex-1 min-h-0 overflow-y-auto">
+                <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
                   <SimulatorCanvas
                     state={simulatorState}
                     programStatus={programStatus}

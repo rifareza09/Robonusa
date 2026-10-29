@@ -226,4 +226,25 @@ describe('Blockly Headless Workspace & Code Generation', () => {
     expect(result.code).not.toContain('while (true)');
     expect(result.code).not.toContain('__robot__.berhenti()');
   });
+
+  it('harus dapat menangani multiple event_start tanpa error duplikasi identifier __program__', () => {
+    // Blok 1: Saat Mulai Diklik kosong (seperti yang sering tidak sengaja ditarik siswa)
+    workspace.newBlock(BLOCK_TYPES.EVENT_START);
+
+    // Blok 2: Saat Mulai Diklik dengan aksi
+    const start2 = workspace.newBlock(BLOCK_TYPES.EVENT_START);
+    const fwd = workspace.newBlock(BLOCK_TYPES.MOTION_FORWARD);
+    start2.nextConnection?.connect(fwd.previousConnection!);
+
+    const result = generateProgramCode(workspace);
+    expect(result.hasEventStart).toBe(true);
+    expect(result.code).toContain('__program__');
+    expect(result.code).toContain('await __robot__.maju(1);');
+
+    // Pastikan kode valid sintaksis JavaScript dan dapat dievaluasi tanpa SyntaxError identifier duplikat
+    const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+    expect(() => {
+      new AsyncFunction(result.code);
+    }).not.toThrow();
+  });
 });
