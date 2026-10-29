@@ -52,6 +52,7 @@ const WORKSPACE_OPTIONS: Blockly.BlocklyOptions = {
 export interface UseBlocklyWorkspaceReturn {
   workspaceRef: React.RefObject<HTMLDivElement | null>;
   workspace: Blockly.WorkspaceSvg | null;
+  blockCount: number;
   canUndo: boolean;
   canRedo: boolean;
   undo: () => void;
@@ -67,6 +68,7 @@ export interface UseBlocklyWorkspaceReturn {
 export function useBlocklyWorkspace(): UseBlocklyWorkspaceReturn {
   const workspaceRef = useRef<HTMLDivElement | null>(null);
   const workspaceInstanceRef = useRef<Blockly.WorkspaceSvg | null>(null);
+  const [blockCount, setBlockCount] = useState(1);
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
 
@@ -106,10 +108,11 @@ export function useBlocklyWorkspace(): UseBlocklyWorkspaceReturn {
       console.warn('[RoboKreasi] Info load blok awal:', err);
     }
 
-    // Dengarkan perubahan untuk update undo/redo state
+    // Dengarkan perubahan untuk update undo/redo state dan jumlah blok
     workspace.addChangeListener(() => {
       setCanUndo(workspace.getUndoStack().length > 0);
       setCanRedo(workspace.getRedoStack().length > 0);
+      setBlockCount(workspace.getAllBlocks(false).length);
     });
 
     // Amati perubahan ukuran kontainer (misal: saat sidebar ditutup/dibuka)
@@ -186,6 +189,7 @@ export function useBlocklyWorkspace(): UseBlocklyWorkspaceReturn {
   return {
     workspaceRef,
     workspace: workspaceInstanceRef.current,
+    blockCount,
     canUndo,
     canRedo,
     undo,

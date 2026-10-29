@@ -1,7 +1,6 @@
 /**
  * RoboKreasi — Komponen SVG Simulator Robot
- * Merender arena, robot, rintangan, garis, dan status program.
- * Animasi dijalankan via React state yang diperbarui oleh RobotSimulator.
+ * Mengacu pada desain Figma: "Ruang pemrograman • Desktop terang.png" & "Kit desain • RoboNusa.png"
  */
 
 import React, { useRef } from 'react';
@@ -16,26 +15,24 @@ interface SimulatorCanvasProps {
   height?: number;
   arenaMode?: ArenaMode;
   onArenaModeChange?: (mode: ArenaMode) => void;
+  onRun?: () => void;
+  onStop?: () => void;
+  onReset?: () => void;
 }
 
-// ─── Warna ────────────────────────────────────────────────────────────────────
+// ─── Warna Figma ──────────────────────────────────────────────────────────────
 
 const COLORS = {
-  ARENA_BG: '#F0F4F8',
-  ARENA_BORDER: '#CBD5E0',
-  ROBOT_BODY: '#4299E1',
-  ROBOT_BODY_MOVING: '#48BB78',
+  ARENA_BG: '#F8FAFC',
+  ARENA_BORDER: '#E2E8F0',
+  ROBOT_BODY: '#2563EB',
+  ROBOT_BODY_MOVING: '#16A34A',
   ROBOT_DIRECTION: '#FFFFFF',
-  ROBOT_ERROR: '#FC8181',
-  OBSTACLE: '#FC8181',
-  OBSTACLE_STROKE: '#C53030',
-  LINE: '#1A202C',
-  DISPLAY_TEXT_BG: 'rgba(49, 130, 206, 0.9)',
-  STATUS_RUNNING: '#48BB78',
-  STATUS_STOPPED: '#FC8181',
-  STATUS_ERROR: '#E53E3E',
-  STATUS_IDLE: '#A0AEC0',
-  STATUS_FINISHED: '#805AD5',
+  ROBOT_ERROR: '#DC2626',
+  OBSTACLE: '#FEF2F2',
+  OBSTACLE_BORDER: '#EA580C',
+  LINE: '#1E293B',
+  DISPLAY_TEXT_BG: 'rgba(37, 99, 235, 0.95)',
 } as const;
 
 // ─── Komponen Robot ───────────────────────────────────────────────────────────
@@ -55,39 +52,56 @@ const Robot: React.FC<{
         : COLORS.ROBOT_BODY;
 
   return (
-    <g transform={`translate(${x}, ${y}) rotate(${angle})`}>
-      {/* Badan robot */}
-      <circle
-        r={18}
-        fill={bodyColor}
-        stroke="#2B6CB0"
-        strokeWidth={2.5}
-        style={{ transition: 'cx 0.15s ease, cy 0.15s ease' }}
-      />
-      {/* Arah hadap (segitiga) */}
-      <polygon
-        points="0,-14 8,4 -8,4"
-        fill={COLORS.ROBOT_DIRECTION}
-        opacity={0.9}
-      />
-      {/* Roda kiri */}
-      <rect x={-22} y={-10} width={5} height={20} rx={2} fill="#2D3748" />
-      {/* Roda kanan */}
-      <rect x={17} y={-10} width={5} height={20} rx={2} fill="#2D3748" />
-      {/* Sensor garis (titik bawah) */}
-      <circle cx={0} cy={14} r={3} fill="#F6E05E" />
+    <g transform={`translate(${x}, ${y})`}>
+      {/* Label "Mulai" saat diam di titik awal */}
+      <g transform="translate(24, 4)">
+        <rect x={0} y={-10} width={42} height={18} rx={6} fill="#EFF6FF" stroke="#BFDBFE" strokeWidth={1} />
+        <text x={21} y={3} textAnchor="middle" fontSize={10} fontWeight="bold" fill="#2563EB">
+          Mulai
+        </text>
+      </g>
+
+      <g transform={`rotate(${angle})`}>
+        {/* Roda kiri */}
+        <rect x={-20} y={-9} width={5} height={18} rx={2} fill="#1E293B" />
+        {/* Roda kanan */}
+        <rect x={15} y={-9} width={5} height={18} rx={2} fill="#1E293B" />
+
+        {/* Badan Robot berbentuk kotak rounded modern seperti Figma */}
+        <rect
+          x={-15}
+          y={-15}
+          width={30}
+          height={30}
+          rx={8}
+          fill={bodyColor}
+          stroke="#1E40AF"
+          strokeWidth={2}
+          style={{ transition: 'transform 0.15s ease' }}
+        />
+
+        {/* Layar/Mata Robot */}
+        <rect x={-9} y={-10} width={18} height={9} rx={3} fill="#FFFFFF" opacity={0.9} />
+        <circle cx={-4} cy={-5.5} r={1.5} fill="#1E40AF" />
+        <circle cx={4} cy={-5.5} r={1.5} fill="#1E40AF" />
+
+        {/* Panah Arah Hadap (Utara) */}
+        <path d="M 0 10 L 0 1 M -3 5 L 0 0 L 3 5" stroke="#FFFFFF" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" fill="none" />
+
+        {/* Sensor Garis / Rintangan di depan */}
+        <circle cx={0} cy={-13} r={2.5} fill="#FACC15" />
+      </g>
     </g>
   );
 };
 
-// ─── Komponen Rintangan ───────────────────────────────────────────────────────
+// ─── Komponen Rintangan Figma ─────────────────────────────────────────────────
 
 const ObstacleBlock: React.FC<{
   x: number;
   y: number;
   width: number;
   height: number;
-  id: string;
 }> = ({ x, y, width, height }) => (
   <g>
     <rect
@@ -95,47 +109,29 @@ const ObstacleBlock: React.FC<{
       y={y}
       width={width}
       height={height}
-      rx={4}
-      fill={COLORS.OBSTACLE}
-      stroke={COLORS.OBSTACLE_STROKE}
+      rx={8}
+      fill="#FFF7ED"
+      stroke="#EA580C"
       strokeWidth={2}
     />
-    {/* Ikon dinding */}
+    {/* Tanda silang X sesuai Figma */}
+    <path
+      d={`M ${x + 12} ${y + 12} L ${x + width - 12} ${y + height - 12} M ${x + width - 12} ${y + 12} L ${x + 12} ${y + height - 12}`}
+      stroke="#EA580C"
+      strokeWidth={2.5}
+      strokeLinecap="round"
+    />
     <text
-      x={x + width / 2}
-      y={y + height / 2 + 5}
-      textAnchor="middle"
-      fontSize={18}
-      fill="white"
+      x={x + width + 8}
+      y={y + height / 2 + 4}
+      fontSize={11}
+      fontWeight="600"
+      fill="#9A3412"
     >
-      🧱
+      Rintangan
     </text>
   </g>
 );
-
-// ─── Indikator Status ─────────────────────────────────────────────────────────
-
-const StatusIndicator: React.FC<{ status: ProgramStatus }> = ({ status }) => {
-  const config: Record<ProgramStatus, { color: string; label: string; icon: string }> = {
-    idle: { color: COLORS.STATUS_IDLE, label: 'Siap', icon: '⏹' },
-    running: { color: COLORS.STATUS_RUNNING, label: 'Berjalan', icon: '▶' },
-    stopped: { color: COLORS.STATUS_STOPPED, label: 'Dihentikan', icon: '⏹' },
-    error: { color: COLORS.STATUS_ERROR, label: 'Error', icon: '❌' },
-    finished: { color: COLORS.STATUS_FINISHED, label: 'Selesai', icon: '✅' },
-  };
-
-  const { color, label, icon } = config[status];
-
-  return (
-    <div
-      className="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-semibold text-white"
-      style={{ backgroundColor: color }}
-    >
-      <span>{icon}</span>
-      <span>{label}</span>
-    </div>
-  );
-};
 
 // ─── Komponen Utama Simulator ─────────────────────────────────────────────────
 
@@ -146,41 +142,103 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
   height = 400,
   arenaMode = 'empty',
   onArenaModeChange,
+  onRun,
+  onStop,
+  onReset,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
+  const isRunning = programStatus === 'running';
+
+  // Menentukan arah mata angin
+  const getCompassDirection = (deg: number): string => {
+    const normalized = ((deg % 360) + 360) % 360;
+    if (normalized >= 315 || normalized < 45) return 'Utara ↑';
+    if (normalized >= 45 && normalized < 135) return 'Timur →';
+    if (normalized >= 135 && normalized < 225) return 'Selatan ↓';
+    return 'Barat ←';
+  };
+
+  const statusBannerConfig: Record<ProgramStatus, { bg: string; border: string; text: string; icon: string; title: string; desc: string }> = {
+    idle: {
+      bg: 'bg-blue-50/70',
+      border: 'border-blue-200',
+      text: 'text-blue-700',
+      icon: '▶',
+      title: 'Siap',
+      desc: 'Program belum dijalankan',
+    },
+    running: {
+      bg: 'bg-emerald-50/70',
+      border: 'border-emerald-200',
+      text: 'text-emerald-700',
+      icon: '▶',
+      title: 'Berjalan',
+      desc: 'Robot sedang bergerak mengeksekusi instruksi',
+    },
+    stopped: {
+      bg: 'bg-amber-50/70',
+      border: 'border-amber-200',
+      text: 'text-amber-800',
+      icon: '⏹',
+      title: 'Dihentikan',
+      desc: 'Program dihentikan oleh pengguna',
+    },
+    finished: {
+      bg: 'bg-green-50/70',
+      border: 'border-green-200',
+      text: 'text-green-700',
+      icon: '✅',
+      title: 'Selesai',
+      desc: 'Program selesai dieksekusi dengan sukses',
+    },
+    error: {
+      bg: 'bg-red-50/70',
+      border: 'border-red-200',
+      text: 'text-red-700',
+      icon: '⚠️',
+      title: 'Kesalahan',
+      desc: state.errorMessage || 'Terjadi kesalahan saat eksekusi',
+    },
+  };
+
+  const banner = statusBannerConfig[programStatus] || statusBannerConfig.idle;
 
   return (
-    <div id="robot-simulator" className="flex flex-col h-full bg-white rounded-xl shadow-md overflow-hidden">
-      {/* Header simulator */}
-      <div className="flex items-center justify-between px-4 py-2 bg-gray-800 text-white">
-        <span className="font-bold text-sm">🤖 Simulator Robot</span>
-        <StatusIndicator status={programStatus} />
-      </div>
+    <div
+      id="robot-simulator"
+      className="flex flex-col h-full bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden text-left text-gray-800"
+    >
+      {/* ─── Header Simulator Figma ─────────────────────────────────────── */}
+      <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50/80 border-b border-gray-200">
+        <div className="flex items-center gap-2">
+          <span className="font-bold text-sm text-gray-900">🤖 Simulator Robot</span>
+          <span className="text-xs px-2 py-0.5 rounded-md bg-gray-200/60 text-gray-600 font-medium">
+            Virtual
+          </span>
+        </div>
 
-      {/* Mode Arena: Bebas / Rintangan / Garis */}
-      {onArenaModeChange && (
-        <div className="flex items-center justify-between px-3 py-1.5 bg-gray-700 border-t border-gray-600 text-xs">
-          <span className="text-gray-300 font-medium">Mode:</span>
-          <div className="flex items-center gap-1">
+        {/* Mode Switcher Pills */}
+        {onArenaModeChange && (
+          <div className="flex items-center gap-1 bg-gray-200/60 p-0.5 rounded-lg text-xs">
             <button
               type="button"
               onClick={() => onArenaModeChange('empty')}
-              className={`px-2 py-0.5 rounded text-xs font-semibold transition-colors ${
+              className={`px-2 py-0.5 rounded-md text-xs font-semibold transition-colors ${
                 arenaMode === 'empty'
-                  ? 'bg-blue-500 text-white shadow-sm'
-                  : 'bg-gray-800 text-gray-300 hover:bg-gray-600'
+                  ? 'bg-white text-blue-600 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
               }`}
-              title="Kanvas Kosong (Kreasi Bebas Murid)"
+              title="Kanvas Kosong (Kreasi Bebas)"
             >
               🎨 Bebas
             </button>
             <button
               type="button"
               onClick={() => onArenaModeChange('obstacles')}
-              className={`px-2 py-0.5 rounded text-xs font-semibold transition-colors ${
+              className={`px-2 py-0.5 rounded-md text-xs font-semibold transition-colors ${
                 arenaMode === 'obstacles'
-                  ? 'bg-red-500 text-white shadow-sm'
-                  : 'bg-gray-800 text-gray-300 hover:bg-gray-600'
+                  ? 'bg-white text-orange-600 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
               }`}
               title="Tantangan Latihan Rintangan"
             >
@@ -189,144 +247,245 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
             <button
               type="button"
               onClick={() => onArenaModeChange('lines')}
-              className={`px-2 py-0.5 rounded text-xs font-semibold transition-colors ${
+              className={`px-2 py-0.5 rounded-md text-xs font-semibold transition-colors ${
                 arenaMode === 'lines'
-                  ? 'bg-indigo-500 text-white shadow-sm'
-                  : 'bg-gray-800 text-gray-300 hover:bg-gray-600'
+                  ? 'bg-white text-indigo-600 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
               }`}
-              title="Tantangan Latihan Sensor Garis"
+              title="Tantangan Sensor Garis"
             >
               〰️ Garis
             </button>
           </div>
-        </div>
-      )}
-
-      {/* Arena SVG */}
-      <div className="flex-1 flex items-center justify-center p-3 bg-gray-100">
-        <svg
-          ref={svgRef}
-          viewBox={`0 0 ${width} ${height}`}
-          width="100%"
-          height="100%"
-          style={{ maxWidth: width, maxHeight: height }}
-          className="rounded-lg border-2 border-gray-300"
-          aria-label="Arena Robot"
-        >
-          {/* Background arena */}
-          <rect
-            width={width}
-            height={height}
-            fill={COLORS.ARENA_BG}
-            stroke={COLORS.ARENA_BORDER}
-            strokeWidth={3}
-          />
-
-          {/* Grid halus */}
-          <defs>
-            <pattern id="grid" width={20} height={20} patternUnits="userSpaceOnUse">
-              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#E2E8F0" strokeWidth={0.5} />
-            </pattern>
-          </defs>
-          <rect width={width} height={height} fill="url(#grid)" />
-
-          {/* Garis hitam (jalur sensor) */}
-          {state.arena.lines.map((line) => (
-            <line
-              key={line.id}
-              x1={line.x1}
-              y1={line.y1}
-              x2={line.x2}
-              y2={line.y2}
-              stroke={line.color}
-              strokeWidth={line.width}
-              strokeLinecap="round"
-            />
-          ))}
-
-          {/* Rintangan */}
-          {state.arena.obstacles.map((obs) => (
-            <ObstacleBlock
-              key={obs.id}
-              id={obs.id}
-              x={obs.x}
-              y={obs.y}
-              width={obs.width}
-              height={obs.height}
-            />
-          ))}
-
-          {/* Robot */}
-          <Robot
-            x={state.robot.x}
-            y={state.robot.y}
-            angle={state.robot.angle}
-            isMoving={state.robot.isMoving}
-            status={programStatus}
-          />
-
-          {/* Teks display (jika ada) */}
-          {state.displayText && (
-            <g>
-              <rect
-                x={10}
-                y={height - 40}
-                width={width - 20}
-                height={30}
-                rx={6}
-                fill={COLORS.DISPLAY_TEXT_BG}
-              />
-              <text
-                x={width / 2}
-                y={height - 20}
-                textAnchor="middle"
-                fill="white"
-                fontSize={13}
-                fontFamily="monospace"
-              >
-                {state.displayText.slice(0, 60)}
-              </text>
-            </g>
-          )}
-
-          {/* Label posisi robot (debug) */}
-          <text x={5} y={14} fontSize={10} fill="#718096">
-            ({Math.round(state.robot.x)}, {Math.round(state.robot.y)}) | {Math.round(state.robot.angle)}°
-          </text>
-        </svg>
-      </div>
-
-      {/* Info kecepatan */}
-      <div className="flex items-center gap-4 px-4 py-2 bg-gray-50 border-t border-gray-200 text-xs text-gray-600">
-        <span>⚡ Kecepatan: {state.robot.speed}/10</span>
-        <span>📍 Arah: {Math.round(state.robot.angle)}°</span>
-        {state.robot.isMoving && (
-          <span className="text-green-600 font-semibold animate-pulse">▶ Bergerak...</span>
         )}
       </div>
 
-      {/* Log terakhir */}
-      {state.logs.length > 0 && (
-        <div className="px-3 py-2 bg-gray-800 text-xs font-mono max-h-20 overflow-y-auto">
-          {state.logs.slice(-5).map((log, i) => (
-            <div
-              key={i}
-              className={
-                log.level === 'error'
-                  ? 'text-red-400'
-                  : log.level === 'warn'
-                    ? 'text-yellow-400'
-                    : 'text-gray-300'
-              }
-            >
-              {log.message}
-            </div>
-          ))}
+      <div className="p-3 flex-1 flex flex-col gap-2.5 overflow-y-auto">
+        {/* Label Ukuran Arena */}
+        <div className="flex items-center justify-between text-xs text-gray-500 px-1">
+          <span className="font-semibold text-gray-700">
+            {arenaMode === 'empty'
+              ? 'Arena bebas'
+              : arenaMode === 'obstacles'
+                ? 'Arena rintangan'
+                : 'Arena sensor garis'}
+          </span>
+          <span className="font-mono text-[11px] text-gray-400">120 × 90 cm</span>
         </div>
-      )}
+
+        {/* ─── Kanvas SVG Arena ────────────────────────────────────────── */}
+        <div className="relative bg-slate-50 rounded-xl border border-gray-200 overflow-hidden flex items-center justify-center p-1">
+          <svg
+            ref={svgRef}
+            viewBox={`0 0 ${width} ${height}`}
+            width="100%"
+            height="100%"
+            style={{ maxWidth: width, maxHeight: height }}
+            className="rounded-lg"
+            aria-label="Arena Robot"
+          >
+            {/* Background */}
+            <rect width={width} height={height} fill={COLORS.ARENA_BG} />
+
+            {/* Grid 1 petak = 10 cm */}
+            <defs>
+              <pattern id="grid10" width={30} height={30} patternUnits="userSpaceOnUse">
+                <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#E2E8F0" strokeWidth={0.8} />
+              </pattern>
+            </defs>
+            <rect width={width} height={height} fill="url(#grid10)" />
+
+            {/* Garis lintasan sensor */}
+            {state.arena.lines.map((line) => (
+              <line
+                key={line.id}
+                x1={line.x1}
+                y1={line.y1}
+                x2={line.x2}
+                y2={line.y2}
+                stroke={line.color}
+                strokeWidth={line.width}
+                strokeLinecap="round"
+              />
+            ))}
+
+            {/* Rintangan */}
+            {state.arena.obstacles.map((obs) => (
+              <ObstacleBlock
+                key={obs.id}
+                x={obs.x}
+                y={obs.y}
+                width={obs.width}
+                height={obs.height}
+              />
+            ))}
+
+            {/* Robot */}
+            <Robot
+              x={state.robot.x}
+              y={state.robot.y}
+              angle={state.robot.angle}
+              isMoving={state.robot.isMoving}
+              status={programStatus}
+            />
+
+            {/* Display Teks Robot */}
+            {state.displayText && (
+              <g>
+                <rect
+                  x={15}
+                  y={height - 42}
+                  width={width - 30}
+                  height={32}
+                  rx={8}
+                  fill={COLORS.DISPLAY_TEXT_BG}
+                  stroke="#1D4ED8"
+                  strokeWidth={1.5}
+                />
+                <text
+                  x={width / 2}
+                  y={height - 21}
+                  textAnchor="middle"
+                  fill="#FFFFFF"
+                  fontSize={13}
+                  fontWeight="bold"
+                  fontFamily="sans-serif"
+                >
+                  {state.displayText.slice(0, 60)}
+                </text>
+              </g>
+            )}
+
+            {/* Label Skala Petak */}
+            <text x={width - 80} y={height - 10} fontSize={9} fill="#94A3B8" fontFamily="sans-serif">
+              1 petak = 10 cm
+            </text>
+          </svg>
+        </div>
+
+        {/* Legend Lintasan */}
+        <div className="flex items-center justify-center gap-4 text-[11px] text-gray-500 py-0.5">
+          <span className="flex items-center gap-1.5">
+            <span className="w-4 h-0.5 border-b-2 border-dashed border-gray-400" />
+            <span>Ilustratif, bukan jejak</span>
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-4 h-0.5 bg-blue-600 rounded" />
+            <span>Jejak eksekusi</span>
+          </span>
+        </div>
+
+        {/* ─── Tombol Eksekusi Simulator (Figma) ─────────────────────────── */}
+        <div className="grid grid-cols-3 gap-2">
+          {isRunning ? (
+            <button
+              type="button"
+              onClick={onStop}
+              className="col-span-2 flex items-center justify-center gap-1.5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow-sm transition-colors shadow-red-500/20"
+            >
+              <span>⏹</span>
+              <span>Hentikan</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={onRun}
+              className="col-span-2 flex items-center justify-center gap-1.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm transition-colors shadow-emerald-500/20"
+            >
+              <span>▶</span>
+              <span>Jalankan</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={onReset}
+            className="flex items-center justify-center gap-1 py-2 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 text-xs font-bold rounded-xl shadow-sm transition-colors"
+          >
+            <span>🔄</span>
+            <span>Atur ulang</span>
+          </button>
+        </div>
+
+        {/* ─── Status Banner Figma ──────────────────────────────────────── */}
+        <div className={`p-3 rounded-xl border flex items-center gap-3 ${banner.bg} ${banner.border}`}>
+          <div className="w-7 h-7 rounded-full bg-white shadow-sm flex items-center justify-center text-xs flex-shrink-0 font-bold">
+            {banner.icon}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className={`text-xs font-bold ${banner.text}`}>{banner.title}</p>
+            <p className="text-[11px] text-gray-600 truncate mt-0.5">{banner.desc}</p>
+          </div>
+        </div>
+
+        {/* ─── Telemetri & Sensor Card ──────────────────────────────────── */}
+        <div className="grid grid-cols-2 gap-2 p-2.5 bg-gray-50 rounded-xl border border-gray-200/80 text-xs">
+          <div>
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">
+              Arah Robot
+            </span>
+            <span className="font-bold text-gray-800 text-xs mt-0.5 block">
+              {getCompassDirection(state.robot.angle)}
+            </span>
+            <span className="text-[10px] text-gray-500">
+              Arah: {Math.round(state.robot.angle)}°
+            </span>
+          </div>
+
+          <div>
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">
+              Sensor Terakhir
+            </span>
+            <span className="font-semibold text-gray-800 text-xs mt-0.5 block truncate">
+              {state.arena.obstacles.length > 0
+                ? 'Deteksi rintangan aktif'
+                : state.arena.lines.length > 0
+                  ? 'Sensor garis aktif'
+                  : 'Belum dibaca'}
+            </span>
+            <span className="text-[10px] text-gray-500">
+              Kecepatan: {state.robot.speed}/10
+            </span>
+          </div>
+        </div>
+
+        {/* ─── Urutan Eksekusi / Catatan Log Figma ───────────────────────── */}
+        <div className="p-3 bg-gray-50/80 rounded-xl border border-gray-200/80 flex flex-col gap-1 text-xs">
+          <p className="font-bold text-[11px] text-gray-700 uppercase tracking-wider">
+            Urutan eksekusi
+          </p>
+          <div className="space-y-1 text-gray-600 max-h-24 overflow-y-auto font-mono text-[11px]">
+            {state.logs.length === 0 ? (
+              <>
+                <p>— Belum ada eksekusi</p>
+                <p>— Robot berada di titik awal</p>
+                <p>— Sensor dibaca saat program berjalan</p>
+              </>
+            ) : (
+              state.logs.slice(-6).map((log, idx) => (
+                <p
+                  key={idx}
+                  className={
+                    log.level === 'error'
+                      ? 'text-red-600 font-bold'
+                      : log.level === 'warn'
+                        ? 'text-amber-600 font-bold'
+                        : 'text-gray-700'
+                  }
+                >
+                  <span className="text-gray-400 select-none mr-1">—</span>
+                  <span>{log.message}</span>
+                </p>
+              ))
+            )}
+          </div>
+          <p className="text-[10px] text-gray-400 mt-1 border-t border-gray-200/60 pt-1">
+            Tekan Jalankan untuk mencoba program dari titik awal.
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default SimulatorCanvas;
-

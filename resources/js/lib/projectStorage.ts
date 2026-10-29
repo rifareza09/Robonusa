@@ -86,7 +86,7 @@ export function importProjectFromFile(
       return;
     }
 
-    readAndImportFile(file, workspace, onResult);
+    importProjectFromSelectedFile(file, workspace, onResult);
   });
 
   document.body.appendChild(input);
@@ -94,8 +94,8 @@ export function importProjectFromFile(
   document.body.removeChild(input);
 }
 
-/** Membaca file dan menjalankan validasi + import */
-function readAndImportFile(
+/** Membaca file yang dipilih/di-drop dan menjalankan validasi + import ke workspace */
+export function importProjectFromSelectedFile(
   file: File,
   workspace: Blockly.Workspace,
   onResult: (result: ImportResult) => void

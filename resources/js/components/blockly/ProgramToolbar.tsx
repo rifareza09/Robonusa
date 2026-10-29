@@ -1,6 +1,6 @@
 /**
- * RoboKreasi — Komponen Toolbar Program
- * Tombol Mulai, Berhenti, Reset, Ekspor, Impor, Undo, Redo
+ * RoboKreasi — Toolbar & Header Program
+ * Mengacu pada desain Figma: "Ruang pemrograman • Desktop terang.png" & "Kit desain • RoboNusa.png"
  */
 
 import React, { useState, useCallback } from 'react';
@@ -21,6 +21,8 @@ interface ProgramToolbarProps {
   onImport: () => void;
   onProjectNameChange: (name: string) => void;
   onOpenGuide?: () => void;
+  onOpenExamplesModal?: () => void;
+  isSavedLocally?: boolean;
 }
 
 export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
@@ -38,6 +40,8 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
   onImport,
   onProjectNameChange,
   onOpenGuide,
+  onOpenExamplesModal,
+  isSavedLocally = false,
 }) => {
   const [isEditingName, setIsEditingName] = useState(false);
   const [tempName, setTempName] = useState(projectName);
@@ -54,150 +58,244 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
     onExport(projectName);
   }, [projectName, onExport]);
 
+  // Konfigurasi Status Pill sesuai Figma Kit Desain
+  const statusConfig: Record<ProgramStatus, { label: string; icon: string; className: string }> = {
+    idle: {
+      label: 'Siap',
+      icon: '▶',
+      className: 'bg-blue-50 text-blue-700 border-blue-200',
+    },
+    running: {
+      label: 'Berjalan',
+      icon: '▶',
+      className: 'bg-emerald-50 text-emerald-700 border-emerald-300 animate-pulse',
+    },
+    stopped: {
+      label: 'Dihentikan',
+      icon: '⏹',
+      className: 'bg-amber-50 text-amber-700 border-amber-300',
+    },
+    finished: {
+      label: 'Selesai',
+      icon: '✅',
+      className: 'bg-green-50 text-green-700 border-green-300',
+    },
+    error: {
+      label: 'Kesalahan',
+      icon: '⚠️',
+      className: 'bg-red-50 text-red-700 border-red-300',
+    },
+  };
+
+  const status = statusConfig[programStatus] || statusConfig.idle;
+
   return (
-    <div className="flex flex-col gap-2">
-      {/* Baris 1: Nama proyek */}
-      <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-800 rounded-lg">
-        <span className="text-yellow-400 text-lg">🤖</span>
-        {isEditingName ? (
-          <input
-            type="text"
-            value={tempName}
-            onChange={(e) => setTempName(e.target.value)}
-            onBlur={handleNameSubmit}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') handleNameSubmit();
-              if (e.key === 'Escape') {
-                setTempName(projectName);
-                setIsEditingName(false);
-              }
-            }}
-            className="flex-1 bg-gray-700 text-white rounded px-2 py-0.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            autoFocus
-            maxLength={100}
-          />
-        ) : (
+    <div className="flex flex-col text-left">
+      {/* ─── Baris 1: Navbar Utama Figma ──────────────────────────────────── */}
+      <div className="flex items-center justify-between pb-2 border-b border-gray-100 flex-wrap gap-2">
+        {/* Brand & Judul Proyek */}
+        <div className="flex items-center gap-3">
+          {/* Logo RoboNusa & Racer Robotic */}
+          <div className="flex items-center gap-2">
+            <img
+              src="/images/logo_racer.png"
+              alt="Racer Robotic"
+              className="h-7 w-auto object-contain hidden sm:block"
+              onError={(e) => {
+                // Sembunyikan jika gambar belum ter-render
+                (e.target as HTMLElement).style.display = 'none';
+              }}
+            />
+            <span className="text-xl font-extrabold tracking-tight text-blue-600 font-sans">
+              RoboNusa!
+            </span>
+          </div>
+
+          <div className="h-6 w-px bg-gray-200 hidden sm:block" />
+
+          {/* Edit Nama Proyek */}
+          <div className="flex flex-col">
+            {isEditingName ? (
+              <input
+                type="text"
+                value={tempName}
+                onChange={(e) => setTempName(e.target.value)}
+                onBlur={handleNameSubmit}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleNameSubmit();
+                  if (e.key === 'Escape') {
+                    setTempName(projectName);
+                    setIsEditingName(false);
+                  }
+                }}
+                className="bg-gray-100 text-gray-900 font-bold rounded-lg px-2 py-0.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 border border-blue-300"
+                autoFocus
+                maxLength={80}
+              />
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setTempName(projectName);
+                  setIsEditingName(true);
+                }}
+                className="flex items-center gap-1.5 text-left text-gray-900 text-sm font-bold hover:text-blue-600 transition-colors group"
+                title="Klik untuk mengubah nama proyek"
+              >
+                <span>{projectName}</span>
+                <span className="text-gray-400 group-hover:text-blue-500 text-xs">✏️</span>
+              </button>
+            )}
+            <span className="text-[11px] text-gray-400">
+              {isSavedLocally ? 'Tersimpan secara lokal' : 'Perubahan belum diunduh'}
+            </span>
+          </div>
+        </div>
+
+        {/* Action Buttons Navbar (Buka Proyek, Simpan Proyek, Panduan) */}
+        <div className="flex items-center gap-2">
+          {/* Tombol Buka Proyek */}
           <button
-            onClick={() => {
-              setTempName(projectName);
-              setIsEditingName(true);
-            }}
-            className="flex-1 text-left text-white text-sm font-semibold hover:text-yellow-300 transition-colors"
-            title="Klik untuk mengubah nama proyek"
+            id="btn-open-project"
+            type="button"
+            onClick={onImport}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 text-xs font-semibold rounded-xl transition-colors shadow-sm"
+            title="Buka berkas proyek dari komputer"
           >
-            {projectName}
-            <span className="ml-1 text-gray-400 text-xs">✏️</span>
+            <span>📂</span>
+            <span>Buka proyek</span>
           </button>
-        )}
-        <span className="text-gray-400 text-xs">RoboKreasi v1</span>
-      </div>
 
-      {/* Baris 2: Tombol kontrol */}
-      <div className="flex items-center gap-2 flex-wrap">
-        {/* Tombol Mulai / Berhenti */}
-        {isRunning ? (
+          {/* Tombol Simpan Proyek */}
           <button
-            id="btn-stop-program"
-            onClick={onStop}
-            className="flex items-center gap-1.5 px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg transition-colors shadow-md"
-            title="Hentikan program (Berhenti)"
+            id="btn-save-project"
+            type="button"
+            onClick={handleExport}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition-colors shadow-blue-500/20"
+            title="Unduh proyek ke komputer"
           >
-            <span>⏹</span>
-            <span>Berhenti</span>
+            <span>📥</span>
+            <span>Simpan proyek</span>
           </button>
-        ) : (
-          <button
-            id="btn-run-program"
-            onClick={onRun}
-            className="flex items-center gap-1.5 px-4 py-2 bg-green-500 hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-colors shadow-md"
-            title="Jalankan program (Mulai)"
-          >
-            <span>▶</span>
-            <span>Mulai</span>
-          </button>
-        )}
 
-        {/* Tombol Reset */}
-        <button
-          onClick={onReset}
-          className="flex items-center gap-1.5 px-3 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg transition-colors"
-          title="Reset posisi robot ke tengah"
-        >
-          <span>🔄</span>
-          <span>Reset</span>
-        </button>
-
-        {/* Divider */}
-        <div className="h-8 w-px bg-gray-300" />
-
-        {/* Undo / Redo */}
-        <button
-          onClick={onUndo}
-          disabled={!canUndo}
-          className="px-3 py-2 bg-gray-200 hover:bg-gray-300 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg transition-colors font-semibold text-gray-700"
-          title="Batalkan (Ctrl+Z)"
-        >
-          ↩ Batal
-        </button>
-        <button
-          onClick={onRedo}
-          disabled={!canRedo}
-          className="px-3 py-2 bg-gray-200 hover:bg-gray-300 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg transition-colors font-semibold text-gray-700"
-          title="Ulangi (Ctrl+Y)"
-        >
-          ↪ Ulangi
-        </button>
-
-        {/* Divider */}
-        <div className="h-8 w-px bg-gray-300" />
-
-        {/* Simpan dan Buka */}
-        <button
-          id="btn-save-project"
-          onClick={handleExport}
-          className="flex items-center gap-1.5 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-colors"
-          title="Simpan proyek ke file JSON"
-        >
-          <span>💾</span>
-          <span>Simpan</span>
-        </button>
-        <button
-          id="btn-open-project"
-          onClick={onImport}
-          className="flex items-center gap-1.5 px-3 py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold rounded-lg transition-colors"
-          title="Buka proyek dari file JSON"
-        >
-          <span>📂</span>
-          <span>Buka</span>
-        </button>
-
-        {/* Tombol Panduan jika tersedia */}
-        {onOpenGuide && (
-          <>
-            <div className="h-8 w-px bg-gray-300" />
+          {/* Tombol Panduan */}
+          {onOpenGuide && (
             <button
+              type="button"
               onClick={onOpenGuide}
-              className="flex items-center gap-1.5 px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors shadow-sm ml-auto"
-              title="Buka Panduan Belajar"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 text-xs font-semibold rounded-xl transition-colors shadow-sm"
+              title="Buka panduan belajar"
             >
               <span>📖</span>
               <span>Panduan</span>
             </button>
-          </>
-        )}
+          )}
+        </div>
       </div>
 
-      {/* Pesan Error */}
-      {errorMessage && (
-        <div className="px-3 py-2 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm font-medium">
-          {errorMessage}
+      {/* ─── Baris 2: Subheader & Status Bar ──────────────────────────────── */}
+      <div className="flex items-center justify-between pt-2 flex-wrap gap-2">
+        {/* Title Subheader */}
+        <div>
+          <h1 className="text-base font-bold text-gray-900 leading-tight">
+            Ruang pemrograman
+          </h1>
+          <p className="text-[11px] text-gray-500">
+            Contoh desain • Simulasi virtual
+          </p>
         </div>
-      )}
 
-      {/* Status berhasil */}
-      {programStatus === 'finished' && !errorMessage && (
-        <div className="px-3 py-2 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm font-medium">
-          ✅ Program selesai dijalankan!
+        {/* Kontrol & Status */}
+        <div className="flex items-center gap-2">
+          {/* Tombol Contoh Proyek Modal */}
+          {onOpenExamplesModal && (
+            <button
+              type="button"
+              onClick={onOpenExamplesModal}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-gray-50 border border-gray-300 text-gray-800 text-xs font-bold rounded-xl transition-colors shadow-sm"
+              title="Pilih proyek contoh untuk latihan"
+            >
+              <span>📚</span>
+              <span>Contoh Proyek</span>
+            </button>
+          )}
+
+          {/* Status Badge Pill (Sesuai Figma) */}
+          <div
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-colors ${status.className}`}
+          >
+            <span>{status.icon}</span>
+            <span>{status.label}</span>
+          </div>
+
+          <div className="h-5 w-px bg-gray-200 hidden sm:block" />
+
+          {/* Tombol Cepat: Mulai / Berhenti & Reset (Kompatibel dengan pengujian) */}
+          <div className="flex items-center gap-1.5">
+            {isRunning ? (
+              <button
+                id="btn-stop-program"
+                type="button"
+                onClick={onStop}
+                className="flex items-center gap-1 px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg shadow-sm transition-colors"
+                title="Hentikan simulasi"
+              >
+                <span>⏹</span>
+                <span>Berhenti</span>
+              </button>
+            ) : (
+              <button
+                id="btn-run-program"
+                type="button"
+                onClick={onRun}
+                className="flex items-center gap-1 px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow-sm transition-colors shadow-emerald-500/20"
+                title="Jalankan simulasi"
+              >
+                <span>▶</span>
+                <span>Mulai</span>
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={onReset}
+              className="flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-gray-100 border border-gray-300 text-gray-700 text-xs font-semibold rounded-lg transition-colors"
+              title="Kembalikan robot ke posisi awal"
+            >
+              <span>🔄</span>
+              <span>Reset</span>
+            </button>
+          </div>
+
+          {/* Undo / Redo Tombol Cepat */}
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={onUndo}
+              disabled={!canUndo}
+              className="px-2 py-1 bg-white hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed border border-gray-200 rounded-lg text-xs font-semibold text-gray-700 transition-colors"
+              title="Urungkan (Ctrl+Z)"
+            >
+              ↩ Batal
+            </button>
+            <button
+              type="button"
+              onClick={onRedo}
+              disabled={!canRedo}
+              className="px-2 py-1 bg-white hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed border border-gray-200 rounded-lg text-xs font-semibold text-gray-700 transition-colors"
+              title="Ulangi (Ctrl+Y)"
+            >
+              ↪ Ulangi
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Pesan Error Banner (jika ada kesalahan) */}
+      {errorMessage && (
+        <div className="mt-2 px-3 py-2 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs font-semibold flex items-center gap-2 animate-in fade-in">
+          <span>⚠️</span>
+          <span>{errorMessage}</span>
         </div>
       )}
     </div>
@@ -205,4 +303,3 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
 };
 
 export default ProgramToolbar;
-
