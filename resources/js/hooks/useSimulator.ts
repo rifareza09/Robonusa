@@ -90,6 +90,12 @@ export function useSimulator(): UseSimulatorReturn {
       hentikanSuara: () => sim.hentikanSuara(),
       tidur: (ms) => sim.tidur(ms),
       cekDibatalkan: () => sim.cekDibatalkan(),
+      daftarkanKeyHandler: (key, handler) => {
+        const listener = (e: KeyboardEvent) => {
+          if (e.key === key) handler();
+        };
+        window.addEventListener('keydown', listener);
+      },
     });
 
     simulatorRef.current = sim;

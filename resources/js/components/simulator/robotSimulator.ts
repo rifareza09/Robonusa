@@ -319,6 +319,9 @@ export class RobotSimulator {
         this.audioContext = new AudioContext();
       }
       const ctx = this.audioContext;
+      if (ctx.state === 'suspended') {
+        await ctx.resume().catch(() => null);
+      }
       const oscillator = ctx.createOscillator();
       const gainNode = ctx.createGain();
       oscillator.connect(gainNode);

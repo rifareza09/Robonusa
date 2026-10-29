@@ -233,6 +233,9 @@ export interface SimulatorAPI {
   mainkanNada(nada: string, durasi: number): Promise<void>;
   hentikanSuara(): void;
 
+  // Keyboard handler
+  daftarkanKeyHandler?(key: string, handler: () => void): void;
+
   // Utilitas runtime
   tidur(ms: number): Promise<void>;
   cekDibatalkan(): void;  // melempar error jika program dihentikan

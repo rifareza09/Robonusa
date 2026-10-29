@@ -125,6 +125,7 @@ javascriptGenerator.forBlock[BLOCK_TYPES.CONTROL_FOREVER] = function (
   return (
     `while (true) {\n` +
     `  __robot__.cekDibatalkan();\n` +
+    `  await __robot__.tidur(50);\n` +
     `  __iterasi__++;\n` +
     `  if (__iterasi__ > __maxIterasi__) throw new Error('Loop selamanya mencapai batas. Program dihentikan.');\n` +
     `${body}` +

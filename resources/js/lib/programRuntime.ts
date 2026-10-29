@@ -1,4 +1,4 @@
-/**
+  /**
  * RoboKreasi — Runtime Controller
  * Mengelola siklus hidup eksekusi program:
  * - Validasi sebelum run
@@ -16,6 +16,7 @@ import type {
   RuntimeConfig,
 } from '../types/robokreasi';
 import { BLOCK_TYPES } from '../types/robokreasi';
+import ProgramWorker from './programWorker?worker&inline';
 
 // ─── Konfigurasi default runtime ─────────────────────────────────────────────
 
@@ -80,6 +81,7 @@ export class ProgramRuntime {
   private statusCallback: StatusCallback;
   private config: RuntimeConfig;
   private isRunning = false;
+  private mainThreadCancel = false;
 
   constructor(
     statusCallback: StatusCallback,
@@ -118,20 +120,26 @@ export class ProgramRuntime {
       return;
     }
 
-    // Cek Web Worker support
-    if (typeof Worker === 'undefined') {
-      this.statusCallback('error', ERROR_MESSAGES.WORKER_NOT_SUPPORTED);
-      return;
-    }
-
     this.isRunning = true;
+    this.mainThreadCancel = false;
     this.statusCallback('running');
 
     try {
+      // Coba jalankan via Web Worker terlebih dahulu
       await this.runInWorker(code);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Error tidak diketahui';
-      this.statusCallback('error', msg);
+    } catch (workerErr) {
+      // Jika pembuatan Web Worker diblokir oleh browser (CORS, file protocol, iframe CSP)
+      console.warn('[RoboKreasi Runtime] Eksekusi Worker dialihkan ke runner sandbox thread utama:', workerErr);
+      try {
+        await this.runInMainThread(code);
+      } catch (mainErr) {
+        if (mainErr instanceof Error && mainErr.message === '__PROGRAM_CANCELLED__') {
+          this.statusCallback('stopped');
+        } else {
+          const msg = mainErr instanceof Error ? mainErr.message : 'Error tidak diketahui';
+          this.statusCallback('error', this.translateError(msg));
+        }
+      }
     } finally {
       this.isRunning = false;
     }
@@ -139,10 +147,10 @@ export class ProgramRuntime {
 
   /** Menghentikan program yang sedang berjalan */
   stop() {
+    this.mainThreadCancel = true;
     if (this.worker) {
       const msg: WorkerInMessage = { type: 'STOP' };
       this.worker.postMessage(msg);
-      // Matikan worker setelah delay singkat
       setTimeout(() => {
         this.worker?.terminate();
         this.worker = null;
@@ -152,14 +160,138 @@ export class ProgramRuntime {
     this.statusCallback('stopped');
   }
 
+  /** Fallback sandbox yang aman dieksekusi di thread utama jika Worker diblokir browser */
+  private async runInMainThread(code: string): Promise<void> {
+    if (!this.robotAPI) return;
+    const api = this.robotAPI;
+    const config = this.config;
+
+    const checkCancelled = () => {
+      if (this.mainThreadCancel) {
+        throw new Error('__PROGRAM_CANCELLED__');
+      }
+    };
+
+    const robotProxy = {
+      maju: async (langkah: number) => {
+        checkCancelled();
+        return api.maju(langkah);
+      },
+      mundur: async (langkah: number) => {
+        checkCancelled();
+        return api.mundur(langkah);
+      },
+      belokKiri: async (derajat: number) => {
+        checkCancelled();
+        return api.belokKiri(derajat);
+      },
+      belokKanan: async (derajat: number) => {
+        checkCancelled();
+        return api.belokKanan(derajat);
+      },
+      berhenti: async () => {
+        checkCancelled();
+        return api.berhenti();
+      },
+      aturKecepatan: (kecepatan: number) => {
+        api.aturKecepatan(kecepatan);
+      },
+      cekRintangan: () => api.cekRintangan(),
+      cekGaris: () => api.cekGaris(),
+      tampilkanTeks: (teks: string) => {
+        api.tampilkanTeks(teks);
+      },
+      mainkanNada: async (nada: string, durasi: number) => {
+        checkCancelled();
+        return api.mainkanNada(nada, durasi);
+      },
+      hentikanSuara: () => {
+        api.hentikanSuara();
+      },
+      daftarkanKeyHandler: (key: string, handler: () => void) => {
+        api.daftarkanKeyHandler?.(key, handler);
+      },
+      cekDibatalkan: checkCancelled,
+      tidur: (ms: number): Promise<void> => {
+        return new Promise((res, rej) => {
+          const start = Date.now();
+          const check = () => {
+            if (this.mainThreadCancel) return rej(new Error('__PROGRAM_CANCELLED__'));
+            if (Date.now() - start >= ms) return res();
+            setTimeout(check, 16);
+          };
+          check();
+        });
+      },
+    };
+
+    const safeScope = {
+      __robot__: robotProxy,
+      __config__: config,
+      __vars__: {} as Record<string, unknown>,
+      __iterasi__: 0,
+      __maxIterasi__: config.maxIterations,
+      Math,
+      String,
+      Number,
+      Boolean,
+      Array,
+      Object,
+      JSON,
+      parseInt,
+      parseFloat,
+      isNaN,
+      isFinite,
+      console: {
+        log: (...args: unknown[]) => console.log('[Robot]', ...args),
+      },
+      window: undefined,
+      document: undefined,
+      fetch: undefined,
+      XMLHttpRequest: undefined,
+      WebSocket: undefined,
+      localStorage: undefined,
+      sessionStorage: undefined,
+      indexedDB: undefined,
+      alert: undefined,
+      confirm: undefined,
+      prompt: undefined,
+      eval: undefined,
+    };
+
+    const paramNames = Object.keys(safeScope);
+    const paramValues = Object.values(safeScope);
+    const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor as FunctionConstructor;
+    const fn = new AsyncFunction(...paramNames, `"use strict";\n${code}`);
+
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    const timeoutPromise = new Promise<never>((_, rej) => {
+      timeoutId = setTimeout(() => {
+        this.mainThreadCancel = true;
+        rej(new Error(`Program melebihi batas waktu ${config.maxDurationMs / 1000} detik.`));
+      }, config.maxDurationMs);
+    });
+
+    try {
+      await Promise.race([fn(...paramValues), timeoutPromise]);
+      if (!this.mainThreadCancel) {
+        this.statusCallback('finished');
+      }
+    } finally {
+      if (timeoutId) clearTimeout(timeoutId);
+    }
+  }
+
   /** Menjalankan kode di Web Worker */
   private runInWorker(code: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      // Buat worker baru dari file yang dikompilasi
-      this.worker = new Worker(
-        new URL('../lib/programWorker.ts', import.meta.url),
-        { type: 'module' }
-      );
+      // Buat worker baru menggunakan Vite inlined worker constructor
+      try {
+        this.worker = new ProgramWorker();
+      } catch (err) {
+        reject(err);
+        return;
+      }
 
       // Terima pesan dari worker
       this.worker.addEventListener('message', async (event: MessageEvent<WorkerOutMessage>) => {

@@ -7,3 +7,23 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* 
+ * Perbaikan untuk Tailwind preflight yang mengatur `svg { display: block; }`.
+ * Blockly menggunakan atribut SVG `display="none"` untuk menyembunyikan scrollbar flyout
+ * dan elemen internal lainnya. Aturan CSS di bawah memastikan atribut tersebut tidak
+ * tertimpa oleh stylesheet Tailwind.
+ */
+svg[display="none"],
+g[display="none"],
+[display="none"] {
+    display: none !important;
+}
+
+.blocklyFlyoutScrollbar[display="none"],
+.blocklyScrollbarVertical[display="none"],
+.blocklyScrollbarHorizontal[display="none"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}

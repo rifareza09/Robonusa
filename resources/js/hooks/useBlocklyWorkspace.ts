@@ -113,8 +113,24 @@ export function useBlocklyWorkspace(): UseBlocklyWorkspaceReturn {
       setCanRedo(workspace.getRedoStack().length > 0);
     });
 
+    // Amati perubahan ukuran kontainer (misal: saat sidebar ditutup/dibuka)
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined' && workspaceRef.current) {
+      resizeObserver = new ResizeObserver(() => {
+        Blockly.svgResize(workspace);
+      });
+      resizeObserver.observe(workspaceRef.current);
+    }
+
+    const handleWindowResize = () => {
+      Blockly.svgResize(workspace);
+    };
+    window.addEventListener('resize', handleWindowResize);
+
     // Cleanup saat unmount
     return () => {
+      window.removeEventListener('resize', handleWindowResize);
+      resizeObserver?.disconnect();
       workspace.dispose();
       workspaceInstanceRef.current = null;
     };

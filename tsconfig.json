@@ -13,7 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "types": ["node", "vitest/globals", "@testing-library/jest-dom/vitest"],
+    "types": ["node", "vitest/globals", "@testing-library/jest-dom/vitest", "vite/client"],
     "paths": {
       "@/*": ["./resources/js/*"]
     }

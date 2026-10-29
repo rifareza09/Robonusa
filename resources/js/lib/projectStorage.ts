@@ -143,8 +143,9 @@ function readAndImportFile(
       return;
     }
 
-    // Semua validasi lulus — muat ke workspace
+    // Semua validasi lulus — bersihkan blok lama dan muat ke workspace
     try {
+      workspace.clear();
       Blockly.serialization.workspaces.load(project.workspace, workspace);
       onResult({ success: true, projectName: project.projectName });
     } catch (err) {
@@ -279,6 +280,8 @@ export function loadExampleProject(
       return { success: false, error: blockTypeError };
     }
 
+    // Bersihkan workspace terlebih dahulu agar blok lama tidak menumpuk
+    workspace.clear();
     Blockly.serialization.workspaces.load(workspaceData, workspace);
     return { success: true };
   } catch (err) {
