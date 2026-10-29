@@ -16,10 +16,37 @@ Blockly.setLocale(idLocale as unknown as Record<string, string>);
 // Import definisi blok (side-effect: mendaftarkan semua blok ke Blockly)
 import '../components/blockly/blockDefinitions';
 
+// ─── Tema Kustom RoboKreasi Sesuai Figma ────────────────────────────────────
+
+const RoboKreasiTheme = Blockly.Theme.defineTheme('robokreasi_figma', {
+  name: 'robokreasi_figma',
+  base: Blockly.Themes.Zelos,
+  componentStyles: {
+    workspaceBackgroundColour: '#F8FAFC',
+    toolboxBackgroundColour: '#FFFFFF',
+    toolboxForegroundColour: '#1E293B',
+    flyoutBackgroundColour: '#F8FAFC',
+    flyoutForegroundColour: '#1E293B',
+    flyoutOpacity: 1,
+    scrollbarColour: '#CBD5E1',
+    scrollbarOpacity: 0.7,
+    insertionMarkerColour: '#2563EB',
+    insertionMarkerOpacity: 0.4,
+    markerColour: '#2563EB',
+    cursorColour: '#2563EB',
+  },
+  fontStyle: {
+    family: '"Instrument Sans", ui-sans-serif, system-ui, -apple-system, sans-serif',
+    weight: 'bold',
+    size: 12,
+  },
+});
+
 // ─── Opsi Workspace ───────────────────────────────────────────────────────────
 
 const WORKSPACE_OPTIONS: Blockly.BlocklyOptions = {
   toolbox: buildToolboxConfig() as Blockly.utils.toolbox.ToolboxDefinition,
+  theme: RoboKreasiTheme,
   media: 'https://unpkg.com/blockly/media/',
   scrollbars: true,
   trashcan: true,

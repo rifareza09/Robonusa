@@ -7,16 +7,16 @@
 import * as Blockly from 'blockly';
 import { BLOCK_TYPES } from '../../types/robokreasi';
 
-// Warna kategori (sesuai dengan color_hex dari backend)
+// Warna kategori resmi sesuai Kit Desain RoboNusa Figma ("Kit desain • RoboNusa.png" & "Pustaka 8 kategori.png")
 const COLORS = {
-  KEJADIAN: '#FF6B35',
-  GERAKAN: '#4ECDC4',
-  KONTROL: '#FFD93D',
-  OPERATOR: '#95E1D3',
-  VARIABEL: '#F38181',
-  SENSOR: '#A8E6CF',
-  TAMPILAN: '#C3A6FF',
-  SUARA: '#FFB3BA',
+  KEJADIAN: '#2563EB',  // Figma: Biru utama (#2563EB)
+  GERAKAN: '#F59E0B',   // Figma: Oranye/Amber hangat (#F59E0B)
+  KONTROL: '#7C3AED',   // Figma: Ungu (#7C3AED)
+  OPERATOR: '#16A34A',  // Figma: Hijau (#16A34A)
+  VARIABEL: '#C2410C',  // Figma: Cokelat/Oranye kemerahan (#C2410C)
+  SENSOR: '#0891B2',    // Figma: Biru toska/Cyan (#0891B2)
+  TAMPILAN: '#BE185D',  // Figma: Magenta pekat (#BE185D)
+  SUARA: '#6366F1',     // Figma: Indigo (#6366F1)
 } as const;
 
 // ─── KEJADIAN ─────────────────────────────────────────────────────────────────
@@ -463,7 +463,7 @@ Blockly.Blocks['rk_text'] = {
       .appendField(new Blockly.FieldTextInput('Halo Robot!'), 'TEXT')
       .appendField('"');
     this.setOutput(true, 'String');
-    this.setColour('#888888');
+    this.setColour(COLORS.TAMPILAN);
     this.setTooltip('Teks yang akan ditampilkan.');
     this.setHelpUrl('');
   },

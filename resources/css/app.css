@@ -27,3 +27,127 @@ g[display="none"],
     visibility: hidden !important;
     opacity: 0 !important;
 }
+
+/* ─── Penyesuaian Desain Blok & Toolbox Sesuai Figma RoboNusa ─────────────── */
+
+/* Panel Kategori Toolbox */
+.blocklyToolboxDiv {
+    background-color: #FFFFFF !important;
+    border-right: 1px solid #E2E8F0 !important;
+    padding: 8px 4px !important;
+    box-shadow: 1px 0 2px 0 rgba(0, 0, 0, 0.02) !important;
+    user-select: none;
+}
+
+.blocklyTreeRow {
+    height: 38px !important;
+    line-height: 38px !important;
+    border-radius: 10px !important;
+    margin: 2px 4px !important;
+    padding: 0 10px !important;
+    transition: background-color 0.15s ease, transform 0.1s ease !important;
+    cursor: pointer !important;
+}
+
+.blocklyTreeRow:hover {
+    background-color: #F1F5F9 !important;
+}
+
+.blocklyTreeSelected {
+    background-color: #EFF6FF !important;
+    box-shadow: inset 3px 0 0 #2563EB !important;
+}
+
+.blocklyTreeSelected .blocklyTreeLabel {
+    color: #1D4ED8 !important;
+    font-weight: 700 !important;
+}
+
+.blocklyTreeLabel {
+    font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    color: #334155 !important;
+    letter-spacing: -0.01em !important;
+    padding-left: 6px !important;
+}
+
+/* Flyout (Laci Palet Blok) */
+.blocklyFlyoutBackground {
+    fill: #F8FAFC !important;
+    fill-opacity: 0.98 !important;
+    stroke: #E2E8F0 !important;
+    stroke-width: 1px !important;
+}
+
+/* Tipografi pada Blok */
+.blocklyText {
+    font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em !important;
+    fill: #FFFFFF;
+}
+
+/* Field Input Parameter Angka/Teks pada Blok (Pill Putih Modern Figma) */
+.blocklyEditableText rect,
+.blocklyFieldRect {
+    fill: #FFFFFF !important;
+    fill-opacity: 1 !important;
+    rx: 6px !important;
+    ry: 6px !important;
+    stroke: rgba(0, 0, 0, 0.15) !important;
+    stroke-width: 1px !important;
+}
+
+.blocklyEditableText text,
+.blocklyFieldRect + text {
+    fill: #0F172A !important;
+    font-family: 'Instrument Sans', ui-sans-serif, system-ui, monospace !important;
+    font-weight: 700 !important;
+    font-size: 12px !important;
+}
+
+/* Dropdown Field */
+.blocklyDropdownText {
+    fill: #0F172A !important;
+    font-weight: 700 !important;
+}
+
+/* Efek Seleksi Blok */
+.blocklySelected > .blocklyPath {
+    stroke: #2563EB !important;
+    stroke-width: 2.5px !important;
+    filter: drop-shadow(0 2px 6px rgba(37, 99, 235, 0.35)) !important;
+}
+
+/* Scrollbar Blockly */
+.blocklyScrollbarHandle {
+    fill: #CBD5E1 !important;
+    rx: 4px !important;
+    ry: 4px !important;
+}
+
+.blocklyScrollbarHandle:hover {
+    fill: #94A3B8 !important;
+}
+
+/* Tombol Tempat Sampah & Zoom */
+.blocklyTrash {
+    opacity: 0.75;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.blocklyTrash:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.blocklyZoom {
+    opacity: 0.85;
+    transition: opacity 0.15s ease;
+}
+
+.blocklyZoom:hover {
+    opacity: 1;
+}

@@ -48,6 +48,7 @@ const Workspace: React.FC<WorkspacePageProps> = ({
   const [isCodeViewerOpen, setIsCodeViewerOpen] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
   const [generatedCode, setGeneratedCode] = useState<string>('');
+  const [missionTip, setMissionTip] = useState<{ title: string; desc: string } | null>(null);
 
   // Blockly workspace
   const {
@@ -130,6 +131,10 @@ const Workspace: React.FC<WorkspacePageProps> = ({
     const result = loadExampleProject(workspace, project.workspace_json);
     if (result.success) {
       setProjectName(project.name);
+      setMissionTip({
+        title: project.name,
+        desc: project.description,
+      });
       setIsSavedLocally(false);
       resetSimulator();
 
@@ -294,12 +299,46 @@ const Workspace: React.FC<WorkspacePageProps> = ({
               </div>
             </div>
 
+            {/* Banner Misi/Tantangan Sesuai Figma (jika ada proyek contoh aktif) */}
+            {missionTip && (
+              <div className="mx-4 mt-2.5 mb-1 p-3 bg-gradient-to-r from-blue-50/90 to-indigo-50/70 rounded-2xl border border-blue-200/80 flex items-center justify-between text-xs shadow-2xs animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-7 h-7 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-xs flex-shrink-0">
+                    🎯
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="font-bold text-gray-900 text-xs truncate">{missionTip.title}</h4>
+                    <p className="text-gray-600 text-[11px] mt-0.5 line-clamp-1">{missionTip.desc}</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setMissionTip(null)}
+                  className="text-gray-400 hover:text-gray-600 p-1 text-xs rounded-lg transition-colors cursor-pointer flex-shrink-0 ml-2"
+                  title="Sembunyikan panduan misi"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+
             {/* Target Injeksi Blockly */}
             <div
               id="blockly-workspace"
               ref={workspaceRef}
               className="flex-1 w-full"
             />
+
+            {/* Footnote Helper Kanvas Sesuai Figma */}
+            <div className="px-4 py-1.5 bg-gray-50/80 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-400">
+              <span className="flex items-center gap-1.5">
+                <span>🗑️</span>
+                <span>Tarik ke sini untuk menghapus</span>
+              </span>
+              <span className="hidden sm:inline text-[10px]">
+                Scroll untuk zoom • Geser kanvas dengan drag mouse
+              </span>
+            </div>
           </div>
 
           {/* Kolom Kanan: Simulator Robot ATAU Panel Kode Teks */}
