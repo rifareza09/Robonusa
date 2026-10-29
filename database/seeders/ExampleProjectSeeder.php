@@ -69,15 +69,6 @@ class ExampleProjectSeeder extends Seeder
                                                             'block' => [
                                                                 'type' => 'motion_turn_right',
                                                                 'id' => 'turn_1',
-                                                                'inputs' => [
-                                                                    'DEGREES' => [
-                                                                        'block' => [
-                                                                            'type' => 'operator_number',
-                                                                            'id' => 'deg_1',
-                                                                            'fields' => ['NUM' => 15],
-                                                                        ],
-                                                                    ],
-                                                                ],
                                                             ],
                                                         ],
                                                     ],
@@ -156,15 +147,6 @@ class ExampleProjectSeeder extends Seeder
                                                                       'block' => [
                                                                         'type' => 'motion_turn_right',
                                                                         'id' => 'turn_2',
-                                                                        'inputs' => [
-                                                                          'DEGREES' => [
-                                                                            'block' => [
-                                                                              'type' => 'operator_number',
-                                                                              'id' => 'turn_deg',
-                                                                              'fields' => ['NUM' => 90],
-                                                                            ],
-                                                                          ],
-                                                                        ],
                                                                       ],
                                                                     ],
                                                                   ],

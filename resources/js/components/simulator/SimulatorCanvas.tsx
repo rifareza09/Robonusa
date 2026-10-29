@@ -216,48 +216,6 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
             Virtual
           </span>
         </div>
-
-        {/* Mode Switcher Pills */}
-        {onArenaModeChange && (
-          <div className="flex items-center gap-1 bg-gray-200/60 p-0.5 rounded-lg text-xs">
-            <button
-              type="button"
-              onClick={() => onArenaModeChange('empty')}
-              className={`px-2 py-0.5 rounded-md text-xs font-semibold transition-colors ${
-                arenaMode === 'empty'
-                  ? 'bg-white text-blue-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-              title="Kanvas Kosong (Kreasi Bebas)"
-            >
-              🎨 Bebas
-            </button>
-            <button
-              type="button"
-              onClick={() => onArenaModeChange('obstacles')}
-              className={`px-2 py-0.5 rounded-md text-xs font-semibold transition-colors ${
-                arenaMode === 'obstacles'
-                  ? 'bg-white text-orange-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-              title="Tantangan Latihan Rintangan"
-            >
-              🧱 Rintangan
-            </button>
-            <button
-              type="button"
-              onClick={() => onArenaModeChange('lines')}
-              className={`px-2 py-0.5 rounded-md text-xs font-semibold transition-colors ${
-                arenaMode === 'lines'
-                  ? 'bg-white text-indigo-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-              title="Tantangan Sensor Garis"
-            >
-              〰️ Garis
-            </button>
-          </div>
-        )}
       </div>
 
       <div className="p-3 flex-1 flex flex-col gap-2.5 overflow-y-auto">

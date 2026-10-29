@@ -9,6 +9,7 @@ import * as idLocale from 'blockly/msg/id';
 import { BlocklyWorkspaceData } from '../types/robokreasi';
 import { buildToolboxConfig } from '../components/blockly/toolboxConfig';
 import { generateProgramCode } from '../components/blockly/generators';
+import { sanitizeWorkspaceData } from '../lib/projectStorage';
 
 // Set bahasa Indonesia untuk semua pesan Blockly
 Blockly.setLocale(idLocale as unknown as Record<string, string>);
@@ -281,7 +282,8 @@ export function useBlocklyWorkspace(): UseBlocklyWorkspaceReturn {
     const workspace = workspaceInstanceRef.current;
     if (!workspace) return false;
     try {
-      Blockly.serialization.workspaces.load(data, workspace);
+      const sanitized = sanitizeWorkspaceData(data);
+      Blockly.serialization.workspaces.load(sanitized, workspace);
       return true;
     } catch (err) {
       console.error('[RoboKreasi] Gagal memuat workspace:', err);

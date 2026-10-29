@@ -146,7 +146,8 @@ export function importProjectFromSelectedFile(
     // Semua validasi lulus — bersihkan blok lama dan muat ke workspace
     try {
       workspace.clear();
-      Blockly.serialization.workspaces.load(project.workspace, workspace);
+      const sanitized = sanitizeWorkspaceData(project.workspace);
+      Blockly.serialization.workspaces.load(sanitized, workspace);
       onResult({ success: true, projectName: project.projectName });
     } catch (err) {
       onResult({
@@ -267,6 +268,63 @@ function collectBlockTypes(blocks: unknown[], unknownTypes: string[]): void {
 // ─── Loader dari Proyek Contoh (dari backend) ─────────────────────────────────
 
 /**
+ * Membersihkan data workspace untuk kompatibilitas versi:
+ * Menghapus input 'DEGREES' dari blok motion_turn_right / motion_turn_left
+ * agar tidak terjadi error missing connection saat memuat proyek lama.
+ */
+export function sanitizeWorkspaceData(data: BlocklyWorkspaceData): BlocklyWorkspaceData {
+  if (!data || typeof data !== 'object') return data;
+
+  try {
+    const cloned = JSON.parse(JSON.stringify(data)) as Record<string, unknown>;
+    const blocksObj = cloned['blocks'] as Record<string, unknown> | undefined;
+    if (!blocksObj || !Array.isArray(blocksObj['blocks'])) return cloned as unknown as BlocklyWorkspaceData;
+
+    const cleanBlock = (block: unknown) => {
+      if (!block || typeof block !== 'object') return;
+      const b = block as Record<string, unknown>;
+
+      if (
+        b['type'] === BLOCK_TYPES.MOTION_TURN_RIGHT ||
+        b['type'] === BLOCK_TYPES.MOTION_TURN_LEFT
+      ) {
+        if (b['inputs'] && typeof b['inputs'] === 'object') {
+          const inputs = b['inputs'] as Record<string, unknown>;
+          delete inputs['DEGREES'];
+          if (Object.keys(inputs).length === 0) {
+            delete b['inputs'];
+          }
+        }
+      }
+
+      if (b['inputs'] && typeof b['inputs'] === 'object') {
+        const inputs = b['inputs'] as Record<string, unknown>;
+        for (const key of Object.keys(inputs)) {
+          const val = inputs[key] as Record<string, unknown>;
+          if (val && typeof val === 'object') {
+            if (val['block']) cleanBlock(val['block']);
+            if (val['shadow']) cleanBlock(val['shadow']);
+          }
+        }
+      }
+
+      if (b['next'] && typeof b['next'] === 'object') {
+        const next = b['next'] as Record<string, unknown>;
+        if (next['block']) cleanBlock(next['block']);
+      }
+    };
+
+    for (const block of blocksObj['blocks']) {
+      cleanBlock(block);
+    }
+
+    return cloned as unknown as BlocklyWorkspaceData;
+  } catch {
+    return data;
+  }
+}
+
+/**
  * Memuat proyek contoh dari backend ke workspace.
  * workspace_json sudah tervalidasi oleh backend.
  */
@@ -282,7 +340,8 @@ export function loadExampleProject(
 
     // Bersihkan workspace terlebih dahulu agar blok lama tidak menumpuk
     workspace.clear();
-    Blockly.serialization.workspaces.load(workspaceData, workspace);
+    const sanitized = sanitizeWorkspaceData(workspaceData);
+    Blockly.serialization.workspaces.load(sanitized, workspace);
     return { success: true };
   } catch (err) {
     return {
