@@ -20,6 +20,7 @@ interface ProgramToolbarProps {
   onExport: (name: string) => void;
   onImport: () => void;
   onProjectNameChange: (name: string) => void;
+  onOpenGuide?: () => void;
 }
 
 export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
@@ -36,6 +37,7 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
   onExport,
   onImport,
   onProjectNameChange,
+  onOpenGuide,
 }) => {
   const [isEditingName, setIsEditingName] = useState(false);
   const [tempName, setTempName] = useState(projectName);
@@ -95,6 +97,7 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
         {/* Tombol Mulai / Berhenti */}
         {isRunning ? (
           <button
+            id="btn-stop-program"
             onClick={onStop}
             className="flex items-center gap-1.5 px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg transition-colors shadow-md"
             title="Hentikan program (Berhenti)"
@@ -104,6 +107,7 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
           </button>
         ) : (
           <button
+            id="btn-run-program"
             onClick={onRun}
             className="flex items-center gap-1.5 px-4 py-2 bg-green-500 hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-colors shadow-md"
             title="Jalankan program (Mulai)"
@@ -149,6 +153,7 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
 
         {/* Simpan dan Buka */}
         <button
+          id="btn-save-project"
           onClick={handleExport}
           className="flex items-center gap-1.5 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-colors"
           title="Simpan proyek ke file JSON"
@@ -157,6 +162,7 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
           <span>Simpan</span>
         </button>
         <button
+          id="btn-open-project"
           onClick={onImport}
           className="flex items-center gap-1.5 px-3 py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold rounded-lg transition-colors"
           title="Buka proyek dari file JSON"
@@ -164,6 +170,21 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
           <span>📂</span>
           <span>Buka</span>
         </button>
+
+        {/* Tombol Panduan jika tersedia */}
+        {onOpenGuide && (
+          <>
+            <div className="h-8 w-px bg-gray-300" />
+            <button
+              onClick={onOpenGuide}
+              className="flex items-center gap-1.5 px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors shadow-sm ml-auto"
+              title="Buka Panduan Belajar"
+            >
+              <span>📖</span>
+              <span>Panduan</span>
+            </button>
+          </>
+        )}
       </div>
 
       {/* Pesan Error */}

@@ -146,7 +146,7 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
   const svgRef = useRef<SVGSVGElement>(null);
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-xl shadow-md overflow-hidden">
+    <div id="robot-simulator" className="flex flex-col h-full bg-white rounded-xl shadow-md overflow-hidden">
       {/* Header simulator */}
       <div className="flex items-center justify-between px-4 py-2 bg-gray-800 text-white">
         <span className="font-bold text-sm">🤖 Simulator Robot</span>

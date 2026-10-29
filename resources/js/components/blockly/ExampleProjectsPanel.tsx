@@ -13,11 +13,17 @@ interface ExampleProjectsPanelProps {
   onToggle?: () => void;
 }
 
-const DIFFICULTY_CONFIG = {
+const DIFFICULTY_CONFIG: Record<string, { label: string; color: string; icon: string }> = {
   mudah: { label: 'Mudah', color: 'bg-green-100 text-green-700', icon: '⭐' },
+  pemula: { label: 'Pemula', color: 'bg-green-100 text-green-700', icon: '⭐' },
+  beginner: { label: 'Pemula', color: 'bg-green-100 text-green-700', icon: '⭐' },
   sedang: { label: 'Sedang', color: 'bg-yellow-100 text-yellow-700', icon: '⭐⭐' },
+  menengah: { label: 'Menengah', color: 'bg-yellow-100 text-yellow-700', icon: '⭐⭐' },
+  intermediate: { label: 'Menengah', color: 'bg-yellow-100 text-yellow-700', icon: '⭐⭐' },
   sulit: { label: 'Sulit', color: 'bg-red-100 text-red-700', icon: '⭐⭐⭐' },
-} as const;
+  mahir: { label: 'Mahir', color: 'bg-red-100 text-red-700', icon: '⭐⭐⭐' },
+  advanced: { label: 'Mahir', color: 'bg-red-100 text-red-700', icon: '⭐⭐⭐' },
+};
 
 export const ExampleProjectsPanel: React.FC<ExampleProjectsPanelProps> = ({
   projects,

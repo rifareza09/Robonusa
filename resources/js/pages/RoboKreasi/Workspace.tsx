@@ -29,11 +29,12 @@ const Workspace: React.FC<WorkspacePageProps> = ({
   blockCategories: _blockCategories = [],
   blockDefinitions: _blockDefinitions = [],
   exampleProjects = [],
-  guides: _guides = [],
+  guides = [],
 }) => {
   const [projectName, setProjectName] = useState('Proyek Saya');
   const [notificationMessage, setNotificationMessage] = useState<string | null>(null);
   const [isExamplesPanelCollapsed, setIsExamplesPanelCollapsed] = useState(false);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
 
   // Blockly workspace
   const {
@@ -168,6 +169,7 @@ const Workspace: React.FC<WorkspacePageProps> = ({
             onExport={handleExport}
             onImport={handleImport}
             onProjectNameChange={setProjectName}
+            onOpenGuide={guides.length > 0 ? () => setIsGuideOpen(true) : undefined}
           />
         </header>
 
@@ -175,7 +177,7 @@ const Workspace: React.FC<WorkspacePageProps> = ({
         <div className="flex flex-1 overflow-hidden gap-2 p-2">
           {/* Panel kiri: Proyek Contoh (opsional) */}
           {exampleProjects.length > 0 && (
-            <div className="w-56 flex-shrink-0 flex flex-col gap-2 overflow-y-auto">
+            <div id="block-category-panel" className="w-56 flex-shrink-0 flex flex-col gap-2 overflow-y-auto">
               <ExampleProjectsPanel
                 projects={exampleProjects}
                 onLoadProject={handleLoadExample}
@@ -197,6 +199,7 @@ const Workspace: React.FC<WorkspacePageProps> = ({
             </div>
             {/* Blockly injection target */}
             <div
+              id="blockly-workspace"
               ref={workspaceRef}
               className="w-full"
               style={{ height: 'calc(100% - 36px)' }}
@@ -225,6 +228,56 @@ const Workspace: React.FC<WorkspacePageProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Modal Panduan Interaktif */}
+      {isGuideOpen && guides.length > 0 && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200">
+            {/* Header Modal */}
+            <div className="p-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">📖</span>
+                <div>
+                  <h3 className="font-bold text-lg leading-tight">{guides[0].title}</h3>
+                  <p className="text-xs text-purple-200 mt-0.5">{guides[0].description}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsGuideOpen(false)}
+                className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white font-bold transition-colors"
+                title="Tutup"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* List Langkah */}
+            <div className="p-6 overflow-y-auto divide-y divide-gray-100 flex-1 space-y-4">
+              {guides[0].steps.map((step) => (
+                <div key={step.id} className="pt-4 first:pt-0 flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-bold flex items-center justify-center text-sm flex-shrink-0 mt-0.5">
+                    {step.step_number}
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-bold text-gray-800 text-sm">{step.title}</h4>
+                    <p className="text-sm text-gray-600 mt-1 leading-relaxed">{step.instruction}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Footer Modal */}
+            <div className="p-4 bg-gray-50 border-t border-gray-200 flex justify-end">
+              <button
+                onClick={() => setIsGuideOpen(false)}
+                className="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl text-sm transition-colors shadow"
+              >
+                Mengerti, Mulai Belajar! 🚀
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
