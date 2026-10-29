@@ -18,7 +18,7 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
       // ── KEJADIAN ────────────────────────────────────────────────────────
       {
         kind: 'category',
-        name: '⚡ Kejadian',
+        name: 'Kejadian',
         colour: COLORS.KEJADIAN,
         contents: [
           {
@@ -35,7 +35,7 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
       // ── GERAKAN ─────────────────────────────────────────────────────────
       {
         kind: 'category',
-        name: '🤖 Gerakan',
+        name: 'Gerakan',
         colour: COLORS.GERAKAN,
         contents: [
           {
@@ -108,7 +108,7 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
       // ── KONTROL ─────────────────────────────────────────────────────────
       {
         kind: 'category',
-        name: '🔄 Kontrol',
+        name: 'Kontrol',
         colour: COLORS.KONTROL,
         contents: [
           {
@@ -141,7 +141,7 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
       // ── OPERATOR ─────────────────────────────────────────────────────────
       {
         kind: 'category',
-        name: '🔢 Operator',
+        name: 'Operator',
         colour: COLORS.OPERATOR,
         contents: [
           {
@@ -202,7 +202,7 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
       // ── VARIABEL ─────────────────────────────────────────────────────────
       {
         kind: 'category',
-        name: '📦 Variabel',
+        name: 'Variabel',
         colour: COLORS.VARIABEL,
         contents: [
           {
@@ -233,7 +233,7 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
       // ── SENSOR ───────────────────────────────────────────────────────────
       {
         kind: 'category',
-        name: '📡 Sensor',
+        name: 'Sensor',
         colour: COLORS.SENSOR,
         contents: [
           {
@@ -250,7 +250,7 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
       // ── TAMPILAN ─────────────────────────────────────────────────────────
       {
         kind: 'category',
-        name: '💬 Tampilan',
+        name: 'Tampilan',
         colour: COLORS.TAMPILAN,
         contents: [
           {
@@ -271,7 +271,7 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
       // ── SUARA ────────────────────────────────────────────────────────────
       {
         kind: 'category',
-        name: '🔔 Suara',
+        name: 'Suara',
         colour: COLORS.SUARA,
         contents: [
           {
