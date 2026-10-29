@@ -52,6 +52,48 @@ describe('validateProgram', () => {
   });
 });
 
+describe('ProgramRuntime eksekusi kode', () => {
+  it('harus dapat mengeksekusi program dengan variabel tanpa error duplikasi __vars__', async () => {
+    const { ProgramRuntime } = await import('../lib/programRuntime');
+
+    let finalStatus = '';
+    const runtime = new ProgramRuntime((status) => {
+      finalStatus = status;
+    });
+
+    const displayed: string[] = [];
+    runtime.connectSimulator({
+      maju: async () => {},
+      mundur: async () => {},
+      belokKiri: async () => {},
+      belokKanan: async () => {},
+      berhenti: async () => {},
+      aturKecepatan: () => {},
+      cekRintangan: () => false,
+      cekGaris: () => false,
+      tampilkanTeks: (t) => { displayed.push(t); },
+      mainkanNada: async () => {},
+      hentikanSuara: () => {},
+      tidur: async () => {},
+      cekDibatalkan: () => {},
+    });
+
+    const code = `
+async function __program__() {
+  __vars__['hitung'] = 3;
+  __vars__['hitung'] = (__vars__['hitung'] || 0) + 2;
+  __robot__.tampilkanTeks(String(__vars__['hitung']));
+}
+await __program__();
+`;
+
+    await runtime.run(code, [BLOCK_TYPES.EVENT_START], [BLOCK_TYPES.EVENT_START, BLOCK_TYPES.VARIABLE_SET, BLOCK_TYPES.DISPLAY_TEXT]);
+
+    expect(displayed).toEqual(['5']);
+    expect(finalStatus).toBe('finished');
+  });
+});
+
 describe('BLOCK_TYPES konstanta', () => {
   it('harus memiliki semua jenis blok yang diperlukan', () => {
     expect(BLOCK_TYPES.EVENT_START).toBe('event_start');

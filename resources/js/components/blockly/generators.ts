@@ -336,16 +336,11 @@ function wrapWithSafetyHeader(code: string): string {
 // Dihasilkan otomatis — jangan edit manual
 "use strict";
 
-// Inisialisasi variabel program
-const __vars__ = {};
-let __iterasi__ = 0;
-const __maxIterasi__ = __config__.maxIterations;
-
 // Jalankan program
 try {
 ${code}
 } catch (e) {
-  if (e.message === '__PROGRAM_CANCELLED__') {
+  if (e && e.message === '__PROGRAM_CANCELLED__') {
     // Program dihentikan oleh pengguna — bukan error
   } else {
     throw e;
