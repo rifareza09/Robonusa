@@ -1,58 +1,262 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# RoboKreasi — Platform Web Pembelajaran Robotika Edukatif
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+RoboKreasi adalah platform pembelajaran robotika edukatif berbahasa Indonesia berbasis web untuk siswa jenjang SD–SMP. Platform ini memadukan pemrograman visual (*block coding* berbasis Google Blockly), simulator virtual robot interaktif, dan materi pembelajaran berbasis proyek.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🛠️ Stack Teknologi
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Backend:** Laravel 11 / 13 (PHP 8.3 / 8.4)
+- **Frontend:** React + TypeScript, Inertia.js, Vite, Tailwind CSS
+- **Block Coding:** Google Blockly
+- **Database:** MySQL 8.0+
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 🚀 Panduan Instalasi & Setup Lokal
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 1. Prasyarat Sistem
+- PHP >= 8.3 (dengan ekstensi `pdo_mysql`, `pdo_sqlite`, `mbstring`, `json`, `intl`)
+- Composer
+- Node.js >= 20 & npm
+- MySQL Server 8.0+ (misal via Herd, Laragon, atau XAMPP)
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
+### 2. Kloning & Pengaturan Branch
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/rifareza09/Robonusa.git
+cd Robonusa
+git checkout feature/backend-database
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 3. Konfigurasi Environment (`.env`)
+Salin file `.env.example` ke `.env` jika belum ada:
+```bash
+cp .env.example .env
+```
+Sesuaikan konfigurasi database MySQL:
+```ini
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=robokreasi
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-## Contributing
+Pastikan database `robokreasi` telah dibuat di MySQL:
+```sql
+CREATE DATABASE IF NOT EXISTS robokreasi CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 4. Instalasi Dependensi & Kunci Aplikasi
+```bash
+composer install
+npm install
+php artisan key:generate
+```
 
-## Code of Conduct
+### 5. Menjalankan Migrasi & Seeder Database
+Jalankan migrasi untuk membuat seluruh tabel platform:
+```bash
+php artisan migrate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Jalankan seeder untuk mengisi data platform awal (kategori, metadata blok, proyek contoh, panduan interaktif):
+```bash
+php artisan db:seed
+```
 
-## Security Vulnerabilities
+> **Catatan Idempotensi Seeder:**  
+> Seluruh seeder (`BlockCategorySeeder`, `BlockDefinitionSeeder`, `ExampleProjectSeeder`, `GuideSeeder`) menggunakan pola `updateOrCreate`. Perintah `php artisan db:seed` dapat dijalankan berulang kali tanpa risiko duplikasi data.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 6. Menjalankan Server Pengembangan
+```bash
+# Terminal 1: Backend Laravel
+php artisan serve
 
-## License
+# Terminal 2: Vite Dev Server
+npm run dev
+```
+Buka browser pada: `http://127.0.0.1:8000/robokreasi`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## 🗄️ Skema Database Platform
+
+Platform menggunakan 5 tabel utama:
+
+1. **`block_categories`**
+   - Mengelompokkan blok berdasarkan fungsionalitas (*Kejadian*, *Gerakan*, *Kontrol*, *Operator*, *Variabel*, *Sensor*, *Tampilan*, *Suara*).
+   - Kolom: `id`, `name`, `slug` (unik), `description`, `color_hex`, `sort_order`, `is_active`, `timestamps`.
+
+2. **`block_definitions`**
+   - Menyimpan metadata definisi blok yang digunakan oleh Blockly di frontend.
+   - Kolom: `id`, `block_category_id` (FK cascade ke `block_categories`), `block_type` (unik), `display_name`, `description`, `block_shape`, `parameter_schema` (JSON), `sort_order`, `is_active`, `timestamps`.
+
+3. **`example_projects`**
+   - Proyek contoh bawaan platform untuk dipelajari siswa.
+   - Kolom: `id`, `name`, `slug` (unik), `description`, `difficulty` (`pemula`, `menengah`, `mahir`), `thumbnail`, `workspace_json` (JSON serialisasi Blockly), `sort_order`, `is_active`, `timestamps`.
+
+4. **`guides`**
+   - Modul panduan interaktif onboarding.
+   - Kolom: `id`, `title`, `description`, `is_active`, `timestamps`.
+
+5. **`guide_steps`**
+   - Langkah-langkah detail onboarding yang ditargetkan ke elemen UI frontend.
+   - Kolom: `id`, `guide_id` (FK cascade ke `guides`), `step_number`, `title`, `instruction`, `target_element`, `timestamps`.
+
+---
+
+## 📡 Kontrak Integrasi Frontend (Developer A & Developer B)
+
+### A. Integrasi Halaman Workspace via Inertia.js
+
+- **Route:** `GET /robokreasi`
+- **Halaman Inertia:** `RoboKreasi/Workspace`
+- **Props yang diterima Frontend:**
+
+| Nama Prop | Tipe Data | Deskripsi |
+| :--- | :--- | :--- |
+| `blockCategories` | `Array<BlockCategory>` | Daftar kategori blok aktif terurut |
+| `blockDefinitions`| `Array<BlockDefinition>` | Seluruh metadata blok aktif |
+| `exampleProjects` | `Array<ExampleProject>` | Proyek contoh beserta `workspace_json` |
+| `guides` | `Array<Guide>` | Panduan onboarding beserta `steps` terurut |
+
+---
+
+### B. Endpoint REST API JSON
+
+Backend juga menyediakan endpoint JSON mandiri dengan format respons seragam:
+
+#### 1. Kategori Blok
+- **URL:** `GET /api/robokreasi/categories`
+- **Query Params:**
+  - `include_blocks` (opsional, boolean: `true`/`false`): Jika `true`, menyertakan relasi blok di tiap kategori.
+- **Respons (200 OK):**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "name": "Kejadian",
+      "slug": "kejadian",
+      "description": "Blok pemantik awal jalannya instruksi program robot.",
+      "color_hex": "#FFBF00",
+      "sort_order": 1
+    }
+  ]
+}
+```
+
+#### 2. Definisi Blok
+- **URL:** `GET /api/robokreasi/blocks`
+- **Query Params:**
+  - `category` (opsional): Filter berdasarkan ID atau slug kategori (contoh: `?category=gerakan`).
+- **Respons (200 OK):**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 3,
+      "block_category_id": 2,
+      "block_type": "motion_forward",
+      "display_name": "Maju [langkah] langkah",
+      "description": "Menggerakkan robot ke arah depan sejumlah langkah.",
+      "block_shape": "statement",
+      "parameter_schema": {
+        "steps": { "type": "number", "default": 1, "min": 1, "max": 100 }
+      },
+      "sort_order": 1
+    }
+  ]
+}
+```
+
+#### 3. Proyek Contoh
+- **URL Daftar:** `GET /api/robokreasi/example-projects`
+- **Query Params:**
+  - `difficulty` (opsional: `pemula`, `menengah`, `mahir` atau `beginner`, `intermediate`, `advanced`)
+  - `include_workspace` (opsional, boolean, default: `true`)
+- **URL Detail Proyek:** `GET /api/robokreasi/example-projects/{slug}`
+  - Contoh: `GET /api/robokreasi/example-projects/robot-pemilih-jalur`
+- **Respons (200 OK):**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "name": "Robot Pemilih Jalur",
+    "slug": "robot-pemilih-jalur",
+    "description": "Robot yang dapat memilih jalur berdasarkan pembacaan sensor garis...",
+    "difficulty": "pemula",
+    "thumbnail": null,
+    "workspace_json": {
+      "blocks": {
+        "languageVersion": 0,
+        "blocks": [...]
+      }
+    },
+    "sort_order": 1
+  }
+}
+```
+
+#### 4. Panduan Interaktif Onboarding
+- **URL Daftar:** `GET /api/robokreasi/guides`
+- **URL Detail:** `GET /api/robokreasi/guides/{id}`
+- **Respons (200 OK):**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "title": "Panduan Dasar Pemula RoboKreasi",
+      "description": "Pelajari antarmuka workspace, blok kode, dan cara menjalankan robot virtual.",
+      "steps": [
+        {
+          "id": 1,
+          "step_number": 1,
+          "title": "Area Kategori Blok",
+          "instruction": "Di sisi kiri terdapat palet kategori seperti Kejadian, Gerakan, dan Sensor...",
+          "target_element": "#blockly-toolbox"
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## 🧪 Pengujian Otomatis (Automated Testing)
+
+Platform dilengkapi suite pengujian otomatis menggunakan **Pest PHP**:
+
+```bash
+php artisan test
+```
+
+Cakupan pengujian meliputi:
+1. `RoboKreasiWorkspaceTest`: Memverifikasi render Inertia dan integritas 4 props utama.
+2. `BlockCategoryApiTest`: Memverifikasi endpoint kategori dan eager loading blok.
+3. `BlockDefinitionApiTest`: Memverifikasi endpoint blok dan filter kategori.
+4. `ExampleProjectApiTest`: Memverifikasi listing proyek, detail proyek, filter tingkat kesulitan, dan validasi slug.
+5. `GuideApiTest`: Memverifikasi onboarding guide dan urutan langkah (*step_number*).
+6. `DatabaseSeederTest`: Memverifikasi idempotensi seeder (bebas duplikasi saat dijalankan berulang) dan integritas relasi Eloquent (`hasMany`, `belongsTo`, array casts).
+
+---
+
+## 📌 Catatan Koordinasi Git & Tim
+
+Sesuai aturan kerja paralel:
+- Seluruh pekerjaan backend berada di branch `feature/backend-database`.
+- Kepemilikan file backend:
+  - `app/Models/*`
+  - `app/Http/Controllers/*`
+  - `database/migrations/*`
+  - `database/seeders/*`
+  - `tests/*`
+- File frontend inti milik Developer A tidak diubah sembarangan tanpa koordinasi.

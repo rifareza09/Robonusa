@@ -2,24 +2,25 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
+     *
+     * Urutan seeder penting:
+     * 1. BlockCategorySeeder harus dijalankan sebelum BlockDefinitionSeeder
+     *    karena definisi blok membutuhkan foreign key ke kategori.
+     * 2. GuideSeeder harus dijalankan sebelum atau setelah proyek (tidak ada dependensi).
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            BlockCategorySeeder::class,
+            BlockDefinitionSeeder::class,
+            ExampleProjectSeeder::class,
+            GuideSeeder::class,
         ]);
     }
 }
