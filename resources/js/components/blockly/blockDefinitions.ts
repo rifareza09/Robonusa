@@ -7,16 +7,16 @@
 import * as Blockly from 'blockly';
 import { BLOCK_TYPES } from '../../types/robokreasi';
 
-// Warna kategori resmi sesuai Kit Desain RoboNusa Figma ("Kit desain • RoboNusa.png" & "Pustaka 8 kategori.png")
+// Warna kategori resmi sesuai Figma Racero Scratch ("media_1793274976879_5060280a.png")
 const COLORS = {
-  KEJADIAN: '#2563EB',  // Figma: Biru utama (#2563EB)
-  GERAKAN: '#F59E0B',   // Figma: Oranye/Amber hangat (#F59E0B)
-  KONTROL: '#7C3AED',   // Figma: Ungu (#7C3AED)
-  OPERATOR: '#16A34A',  // Figma: Hijau (#16A34A)
-  VARIABEL: '#C2410C',  // Figma: Cokelat/Oranye kemerahan (#C2410C)
-  SENSOR: '#0891B2',    // Figma: Biru toska/Cyan (#0891B2)
-  TAMPILAN: '#BE185D',  // Figma: Magenta pekat (#BE185D)
-  SUARA: '#6366F1',     // Figma: Indigo (#6366F1)
+  GERAKAN: '#2563EB',   // Figma Racero: Biru (#2563EB)
+  KONTROL: '#D97706',   // Figma Racero: Amber / Cokelat Keemasan (#D97706)
+  SENSOR: '#7C3AED',    // Figma Racero: Ungu (#7C3AED)
+  OPERATOR: '#DB2777',  // Figma Racero: Magenta / Logika (#DB2777)
+  VARIABEL: '#EA580C',  // Figma Racero: Oranye Kemerahan (#EA580C)
+  KEJADIAN: '#0D9488',  // Figma Racero: Hijau Toska / Teal (#0D9488)
+  TAMPILAN: '#8B5CF6',  // Figma Racero: Violet (#8B5CF6)
+  SUARA: '#6366F1',     // Figma Racero: Indigo (#6366F1)
 } as const;
 
 // ─── KEJADIAN ─────────────────────────────────────────────────────────────────
@@ -66,14 +66,13 @@ Blockly.Blocks[BLOCK_TYPES.MOTION_FORWARD] = {
   init(this: Blockly.Block) {
     this.appendValueInput('STEPS')
       .setCheck('Number')
-      .appendField('➡️')
-      .appendField('Maju');
-    this.appendDummyInput().appendField('langkah');
+      .appendField('Maju sejauh');
+    this.appendDummyInput().appendField('cm');
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(COLORS.GERAKAN);
-    this.setTooltip('Robot bergerak maju sejumlah langkah yang ditentukan.');
+    this.setTooltip('Robot bergerak maju sejauh nilai yang ditentukan.');
     this.setHelpUrl('');
   },
 };
@@ -82,14 +81,13 @@ Blockly.Blocks[BLOCK_TYPES.MOTION_BACKWARD] = {
   init(this: Blockly.Block) {
     this.appendValueInput('STEPS')
       .setCheck('Number')
-      .appendField('⬅️')
-      .appendField('Mundur');
-    this.appendDummyInput().appendField('langkah');
+      .appendField('Mundur sejauh');
+    this.appendDummyInput().appendField('cm');
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(COLORS.GERAKAN);
-    this.setTooltip('Robot bergerak mundur sejumlah langkah yang ditentukan.');
+    this.setTooltip('Robot bergerak mundur sejauh nilai yang ditentukan.');
     this.setHelpUrl('');
   },
 };
@@ -99,13 +97,13 @@ Blockly.Blocks[BLOCK_TYPES.MOTION_TURN_LEFT] = {
     this.appendValueInput('DEGREES')
       .setCheck('Number')
       .appendField('↰')
-      .appendField('Belok Kiri');
-    this.appendDummyInput().appendField('derajat');
+      .appendField('Putar ke kiri');
+    this.appendDummyInput().appendField('°');
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(COLORS.GERAKAN);
-    this.setTooltip('Robot berputar ke kiri sejumlah derajat yang ditentukan.');
+    this.setTooltip('Robot berputar ke kiri.');
     this.setHelpUrl('');
   },
 };
@@ -115,13 +113,13 @@ Blockly.Blocks[BLOCK_TYPES.MOTION_TURN_RIGHT] = {
     this.appendValueInput('DEGREES')
       .setCheck('Number')
       .appendField('↱')
-      .appendField('Belok Kanan');
-    this.appendDummyInput().appendField('derajat');
+      .appendField('Putar ke kanan');
+    this.appendDummyInput().appendField('°');
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(COLORS.GERAKAN);
-    this.setTooltip('Robot berputar ke kanan sejumlah derajat yang ditentukan.');
+    this.setTooltip('Robot berputar ke kanan.');
     this.setHelpUrl('');
   },
 };
@@ -129,7 +127,7 @@ Blockly.Blocks[BLOCK_TYPES.MOTION_TURN_RIGHT] = {
 Blockly.Blocks[BLOCK_TYPES.MOTION_STOP] = {
   init(this: Blockly.Block) {
     this.appendDummyInput()
-      .appendField('🛑')
+      .appendField('○')
       .appendField('Berhenti');
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);

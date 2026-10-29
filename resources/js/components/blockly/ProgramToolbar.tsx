@@ -109,6 +109,15 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
             <span className="text-xl font-extrabold tracking-tight text-blue-600 font-sans">
               RoboNusa!
             </span>
+            <div className="h-4 w-px bg-gray-200 mx-1 hidden sm:block" />
+            <a
+              href="/"
+              className="flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg transition-colors shadow-2xs"
+              title="Kembali ke Beranda"
+            >
+              <span>←</span>
+              <span>Beranda</span>
+            </a>
           </div>
 
           <div className="h-6 w-px bg-gray-200 hidden sm:block" />

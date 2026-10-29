@@ -23,9 +23,9 @@ const RoboKreasiTheme = Blockly.Theme.defineTheme('robokreasi_figma', {
   base: Blockly.Themes.Zelos,
   componentStyles: {
     workspaceBackgroundColour: '#F8FAFC',
-    toolboxBackgroundColour: '#FFFFFF',
+    toolboxBackgroundColour: '#F8FAFC',
     toolboxForegroundColour: '#1E293B',
-    flyoutBackgroundColour: '#F8FAFC',
+    flyoutBackgroundColour: '#FFFFFF',
     flyoutForegroundColour: '#1E293B',
     flyoutOpacity: 1,
     scrollbarColour: '#CBD5E1',

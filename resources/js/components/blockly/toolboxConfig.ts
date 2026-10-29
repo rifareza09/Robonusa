@@ -1,40 +1,25 @@
 /**
  * RoboKreasi — Definisi Toolbox Blockly
  * Mendefinisikan kategori dan blok yang tersedia di panel kiri.
- * Format toolbox menggunakan XML string yang kompatibel dengan Blockly 13.x
+ * Format toolbox menggunakan JSON format yang kompatibel dengan Blockly 13.x
+ * Mengacu pada desain Figma Racero Scratch ("media_1793274976879_5060280a.png")
  */
 
 import { BLOCK_TYPES } from '../../types/robokreasi';
 import { COLORS } from './blockDefinitions';
 
 /**
- * Menghasilkan konfigurasi toolbox sebagai objek JSON (Blockly 10+ mendukung format JSON)
+ * Menghasilkan konfigurasi toolbox sebagai objek JSON
  * Dikompilasi dari blok yang terdaftar di blockDefinitions.ts
  */
 export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
   return {
     kind: 'categoryToolbox',
     contents: [
-      // ── KEJADIAN ────────────────────────────────────────────────────────
+      // ── GERAKAN (Utama di Figma: Biru #2563EB) ───────────────────────────
       {
         kind: 'category',
-        name: 'Kejadian',
-        colour: COLORS.KEJADIAN,
-        contents: [
-          {
-            kind: 'block',
-            type: BLOCK_TYPES.EVENT_START,
-          },
-          {
-            kind: 'block',
-            type: BLOCK_TYPES.EVENT_KEY_PRESSED,
-          },
-        ],
-      },
-
-      // ── GERAKAN ─────────────────────────────────────────────────────────
-      {
-        kind: 'category',
+        id: 'cat_gerakan',
         name: 'Gerakan',
         colour: COLORS.GERAKAN,
         contents: [
@@ -45,7 +30,7 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
               STEPS: {
                 block: {
                   type: BLOCK_TYPES.OPERATOR_NUMBER,
-                  fields: { NUM: 1 },
+                  fields: { NUM: 10 },
                 },
               },
             },
@@ -57,14 +42,14 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
               STEPS: {
                 block: {
                   type: BLOCK_TYPES.OPERATOR_NUMBER,
-                  fields: { NUM: 1 },
+                  fields: { NUM: 10 },
                 },
               },
             },
           },
           {
             kind: 'block',
-            type: BLOCK_TYPES.MOTION_TURN_LEFT,
+            type: BLOCK_TYPES.MOTION_TURN_RIGHT,
             inputs: {
               DEGREES: {
                 block: {
@@ -76,7 +61,7 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
           },
           {
             kind: 'block',
-            type: BLOCK_TYPES.MOTION_TURN_RIGHT,
+            type: BLOCK_TYPES.MOTION_TURN_LEFT,
             inputs: {
               DEGREES: {
                 block: {
@@ -105,9 +90,10 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
         ],
       },
 
-      // ── KONTROL ─────────────────────────────────────────────────────────
+      // ── KONTROL (Figma: Amber #D97706) ───────────────────────────────────
       {
         kind: 'category',
+        id: 'cat_kontrol',
         name: 'Kontrol',
         colour: COLORS.KONTROL,
         contents: [
@@ -118,7 +104,7 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
               TIMES: {
                 block: {
                   type: BLOCK_TYPES.OPERATOR_NUMBER,
-                  fields: { NUM: 10 },
+                  fields: { NUM: 3 },
                 },
               },
             },
@@ -138,10 +124,29 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
         ],
       },
 
-      // ── OPERATOR ─────────────────────────────────────────────────────────
+      // ── SENSOR (Figma: Ungu #7C3AED) ─────────────────────────────────────
       {
         kind: 'category',
-        name: 'Operator',
+        id: 'cat_sensor',
+        name: 'Sensor',
+        colour: COLORS.SENSOR,
+        contents: [
+          {
+            kind: 'block',
+            type: BLOCK_TYPES.SENSOR_OBSTACLE,
+          },
+          {
+            kind: 'block',
+            type: BLOCK_TYPES.SENSOR_LINE,
+          },
+        ],
+      },
+
+      // ── LOGIKA / OPERATOR (Figma: Magenta #DB2777) ───────────────────────
+      {
+        kind: 'category',
+        id: 'cat_operator',
+        name: 'Logika (Operator)',
         colour: COLORS.OPERATOR,
         contents: [
           {
@@ -199,9 +204,10 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
         ],
       },
 
-      // ── VARIABEL ─────────────────────────────────────────────────────────
+      // ── VARIABEL (Figma: Oranye Kemerahan #EA580C) ───────────────────────
       {
         kind: 'category',
+        id: 'cat_variabel',
         name: 'Variabel',
         colour: COLORS.VARIABEL,
         contents: [
@@ -230,26 +236,28 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
         ],
       },
 
-      // ── SENSOR ───────────────────────────────────────────────────────────
+      // ── KEJADIAN (Figma: Teal #0D9488) ───────────────────────────────────
       {
         kind: 'category',
-        name: 'Sensor',
-        colour: COLORS.SENSOR,
+        id: 'cat_kejadian',
+        name: 'Kejadian',
+        colour: COLORS.KEJADIAN,
         contents: [
           {
             kind: 'block',
-            type: BLOCK_TYPES.SENSOR_OBSTACLE,
+            type: BLOCK_TYPES.EVENT_START,
           },
           {
             kind: 'block',
-            type: BLOCK_TYPES.SENSOR_LINE,
+            type: BLOCK_TYPES.EVENT_KEY_PRESSED,
           },
         ],
       },
 
-      // ── TAMPILAN ─────────────────────────────────────────────────────────
+      // ── TAMPILAN (Figma: Violet #8B5CF6) ─────────────────────────────────
       {
         kind: 'category',
+        id: 'cat_tampilan',
         name: 'Tampilan',
         colour: COLORS.TAMPILAN,
         contents: [
@@ -268,9 +276,10 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
         ],
       },
 
-      // ── SUARA ────────────────────────────────────────────────────────────
+      // ── SUARA (Figma: Indigo #6366F1) ────────────────────────────────────
       {
         kind: 'category',
+        id: 'cat_suara',
         name: 'Suara',
         colour: COLORS.SUARA,
         contents: [
@@ -290,4 +299,3 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
 
 // Import Blockly untuk tipe return
 import type * as Blockly from 'blockly/core';
-
