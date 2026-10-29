@@ -22,7 +22,10 @@ interface ProgramToolbarProps {
   onProjectNameChange: (name: string) => void;
   onOpenGuide?: () => void;
   onOpenExamplesModal?: () => void;
+  onNavigateHome?: () => void;
   isSavedLocally?: boolean;
+  isDarkMode?: boolean;
+  onToggleDarkMode?: () => void;
 }
 
 export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
@@ -41,7 +44,10 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
   onProjectNameChange,
   onOpenGuide,
   onOpenExamplesModal,
+  onNavigateHome,
   isSavedLocally = false,
+  isDarkMode = false,
+  onToggleDarkMode,
 }) => {
   const [isEditingName, setIsEditingName] = useState(false);
   const [tempName, setTempName] = useState(projectName);
@@ -110,14 +116,26 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
               RoboNusa!
             </span>
             <div className="h-4 w-px bg-gray-200 mx-1 hidden sm:block" />
-            <a
-              href="/"
-              className="flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg transition-colors shadow-2xs"
-              title="Kembali ke Beranda"
-            >
-              <span>←</span>
-              <span>Beranda</span>
-            </a>
+            {onNavigateHome ? (
+              <button
+                type="button"
+                onClick={onNavigateHome}
+                className="flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg transition-colors shadow-2xs cursor-pointer"
+                title="Kembali ke Beranda Racero Scratch"
+              >
+                <span>←</span>
+                <span>Beranda</span>
+              </button>
+            ) : (
+              <a
+                href="/beranda"
+                className="flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg transition-colors shadow-2xs"
+                title="Kembali ke Beranda Racero Scratch"
+              >
+                <span>←</span>
+                <span>Beranda</span>
+              </a>
+            )}
           </div>
 
           <div className="h-6 w-px bg-gray-200 hidden sm:block" />
@@ -180,12 +198,25 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
             id="btn-save-project"
             type="button"
             onClick={handleExport}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition-colors shadow-blue-500/20"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition-colors shadow-blue-500/20 cursor-pointer"
             title="Unduh proyek ke komputer"
           >
             <span>📥</span>
             <span>Simpan proyek</span>
           </button>
+
+          {/* Tombol Mode Gelap / Terang Sesuai Figma */}
+          {onToggleDarkMode && (
+            <button
+              type="button"
+              onClick={onToggleDarkMode}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 text-xs font-semibold rounded-xl transition-colors shadow-sm cursor-pointer"
+              title={isDarkMode ? 'Beralih ke mode terang' : 'Beralih ke mode gelap'}
+            >
+              <span>{isDarkMode ? '☀️' : '🌙'}</span>
+              <span>{isDarkMode ? 'Mode terang' : 'Mode gelap'}</span>
+            </button>
+          )}
 
           {/* Tombol Panduan */}
           {onOpenGuide && (

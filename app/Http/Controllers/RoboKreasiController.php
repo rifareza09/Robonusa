@@ -13,6 +13,14 @@ use Inertia\Response;
 class RoboKreasiController extends Controller
 {
     /**
+     * Menampilkan halaman depan Racero Scratch (Landing Page).
+     */
+    public function home(): Response
+    {
+        return Inertia::render('RoboKreasi/Home');
+    }
+
+    /**
      * Menampilkan halaman workspace RoboKreasi via Inertia.js.
      * Mengirim props sesuai kontrak resmi:
      * - blockCategories

@@ -20,6 +20,8 @@ import { CodeViewerPanel } from '../../components/blockly/CodeViewerPanel';
 import { SaveProjectModal } from '../../components/modals/SaveProjectModal';
 import { OpenProjectModal } from '../../components/modals/OpenProjectModal';
 import { ExampleProjectsModal } from '../../components/modals/ExampleProjectsModal';
+import { InteractiveTourModal } from '../../components/modals/InteractiveTourModal';
+import { UnsavedChangesModal, type UnsavedModalMode } from '../../components/modals/UnsavedChangesModal';
 
 import {
   exportProjectAsJSON,
@@ -47,8 +49,36 @@ const Workspace: React.FC<WorkspacePageProps> = ({
   const [isExamplesModalOpen, setIsExamplesModalOpen] = useState(false);
   const [isCodeViewerOpen, setIsCodeViewerOpen] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [isTourModalOpen, setIsTourModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [generatedCode, setGeneratedCode] = useState<string>('');
   const [missionTip, setMissionTip] = useState<{ title: string; desc: string } | null>(null);
+  const [mobileTab, setMobileTab] = useState<'program' | 'simulator'>('program');
+
+  // Konfirmasi Perubahan Belum Disimpan Sesuai Figma
+  const [unsavedConfirmation, setUnsavedConfirmation] = useState<{
+    isOpen: boolean;
+    mode: UnsavedModalMode;
+    pendingAction: (() => void) | null;
+  }>({ isOpen: false, mode: 'open', pendingAction: null });
+
+  // Mode Gelap Sesuai Figma ("Ruang pemrograman • Desktop gelap.png")
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('robokreasi_theme') === 'dark';
+    }
+    return false;
+  });
+
+  const toggleDarkMode = useCallback(() => {
+    setIsDarkMode((prev) => {
+      const next = !prev;
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('robokreasi_theme', next ? 'dark' : 'light');
+      }
+      return next;
+    });
+  }, []);
 
   // Blockly workspace
   const {
@@ -153,6 +183,59 @@ const Workspace: React.FC<WorkspacePageProps> = ({
     }
   }, [workspace, resetSimulator, setArenaMode, showNotification]);
 
+  // Konfirmasi sebelum membuka proyek lain / keluar jika ada perubahan yang belum disimpan
+  const confirmIfUnsaved = useCallback(
+    (action: () => void, mode: UnsavedModalMode = 'open') => {
+      if (blockCount > 1 && !isSavedLocally) {
+        setUnsavedConfirmation({
+          isOpen: true,
+          mode,
+          pendingAction: action,
+        });
+      } else {
+        action();
+      }
+    },
+    [blockCount, isSavedLocally]
+  );
+
+  const handleNavigateHome = useCallback(() => {
+    confirmIfUnsaved(() => {
+      window.location.href = '/beranda';
+    }, 'leave');
+  }, [confirmIfUnsaved]);
+
+  // Pencarian blok di pustaka blok (interaktif)
+  const handleSearchChange = useCallback(
+    (query: string) => {
+      setSearchQuery(query);
+      if (!workspace || !query.trim()) return;
+
+      const q = query.toLowerCase().trim();
+      const toolbox = workspace.getToolbox() as { selectItemByPosition?: (idx: number) => void } | null;
+      if (!toolbox?.selectItemByPosition) return;
+
+      if (q.includes('maju') || q.includes('mundur') || q.includes('belok') || q.includes('putar') || q.includes('henti') || q.includes('gerak')) {
+        toolbox.selectItemByPosition(0);
+      } else if (q.includes('ulang') || q.includes('selamanya') || q.includes('jika') || q.includes('kontrol')) {
+        toolbox.selectItemByPosition(1);
+      } else if (q.includes('sensor') || q.includes('rintangan') || q.includes('garis')) {
+        toolbox.selectItemByPosition(2);
+      } else if (q.includes('tambah') || q.includes('kurang') || q.includes('logika') || q.includes('dan') || q.includes('atau') || q.includes('operator')) {
+        toolbox.selectItemByPosition(3);
+      } else if (q.includes('variabel') || q.includes('skor') || q.includes('hitung') || q.includes('ubah')) {
+        toolbox.selectItemByPosition(4);
+      } else if (q.includes('mulai') || q.includes('klik') || q.includes('kejadian') || q.includes('tombol')) {
+        toolbox.selectItemByPosition(5);
+      } else if (q.includes('tampil') || q.includes('teks') || q.includes('halo')) {
+        toolbox.selectItemByPosition(6);
+      } else if (q.includes('suara') || q.includes('nada') || q.includes('bip')) {
+        toolbox.selectItemByPosition(7);
+      }
+    },
+    [workspace]
+  );
+
   // Toggle panel kode teks
   const handleToggleCodeViewer = useCallback(() => {
     if (!isCodeViewerOpen) {
@@ -211,9 +294,9 @@ const Workspace: React.FC<WorkspacePageProps> = ({
       )}
 
       {/* Layout Utama Full Screen */}
-      <div className="flex flex-col h-screen bg-[#F8FAFC] text-gray-800 overflow-hidden font-sans">
+      <div className={`flex flex-col h-screen ${isDarkMode ? 'dark bg-[#0F172A] text-gray-100' : 'bg-[#F8FAFC] text-gray-800'} overflow-hidden font-sans`}>
         {/* Header & Subheader Navigasi (Sesuai Figma) */}
-        <header className="flex-shrink-0 bg-white border-b border-gray-200/80 px-6 py-2 shadow-xs">
+        <header className={`flex-shrink-0 ${isDarkMode ? 'bg-[#1E293B] border-gray-800' : 'bg-white border-gray-200/80'} border-b px-6 py-2 shadow-xs`}>
           <ProgramToolbar
             programStatus={programStatus}
             canUndo={canUndo}
@@ -226,25 +309,63 @@ const Workspace: React.FC<WorkspacePageProps> = ({
             onUndo={undo}
             onRedo={redo}
             onExport={() => setIsSaveModalOpen(true)}
-            onImport={() => setIsOpenModalOpen(true)}
+            onImport={() => confirmIfUnsaved(() => setIsOpenModalOpen(true))}
             onProjectNameChange={setProjectName}
-            onOpenGuide={guides.length > 0 ? () => setIsGuideOpen(true) : undefined}
-            onOpenExamplesModal={exampleProjects.length > 0 ? () => setIsExamplesModalOpen(true) : undefined}
+            onOpenGuide={() => setIsTourModalOpen(true)}
+            onOpenExamplesModal={exampleProjects.length > 0 ? () => confirmIfUnsaved(() => setIsExamplesModalOpen(true)) : undefined}
+            onNavigateHome={handleNavigateHome}
             isSavedLocally={isSavedLocally}
+            isDarkMode={isDarkMode}
+            onToggleDarkMode={toggleDarkMode}
           />
         </header>
+
+        {/* Switcher Tab Layar Kecil (Mobile / Tablet) Sesuai Figma */}
+        <div className={`lg:hidden flex border-b ${isDarkMode ? 'bg-[#1E293B] border-gray-800' : 'bg-white border-gray-200'}`}>
+          <button
+            type="button"
+            onClick={() => setMobileTab('program')}
+            className={`flex-1 py-2.5 flex items-center justify-center gap-2 text-xs font-bold border-b-2 transition-colors cursor-pointer ${
+              mobileTab === 'program'
+                ? 'border-blue-600 text-blue-600 bg-blue-50/30'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
+              <rect x="3" y="3" width="7" height="7" rx="1.5" />
+              <rect x="14" y="3" width="7" height="7" rx="1.5" />
+              <rect x="3" y="14" width="7" height="7" rx="1.5" />
+              <rect x="14" y="14" width="7" height="7" rx="1.5" />
+            </svg>
+            <span>Program</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileTab('simulator')}
+            className={`flex-1 py-2.5 flex items-center justify-center gap-2 text-xs font-bold border-b-2 transition-colors cursor-pointer ${
+              mobileTab === 'simulator'
+                ? 'border-blue-600 text-blue-600 bg-blue-50/30'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <span>🤖</span>
+            <span>Simulasi</span>
+          </button>
+        </div>
 
         {/* Area Konten Utama (Editor Tengah & Simulator/Kode Kanan) */}
         <main className="flex flex-1 overflow-hidden gap-3 p-3">
           {/* Kolom Tengah: Editor Blok Blockly */}
           <div
             id="block-category-panel"
-            className="flex-1 min-w-0 bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-200/90 flex flex-col"
+            className={`flex-1 min-w-0 ${isDarkMode ? 'bg-[#1E293B] border-gray-800' : 'bg-white border-gray-200/90'} rounded-2xl shadow-sm overflow-hidden border ${
+              mobileTab === 'program' ? 'flex' : 'hidden lg:flex'
+            } flex-col`}
           >
             {/* Header Editor Sesuai Figma: Pustaka Blok di kiri & Programku di kanan */}
-            <div className="bg-white border-b border-gray-100 flex items-stretch flex-wrap sm:flex-nowrap">
+            <div className={`${isDarkMode ? 'bg-[#1E293B] border-gray-800' : 'bg-white border-gray-100'} border-b flex items-stretch flex-wrap sm:flex-nowrap`}>
               {/* Kolom Kiri: Pustaka Blok Header & Pencarian Sesuai Figma */}
-              <div className="w-full sm:w-[270px] flex-shrink-0 border-b sm:border-b-0 sm:border-r border-gray-200/80 px-3.5 py-2 flex flex-col justify-center gap-1.5 bg-[#F8FAFC]/60">
+              <div className={`w-full sm:w-[270px] flex-shrink-0 border-b sm:border-b-0 sm:border-r ${isDarkMode ? 'border-gray-800 bg-[#0F172A]/40' : 'border-gray-200/80 bg-[#F8FAFC]/60'} px-3.5 py-2 flex flex-col justify-center gap-1.5`}>
                 <div className="flex items-center gap-2 text-xs font-bold text-teal-800">
                   <svg className="w-4 h-4 text-teal-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
                     <rect x="3" y="3" width="7" height="7" rx="1.5" />
@@ -252,13 +373,15 @@ const Workspace: React.FC<WorkspacePageProps> = ({
                     <rect x="8.5" y="14" width="7" height="7" rx="1.5" />
                     <path d="M6.5 10v2a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-2" strokeDasharray="2 2" />
                   </svg>
-                  <span className="font-bold tracking-tight text-gray-900">Pustaka blok</span>
+                  <span className={`font-bold tracking-tight ${isDarkMode ? 'text-gray-200' : 'text-gray-900'}`}>Pustaka blok</span>
                 </div>
                 <div className="relative">
                   <input
                     type="text"
+                    value={searchQuery}
+                    onChange={(e) => handleSearchChange(e.target.value)}
                     placeholder="Cari blok..."
-                    className="w-full bg-white border border-gray-200 rounded-lg pl-7 pr-2 py-1 text-xs text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-2xs"
+                    className={`w-full ${isDarkMode ? 'bg-[#0F172A] border-gray-700 text-gray-200 placeholder:text-gray-500' : 'bg-white border-gray-200 text-gray-700 placeholder:text-gray-400'} border rounded-lg pl-7 pr-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-2xs`}
                   />
                   <svg className="w-3.5 h-3.5 text-gray-400 absolute left-2 top-2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
                     <circle cx="11" cy="11" r="7" />
@@ -369,7 +492,9 @@ const Workspace: React.FC<WorkspacePageProps> = ({
           </div>
 
           {/* Kolom Kanan: Simulator Robot ATAU Panel Kode Teks */}
-          <div className="w-80 lg:w-[360px] flex-shrink-0 flex flex-col gap-2 overflow-hidden">
+          <div className={`w-full lg:w-[360px] flex-shrink-0 flex-col gap-2 overflow-hidden ${
+            mobileTab === 'simulator' ? 'flex' : 'hidden lg:flex'
+          }`}>
             {isCodeViewerOpen ? (
               <CodeViewerPanel
                 code={generatedCode}
@@ -409,8 +534,8 @@ const Workspace: React.FC<WorkspacePageProps> = ({
           </div>
         </main>
 
-        {/* Footer Bar Sesuai Figma Kit Desain */}
-        <footer className="flex-shrink-0 bg-white border-t border-gray-200 px-6 py-1.5 flex items-center justify-between text-[11px] text-gray-500">
+        {/* Footer Bar Sesuai Figma Kit Desain & Mode Gelap Toggle */}
+        <footer className={`flex-shrink-0 ${isDarkMode ? 'bg-[#1E293B] border-gray-800 text-gray-400' : 'bg-white border-gray-200 text-gray-500'} border-t px-6 py-1.5 flex items-center justify-between text-[11px]`}>
           <div className="flex items-center gap-2">
             <span>💾</span>
             <span>Simpan ke komputer • Tidak disimpan otomatis</span>
@@ -418,12 +543,45 @@ const Workspace: React.FC<WorkspacePageProps> = ({
           <div className="flex items-center gap-3">
             <span>🇮🇩 Bahasa Indonesia</span>
             <span>•</span>
-            <span>☀️ Mode terang</span>
+            <button
+              type="button"
+              onClick={toggleDarkMode}
+              className="hover:text-blue-600 transition-colors cursor-pointer"
+            >
+              {isDarkMode ? '🌙 Mode gelap' : '☀️ Mode terang'}
+            </button>
           </div>
         </footer>
       </div>
 
       {/* ─── Modal Dialogs (Sesuai Figma) ─────────────────────────────────── */}
+
+      {/* Modal Tur Panduan Interaktif 3 Langkah Sesuai Figma */}
+      <InteractiveTourModal
+        isOpen={isTourModalOpen}
+        onClose={() => setIsTourModalOpen(false)}
+      />
+
+      {/* Modal Konfirmasi Buka Proyek Lain / Keluar (Unsaved Changes) Sesuai Figma */}
+      <UnsavedChangesModal
+        isOpen={unsavedConfirmation.isOpen}
+        mode={unsavedConfirmation.mode}
+        projectName={projectName}
+        onSaveAndProceed={() => {
+          handleExport(projectName);
+          const act = unsavedConfirmation.pendingAction;
+          setUnsavedConfirmation((prev) => ({ ...prev, isOpen: false, pendingAction: null }));
+          act?.();
+        }}
+        onProceedWithoutSaving={() => {
+          const act = unsavedConfirmation.pendingAction;
+          setUnsavedConfirmation((prev) => ({ ...prev, isOpen: false, pendingAction: null }));
+          act?.();
+        }}
+        onCancel={() => {
+          setUnsavedConfirmation((prev) => ({ ...prev, isOpen: false, pendingAction: null }));
+        }}
+      />
 
       {/* Modal Simpan Proyek */}
       <SaveProjectModal

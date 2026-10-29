@@ -262,3 +262,45 @@ g[display="none"],
 .blocklyZoom:hover {
     opacity: 1;
 }
+
+/* ─── Mode Gelap Sesuai Figma ("Ruang pemrograman • Desktop gelap.png") ─── */
+.dark .blocklyToolboxDiv {
+    background-color: #1E293B !important;
+    border-right-color: #334155 !important;
+}
+
+.dark .blocklyToolboxCategory:hover {
+    background-color: #334155 !important;
+}
+
+.dark .blocklyToolboxCategoryLabel {
+    color: #94A3B8 !important;
+}
+
+.dark .blocklyToolboxCategory.blocklyToolboxSelected,
+.dark .blocklyToolboxSelected {
+    background-color: #1E3A8A !important;
+}
+
+.dark .blocklyToolboxCategory.blocklyToolboxSelected .blocklyToolboxCategoryLabel,
+.dark .blocklyToolboxSelected .blocklyToolboxCategoryLabel {
+    color: #60A5FA !important;
+}
+
+.dark .blocklyFlyoutBackground {
+    fill: #0F172A !important;
+    stroke: #334155 !important;
+}
+
+.dark .blocklyMainBackground {
+    fill: #0B0F19 !important;
+}
+
+.dark .flyout-title {
+    fill: #60A5FA !important;
+}
+
+.dark .flyout-subtitle,
+.dark .flyout-tip {
+    fill: #94A3B8 !important;
+}
