@@ -23,7 +23,12 @@ interface SimulationStateLocal {
 }
 type StateCallback = (state: SimulationStateLocal) => void;
 
-import { RobotSimulator, createDefaultArena } from '../components/simulator/robotSimulator';
+import {
+  RobotSimulator,
+  createDefaultArena,
+  createEmptyArena,
+  createChallengeArena,
+} from '../components/simulator/robotSimulator';
 import type { SimulationState } from '../components/simulator/robotSimulator';
 
 // Mock AudioContext untuk environment Node.js
@@ -50,21 +55,27 @@ global.AudioContext = vi.fn().mockImplementation(() => ({
 // Mock setTimeout global
 vi.useFakeTimers();
 
-describe('createDefaultArena', () => {
+describe('createDefaultArena & createChallengeArena', () => {
   it('harus membuat arena dengan dimensi yang benar', () => {
     const arena = createDefaultArena(600, 500);
     expect(arena.width).toBe(600);
     expect(arena.height).toBe(500);
   });
 
-  it('harus membuat arena dengan rintangan dan garis', () => {
+  it('harus membuat arena kosong secara default untuk kebebasan berkreasi murid', () => {
     const arena = createDefaultArena();
+    expect(arena.obstacles).toEqual([]);
+    expect(arena.lines).toEqual([]);
+  });
+
+  it('createChallengeArena harus membuat arena dengan rintangan dan garis untuk latihan', () => {
+    const arena = createChallengeArena('both');
     expect(arena.obstacles.length).toBeGreaterThan(0);
     expect(arena.lines.length).toBeGreaterThan(0);
   });
 
-  it('rintangan harus memiliki id yang unik', () => {
-    const arena = createDefaultArena();
+  it('rintangan harus memiliki id yang unik pada arena tantangan', () => {
+    const arena = createChallengeArena('both');
     const ids = arena.obstacles.map((o) => o.id);
     const uniqueIds = new Set(ids);
     expect(uniqueIds.size).toBe(ids.length);
@@ -132,7 +143,7 @@ describe('RobotSimulator', () => {
   });
 
   it('sensor garis harus mendeteksi berdasarkan posisi nyata', () => {
-    const arena = createDefaultArena(500, 400);
+    const arena = createChallengeArena('lines', 500, 400);
     // Garis ada di y=200 (horizontal). Robot ada di tengah (250, 200) — di atas garis.
     const sim2 = new RobotSimulator(arena, () => {});
     expect(sim2.cekGaris()).toBe(true);

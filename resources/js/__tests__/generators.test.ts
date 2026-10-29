@@ -208,4 +208,22 @@ describe('Blockly Headless Workspace & Code Generation', () => {
     expect(result.code).toContain('if (__robot__.cekRintangan())');
     expect(result.code).toContain('await __robot__.berhenti()');
   });
+
+  it('harus mengabaikan blok yang terlepas/terpisah dari event block (seperti Scratch / PictoBlox)', () => {
+    const start = workspace.newBlock(BLOCK_TYPES.EVENT_START);
+    const speed = workspace.newBlock(BLOCK_TYPES.MOTION_SET_SPEED);
+    start.nextConnection?.connect(speed.previousConnection!);
+
+    // Blok mengambang/terlepas (tidak tersambung ke event_start)
+    const detachedForever = workspace.newBlock(BLOCK_TYPES.CONTROL_FOREVER);
+    const stop = workspace.newBlock(BLOCK_TYPES.MOTION_STOP);
+    detachedForever.getInput('DO')?.connection?.connect(stop.previousConnection!);
+
+    const result = generateProgramCode(workspace);
+    // Hanya blok yang terhubung ke start yang dieksekusi
+    expect(result.code).toContain('__robot__.aturKecepatan');
+    // Blok yang terlepas tidak boleh ada di kode yang dihasilkan
+    expect(result.code).not.toContain('while (true)');
+    expect(result.code).not.toContain('__robot__.berhenti()');
+  });
 });

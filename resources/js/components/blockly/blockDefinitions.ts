@@ -30,7 +30,6 @@ Blockly.Blocks[BLOCK_TYPES.EVENT_START] = {
     this.setColour(COLORS.KEJADIAN);
     this.setTooltip('Blok ini dijalankan saat tombol Mulai diklik.');
     this.setHelpUrl('');
-    this.setDeletable(false);
   },
 };
 

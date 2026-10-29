@@ -6,7 +6,7 @@
  * Satuan: pixel (1 langkah = PIXELS_PER_STEP pixel)
  */
 
-import type { RobotState, ArenaState, Obstacle, SimulatorLog } from '../../types/robokreasi';
+import type { RobotState, ArenaState, Obstacle, Line, SimulatorLog, ArenaMode } from '../../types/robokreasi';
 
 // ─── Konstanta Fisika ─────────────────────────────────────────────────────────
 
@@ -397,23 +397,61 @@ const NOTE_FREQUENCIES: Record<string, number> = {
   C5: 523.25,
 };
 
-// ─── Arena Default ────────────────────────────────────────────────────────────
+// ─── Pembuatan Arena ──────────────────────────────────────────────────────────
 
-export function createDefaultArena(width = 500, height = 400): ArenaState {
+/**
+ * Membuat arena kosong tanpa rintangan atau garis.
+ * Standar kanvas bersih agar murid bebas berkreasi (seperti di PictoBlox).
+ */
+export function createEmptyArena(width = 500, height = 400): ArenaState {
   return {
     width,
     height,
-    obstacles: [
-      { id: 'obs1', x: 80, y: 80, width: 60, height: 60 },
-      { id: 'obs2', x: 360, y: 260, width: 60, height: 60 },
-      { id: 'obs3', x: 200, y: 150, width: 40, height: 40 },
-    ],
-    lines: [
-      // Garis tengah horizontal
-      { id: 'line1', x1: 50, y1: 200, x2: 450, y2: 200, color: '#000000', width: 6 },
-      // Garis vertikal kecil
-      { id: 'line2', x1: 250, y1: 200, x2: 250, y2: 350, color: '#000000', width: 6 },
-    ],
+    obstacles: [],
+    lines: [],
   };
+}
+
+/**
+ * Membuat arena tantangan dengan rintangan dan/atau garis
+ * untuk melatih logika berpikir komputasi murid saat latihan.
+ */
+export function createChallengeArena(
+  mode: 'obstacles' | 'lines' | 'both' = 'both',
+  width = 500,
+  height = 400
+): ArenaState {
+  const obstacles: Obstacle[] =
+    mode === 'obstacles' || mode === 'both'
+      ? [
+          { id: 'obs1', x: 80, y: 80, width: 60, height: 60 },
+          { id: 'obs2', x: 360, y: 260, width: 60, height: 60 },
+          { id: 'obs3', x: 200, y: 150, width: 40, height: 40 },
+        ]
+      : [];
+
+  const lines: Line[] =
+    mode === 'lines' || mode === 'both'
+      ? [
+          // Garis tengah horizontal
+          { id: 'line1', x1: 50, y1: 200, x2: 450, y2: 200, color: '#000000', width: 6 },
+          // Garis vertikal kecil
+          { id: 'line2', x1: 250, y1: 200, x2: 250, y2: 350, color: '#000000', width: 6 },
+        ]
+      : [];
+
+  return {
+    width,
+    height,
+    obstacles,
+    lines,
+  };
+}
+
+/**
+ * Arena default RoboKreasi: kanvas kosong untuk kebebasan berkreasi murid.
+ */
+export function createDefaultArena(width = 500, height = 400): ArenaState {
+  return createEmptyArena(width, height);
 }
 

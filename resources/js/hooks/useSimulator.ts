@@ -4,9 +4,15 @@
  */
 
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { RobotSimulator, createDefaultArena, SimulationState } from '../components/simulator/robotSimulator';
+import {
+  RobotSimulator,
+  createDefaultArena,
+  createEmptyArena,
+  createChallengeArena,
+  SimulationState,
+} from '../components/simulator/robotSimulator';
 import { ProgramRuntime } from '../lib/programRuntime';
-import type { ProgramStatus, SimulatorState, ArenaState } from '../types/robokreasi';
+import type { ProgramStatus, SimulatorState, ArenaState, ArenaMode } from '../types/robokreasi';
 
 // ─── State awal ───────────────────────────────────────────────────────────────
 
@@ -34,6 +40,8 @@ export interface UseSimulatorReturn {
   programStatus: ProgramStatus;
   errorMessage: string | null;
   isRunning: boolean;
+  arenaMode: ArenaMode;
+  setArenaMode: (mode: ArenaMode) => void;
   runProgram: (code: string, topBlocks: string[], allBlockTypes: string[]) => Promise<void>;
   stopProgram: () => void;
   resetSimulator: () => void;
@@ -44,6 +52,7 @@ export function useSimulator(): UseSimulatorReturn {
   const [simulatorState, setSimulatorState] = useState<SimulatorState>(
     createInitialState(defaultArena)
   );
+  const [arenaMode, setArenaModeState] = useState<ArenaMode>('empty');
   const [programStatus, setProgramStatus] = useState<ProgramStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -107,6 +116,20 @@ export function useSimulator(): UseSimulatorReturn {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const setArenaMode = useCallback((mode: ArenaMode) => {
+    setArenaModeState(mode);
+    const newArena =
+      mode === 'empty'
+        ? createEmptyArena(500, 400)
+        : createChallengeArena(mode, 500, 400);
+
+    simulatorRef.current?.setArena(newArena);
+    setSimulatorState((prev) => ({
+      ...prev,
+      arena: newArena,
+    }));
+  }, []);
+
   const runProgram = useCallback(async (
     code: string,
     topBlocks: string[],
@@ -134,6 +157,8 @@ export function useSimulator(): UseSimulatorReturn {
     programStatus,
     errorMessage,
     isRunning: programStatus === 'running',
+    arenaMode,
+    setArenaMode,
     runProgram,
     stopProgram,
     resetSimulator,

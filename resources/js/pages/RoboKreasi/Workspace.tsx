@@ -52,6 +52,8 @@ const Workspace: React.FC<WorkspacePageProps> = ({
     simulatorState,
     programStatus,
     errorMessage,
+    arenaMode,
+    setArenaMode,
     runProgram,
     stopProgram,
     resetSimulator,
@@ -105,11 +107,21 @@ const Workspace: React.FC<WorkspacePageProps> = ({
     if (result.success) {
       setProjectName(project.name);
       resetSimulator();
+
+      // Sesuaikan arena latihan sesuai jenis proyek contoh
+      if (project.slug === 'menghindari-rintangan-virtual') {
+        setArenaMode('obstacles');
+      } else if (project.slug === 'robot-pemilih-jalur') {
+        setArenaMode('lines');
+      } else {
+        setArenaMode('empty');
+      }
+
       showNotification(`✅ Proyek contoh "${project.name}" berhasil dimuat!`);
     } else {
       showNotification(result.error ?? '❌ Gagal memuat proyek contoh.');
     }
-  }, [workspace, resetSimulator]);
+  }, [workspace, resetSimulator, setArenaMode]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -213,6 +225,8 @@ const Workspace: React.FC<WorkspacePageProps> = ({
               programStatus={programStatus}
               width={500}
               height={400}
+              arenaMode={arenaMode}
+              onArenaModeChange={setArenaMode}
             />
 
             {/* Hint untuk anak-anak */}

@@ -96,7 +96,6 @@ export function useBlocklyWorkspace(): UseBlocklyWorkspaceReturn {
                 id: 'start_block',
                 x: 30,
                 y: 30,
-                deletable: false,
               },
             ],
           },

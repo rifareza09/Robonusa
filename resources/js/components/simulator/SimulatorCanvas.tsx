@@ -5,7 +5,7 @@
  */
 
 import React, { useRef } from 'react';
-import type { SimulatorState, ProgramStatus } from '../../types/robokreasi';
+import type { SimulatorState, ProgramStatus, ArenaMode } from '../../types/robokreasi';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -14,6 +14,8 @@ interface SimulatorCanvasProps {
   programStatus: ProgramStatus;
   width?: number;
   height?: number;
+  arenaMode?: ArenaMode;
+  onArenaModeChange?: (mode: ArenaMode) => void;
 }
 
 // ─── Warna ────────────────────────────────────────────────────────────────────
@@ -142,6 +144,8 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
   programStatus,
   width = 500,
   height = 400,
+  arenaMode = 'empty',
+  onArenaModeChange,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -152,6 +156,51 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
         <span className="font-bold text-sm">🤖 Simulator Robot</span>
         <StatusIndicator status={programStatus} />
       </div>
+
+      {/* Mode Arena: Bebas / Rintangan / Garis */}
+      {onArenaModeChange && (
+        <div className="flex items-center justify-between px-3 py-1.5 bg-gray-700 border-t border-gray-600 text-xs">
+          <span className="text-gray-300 font-medium">Mode:</span>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => onArenaModeChange('empty')}
+              className={`px-2 py-0.5 rounded text-xs font-semibold transition-colors ${
+                arenaMode === 'empty'
+                  ? 'bg-blue-500 text-white shadow-sm'
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-600'
+              }`}
+              title="Kanvas Kosong (Kreasi Bebas Murid)"
+            >
+              🎨 Bebas
+            </button>
+            <button
+              type="button"
+              onClick={() => onArenaModeChange('obstacles')}
+              className={`px-2 py-0.5 rounded text-xs font-semibold transition-colors ${
+                arenaMode === 'obstacles'
+                  ? 'bg-red-500 text-white shadow-sm'
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-600'
+              }`}
+              title="Tantangan Latihan Rintangan"
+            >
+              🧱 Rintangan
+            </button>
+            <button
+              type="button"
+              onClick={() => onArenaModeChange('lines')}
+              className={`px-2 py-0.5 rounded text-xs font-semibold transition-colors ${
+                arenaMode === 'lines'
+                  ? 'bg-indigo-500 text-white shadow-sm'
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-600'
+              }`}
+              title="Tantangan Latihan Sensor Garis"
+            >
+              〰️ Garis
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Arena SVG */}
       <div className="flex-1 flex items-center justify-center p-3 bg-gray-100">

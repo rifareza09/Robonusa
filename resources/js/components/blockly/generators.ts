@@ -308,13 +308,27 @@ export function generateProgramCode(workspace: Blockly.Workspace): {
   hasEventStart: boolean;
   topBlocks: string[];
 } {
-  // Cek blok paling atas
-  const topBlocks = workspace.getTopBlocks(true);
-  const hasEventStart = topBlocks.some((b: Blockly.Block) => b.type === BLOCK_TYPES.EVENT_START);
-  const topBlockTypes = topBlocks.map((b: Blockly.Block) => b.type);
+  // Ambil semua blok teratas
+  const allTopBlocks = workspace.getTopBlocks(true);
+  const hasEventStart = allTopBlocks.some((b: Blockly.Block) => b.type === BLOCK_TYPES.EVENT_START);
+  const topBlockTypes = allTopBlocks.map((b: Blockly.Block) => b.type);
 
-  // Generate kode
-  const rawCode = javascriptGenerator.workspaceToCode(workspace);
+  // Inisialisasi generator untuk workspace ini
+  javascriptGenerator.init(workspace);
+
+  // Hanya blok Event (Saat Mulai Diklik, Saat Tombol Ditekan) yang menjadi entry point.
+  // Blok yang terlepas/terpisah (orphan blocks) yang tidak tersambung ke blok Event
+  // TIDAK akan dieksekusi (seperti pada Scratch / PictoBlox).
+  const eventBlocks = allTopBlocks.filter(
+    (b: Blockly.Block) =>
+      b.type === BLOCK_TYPES.EVENT_START ||
+      b.type === BLOCK_TYPES.EVENT_KEY_PRESSED
+  );
+
+  let rawCode = '';
+  for (const eventBlock of eventBlocks) {
+    rawCode += javascriptGenerator.blockToCode(eventBlock) + '\n';
+  }
 
   // Bungkus dengan header keamanan
   const wrappedCode = wrapWithSafetyHeader(rawCode);
@@ -327,8 +341,8 @@ export function generateProgramCode(workspace: Blockly.Workspace): {
 }
 
 /**
- * Tambahkan header keamanan dan inisialisasi variabel runtime.
- * Kode ini dieksekusi di dalam Worker yang sudah terisolasi.
+ * Tambahkan header keamanan dan penanganan error program.
+ * Variabel runtime (__vars__, __iterasi__, __maxIterasi__) disediakan oleh scope eksekusi.
  */
 function wrapWithSafetyHeader(code: string): string {
   return `

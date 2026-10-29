@@ -171,6 +171,8 @@ export interface RobotState {
   isMoving: boolean;
 }
 
+export type ArenaMode = 'empty' | 'obstacles' | 'lines' | 'both';
+
 export interface ArenaState {
   width: number;
   height: number;
