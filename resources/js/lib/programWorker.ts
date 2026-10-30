@@ -196,6 +196,11 @@ self.addEventListener('message', async (event: MessageEvent<WorkerInMessage>) =>
     callIdCounter = 0;
     pendingCalls.clear();
 
+    if (msg.sensors) {
+      (self as unknown as { __sensorObstacle__: boolean }).__sensorObstacle__ = msg.sensors.obstacle;
+      (self as unknown as { __sensorLine__: boolean }).__sensorLine__ = msg.sensors.line;
+    }
+
     try {
       await runProgram(msg.code, msg.config);
       if (!cancelled) {
@@ -222,6 +227,10 @@ self.addEventListener('message', (event: MessageEvent<MainToWorkerReply>) => {
   const msg = event.data;
 
   if (msg.type === 'API_RESULT') {
+    if (msg.sensors) {
+      (self as unknown as { __sensorObstacle__: boolean }).__sensorObstacle__ = msg.sensors.obstacle;
+      (self as unknown as { __sensorLine__: boolean }).__sensorLine__ = msg.sensors.line;
+    }
     const pending = pendingCalls.get(msg.id);
     if (pending) {
       pendingCalls.delete(msg.id);

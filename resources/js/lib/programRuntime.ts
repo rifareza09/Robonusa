@@ -344,11 +344,17 @@ export class ProgramRuntime {
         reject(new Error(msg));
       });
 
-      // Kirim kode ke worker
+      // Kirim kode ke worker beserta pembacaan awal sensor
       const msg: WorkerInMessage = {
         type: 'RUN',
         code,
         config: this.config,
+        sensors: this.robotAPI
+          ? {
+              obstacle: this.robotAPI.cekRintangan(),
+              line: this.robotAPI.cekGaris(),
+            }
+          : undefined,
       };
       this.worker.postMessage(msg);
     });
@@ -394,8 +400,16 @@ export class ProgramRuntime {
           throw new Error(`Metode tidak dikenal: ${method}`);
       }
 
-      // Kirim hasil ke worker
-      const reply: MainToWorkerReply = { type: 'API_RESULT', id, result };
+      // Kirim hasil beserta pembacaan sensor terbaru ke worker
+      const reply: MainToWorkerReply = {
+        type: 'API_RESULT',
+        id,
+        result,
+        sensors: {
+          obstacle: this.robotAPI.cekRintangan(),
+          line: this.robotAPI.cekGaris(),
+        },
+      };
       this.worker.postMessage(reply);
     } catch (err) {
       const reply: MainToWorkerReply = {

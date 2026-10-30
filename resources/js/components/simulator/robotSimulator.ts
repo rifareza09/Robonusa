@@ -12,7 +12,7 @@ import type { RobotState, ArenaState, Obstacle, Line, SimulatorLog, ArenaMode } 
 
 const PIXELS_PER_STEP = 20;        // 1 langkah = 20px
 const ROBOT_RADIUS = 20;           // radius robot dalam pixel
-const OBSTACLE_DETECTION_DIST = 40; // jarak deteksi rintangan (px)
+const OBSTACLE_DETECTION_DIST = 50; // jarak deteksi rintangan (px)
 const LINE_DETECTION_RADIUS = 8;   // radius sensor garis (px)
 const BASE_ANIMATION_MS = 300;     // durasi animasi dasar per langkah pada speed=5
 
@@ -65,24 +65,41 @@ function isRobotCollidingWithObstacle(
 
 function hasObstacleAhead(robot: RobotState, arena: ArenaState): boolean {
   const { dx, dy } = angleToVector(robot.angle);
-  // Cek titik di depan robot sejauh OBSTACLE_DETECTION_DIST
-  const checkX = robot.x + dx * (ROBOT_RADIUS + OBSTACLE_DETECTION_DIST);
-  const checkY = robot.y + dy * (ROBOT_RADIUS + OBSTACLE_DETECTION_DIST);
 
-  // Cek dinding arena
+  // 1. Jika robot saat ini sedang menyentuh / menabrak rintangan, sensor langsung aktif
+  for (const obstacle of arena.obstacles) {
+    if (isRobotCollidingWithObstacle(robot.x, robot.y, obstacle)) {
+      return true;
+    }
+  }
+
+  // 2. Cek dinding arena di depan robot (sepanjang jarak deteksi)
+  const maxCheckDist = ROBOT_RADIUS + OBSTACLE_DETECTION_DIST;
+  const wallCheckX = robot.x + dx * maxCheckDist;
+  const wallCheckY = robot.y + dy * maxCheckDist;
   if (
-    checkX < ROBOT_RADIUS ||
-    checkX > arena.width - ROBOT_RADIUS ||
-    checkY < ROBOT_RADIUS ||
-    checkY > arena.height - ROBOT_RADIUS
+    wallCheckX < ROBOT_RADIUS ||
+    wallCheckX > arena.width - ROBOT_RADIUS ||
+    wallCheckY < ROBOT_RADIUS ||
+    wallCheckY > arena.height - ROBOT_RADIUS
   ) {
     return true;
   }
 
-  // Cek rintangan
-  for (const obstacle of arena.obstacles) {
-    if (isPointInObstacle(checkX, checkY, obstacle)) {
-      return true;
+  // 3. Cek rintangan di depan robot sepanjang jarak deteksi (sweep test)
+  // Memeriksa lintasan pergerakan robot dengan memperhitungkan radius fisik robot
+  const samples = 8;
+  const stepDist = OBSTACLE_DETECTION_DIST / samples;
+
+  for (let i = 1; i <= samples; i++) {
+    const dist = ROBOT_RADIUS + i * stepDist;
+    const testX = robot.x + dx * dist;
+    const testY = robot.y + dy * dist;
+
+    for (const obstacle of arena.obstacles) {
+      if (isRobotCollidingWithObstacle(testX, testY, obstacle)) {
+        return true;
+      }
     }
   }
 
@@ -374,6 +391,9 @@ export class RobotSimulator {
   }
 
   private sleep(ms: number): Promise<void> {
+    if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
+      return Promise.resolve();
+    }
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
@@ -424,9 +444,9 @@ export function createChallengeArena(
   const obstacles: Obstacle[] =
     mode === 'obstacles' || mode === 'both'
       ? [
-          { id: 'obs1', x: 80, y: 80, width: 60, height: 60 },
-          { id: 'obs2', x: 360, y: 260, width: 60, height: 60 },
-          { id: 'obs3', x: 200, y: 150, width: 40, height: 40 },
+          { id: 'obs1', x: 210, y: 50, width: 80, height: 50 },
+          { id: 'obs2', x: 390, y: 165, width: 50, height: 70 },
+          { id: 'obs3', x: 100, y: 280, width: 60, height: 60 },
         ]
       : [];
 
