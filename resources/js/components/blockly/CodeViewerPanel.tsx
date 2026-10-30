@@ -62,6 +62,23 @@ function translateToIndonesianPseudocode(jsCode: string): string {
       output.push(`${indent}putar_kanan(90)`);
     } else if (line.includes('await robot.turnLeft(')) {
       output.push(`${indent}putar_kiri(90)`);
+    } else if (line.includes('geserKanan(')) {
+      const match = line.match(/geserKanan\((\d+)\)/);
+      output.push(`${indent}geser_kanan(${match ? match[1] : 10})`);
+    } else if (line.includes('geserKiri(')) {
+      const match = line.match(/geserKiri\((\d+)\)/);
+      output.push(`${indent}geser_kiri(${match ? match[1] : 10})`);
+    } else if (line.includes('aturKostum(')) {
+      const match = line.match(/aturKostum\(["']([^"']+)["']\)/);
+      output.push(`${indent}ganti_pose("${match ? match[1] : 'default'}")`);
+    } else if (line.includes('gantiKostumBerikutnya(')) {
+      output.push(`${indent}pose_berikutnya()`);
+    } else if (line.includes('ubahUkuran(')) {
+      const match = line.match(/ubahUkuran\((-?\d+)\)/);
+      output.push(`${indent}ubah_ukuran(${match ? match[1] : 20})`);
+    } else if (line.includes('aturUkuran(')) {
+      const match = line.match(/aturUkuran\((\d+)\)/);
+      output.push(`${indent}atur_ukuran(${match ? match[1] : 100})`);
     } else if (line.includes('await robot.stop()')) {
       output.push(`${indent}berhenti()`);
     } else if (line.includes('robot.setSpeed(')) {

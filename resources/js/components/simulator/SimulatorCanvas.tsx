@@ -35,6 +35,14 @@ const COLORS = {
   DISPLAY_TEXT_BG: 'rgba(13, 148, 136, 0.95)',
 } as const;
 
+const COSTUME_MAP: Record<string, string> = {
+  default: '/images/robot/pose_default.png',
+  walk_right: '/images/robot/pose_walk_right.png',
+  walk_left: '/images/robot/pose_walk_left.png',
+  mouth_open: '/images/robot/pose_mouth_open.png',
+  active: '/images/robot/pose_active.png',
+};
+
 // ─── Komponen Robot ───────────────────────────────────────────────────────────
 
 const Robot: React.FC<{
@@ -43,18 +51,35 @@ const Robot: React.FC<{
   angle: number;
   isMoving: boolean;
   status: ProgramStatus;
-}> = ({ x, y, angle, isMoving, status }) => {
-  const spriteWidth = 52;
-  const spriteHeight = 56;
+  costume?: string;
+  size?: number;
+  onRobotClick?: () => void;
+}> = ({ x, y, angle, isMoving, status, costume = 'default', size = 100, onRobotClick }) => {
+  const currentCostume = COSTUME_MAP[costume] ? costume : 'default';
+  const spriteSrc = COSTUME_MAP[currentCostume] || COSTUME_MAP.default;
+
+  // Ukuran dasar di kanvas dikalikan skala persentase
+  const baseWidth = 54;
+  const baseHeight = 58;
+  const scaleFactor = Math.max(0.3, Math.min(2.5, size / 100));
+  const spriteWidth = baseWidth * scaleFactor;
+  const spriteHeight = baseHeight * scaleFactor;
 
   return (
-    <g transform={`translate(${x}, ${y})`}>
+    <g
+      transform={`translate(${x}, ${y})`}
+      onClick={onRobotClick}
+      className="cursor-pointer group select-none"
+      role="button"
+      tabIndex={0}
+    >
+      <title>Klik karakter robot untuk menjalankan program!</title>
       {/* Bayangan halus robot di kanvas */}
       <ellipse
         cx={0}
         cy={spriteHeight / 2 - 2}
         rx={spriteWidth / 2.6}
-        ry={6}
+        ry={Math.max(3, 6 * scaleFactor)}
         fill="rgba(0, 0, 0, 0.12)"
       />
 
@@ -71,7 +96,7 @@ const Robot: React.FC<{
           <circle
             cx={0}
             cy={0}
-            r={spriteWidth / 1.7}
+            r={spriteWidth / 1.6}
             fill="none"
             stroke="#EF4444"
             strokeWidth={3}
@@ -85,7 +110,7 @@ const Robot: React.FC<{
           <circle
             cx={0}
             cy={0}
-            r={spriteWidth / 1.7}
+            r={spriteWidth / 1.6}
             fill="none"
             stroke="#10B981"
             strokeWidth={2}
@@ -93,9 +118,9 @@ const Robot: React.FC<{
           />
         )}
 
-        {/* Karakter Robot (Sprite baru) */}
+        {/* Karakter Robot (Pose aktif sesuai kostum) */}
         <image
-          href="/images/robot_sprite.png"
+          href={spriteSrc}
           x={-spriteWidth / 2}
           y={-spriteHeight / 2}
           width={spriteWidth}
@@ -107,7 +132,7 @@ const Robot: React.FC<{
         <circle
           cx={0}
           cy={-spriteHeight / 2 + 2}
-          r={3}
+          r={Math.max(2, 3 * scaleFactor)}
           fill={isMoving ? '#10B981' : '#6366F1'}
           stroke="#FFFFFF"
           strokeWidth={1.5}
@@ -301,7 +326,35 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
               angle={state.robot.angle}
               isMoving={state.robot.isMoving}
               status={programStatus}
+              costume={state.robot.costume}
+              size={state.robot.size}
+              onRobotClick={onRun}
             />
+
+            {/* Petunjuk Klik Karakter Robot */}
+            <g transform={`translate(${width / 2}, ${height - 12})`}>
+              <rect
+                x={-90}
+                y={-9}
+                width={180}
+                height={18}
+                rx={9}
+                fill="rgba(240, 253, 250, 0.9)"
+                stroke="#CCFBF1"
+                strokeWidth={1}
+              />
+              <text
+                x={0}
+                y={3.5}
+                textAnchor="middle"
+                fontSize={9.5}
+                fontWeight="600"
+                fill="#0F766E"
+                fontFamily="sans-serif"
+              >
+                ✨ Klik robot untuk menjalankan
+              </text>
+            </g>
 
             {/* Display Teks Robot */}
             {state.displayText && (

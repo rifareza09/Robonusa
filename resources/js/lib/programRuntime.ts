@@ -189,12 +189,32 @@ export class ProgramRuntime {
         checkCancelled();
         return api.belokKanan(derajat);
       },
+      geserKanan: async (langkah: number) => {
+        checkCancelled();
+        return api.geserKanan(langkah);
+      },
+      geserKiri: async (langkah: number) => {
+        checkCancelled();
+        return api.geserKiri(langkah);
+      },
       berhenti: async () => {
         checkCancelled();
         return api.berhenti();
       },
       aturKecepatan: (kecepatan: number) => {
         api.aturKecepatan(kecepatan);
+      },
+      aturKostum: (kostum: string) => {
+        api.aturKostum(kostum);
+      },
+      gantiKostumBerikutnya: () => {
+        api.gantiKostumBerikutnya();
+      },
+      ubahUkuran: (perubahan: number) => {
+        api.ubahUkuran(perubahan);
+      },
+      aturUkuran: (persen: number) => {
+        api.aturUkuran(persen);
       },
       cekRintangan: () => api.cekRintangan(),
       cekGaris: () => api.cekGaris(),
@@ -381,11 +401,29 @@ export class ProgramRuntime {
         case 'belokKanan':
           await this.robotAPI.belokKanan(args[0] as number);
           break;
+        case 'geserKanan':
+          await this.robotAPI.geserKanan(args[0] as number);
+          break;
+        case 'geserKiri':
+          await this.robotAPI.geserKiri(args[0] as number);
+          break;
         case 'berhenti':
           await this.robotAPI.berhenti();
           break;
         case 'aturKecepatan':
           this.robotAPI.aturKecepatan(args[0] as number);
+          break;
+        case 'aturKostum':
+          this.robotAPI.aturKostum(args[0] as string);
+          break;
+        case 'gantiKostumBerikutnya':
+          this.robotAPI.gantiKostumBerikutnya();
+          break;
+        case 'ubahUkuran':
+          this.robotAPI.ubahUkuran(args[0] as number);
+          break;
+        case 'aturUkuran':
+          this.robotAPI.aturUkuran(args[0] as number);
           break;
         case 'tampilkanTeks':
           this.robotAPI.tampilkanTeks(args[0] as string);

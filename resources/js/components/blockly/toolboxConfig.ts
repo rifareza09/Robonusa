@@ -71,6 +71,30 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
           },
           {
             kind: 'block',
+            type: BLOCK_TYPES.MOTION_STEP_RIGHT,
+            inputs: {
+              STEPS: {
+                shadow: {
+                  type: BLOCK_TYPES.OPERATOR_NUMBER,
+                  fields: { NUM: 10 },
+                },
+              },
+            },
+          },
+          {
+            kind: 'block',
+            type: BLOCK_TYPES.MOTION_STEP_LEFT,
+            inputs: {
+              STEPS: {
+                shadow: {
+                  type: BLOCK_TYPES.OPERATOR_NUMBER,
+                  fields: { NUM: 10 },
+                },
+              },
+            },
+          },
+          {
+            kind: 'block',
             type: BLOCK_TYPES.MOTION_STOP,
           },
           {
@@ -314,6 +338,10 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
           },
           {
             kind: 'block',
+            type: BLOCK_TYPES.EVENT_CLICK_ROBOT,
+          },
+          {
+            kind: 'block',
             type: BLOCK_TYPES.EVENT_KEY_PRESSED,
           },
         ],
@@ -333,12 +361,48 @@ export function buildToolboxConfig(): Blockly.utils.toolbox.ToolboxDefinition {
           },
           {
             kind: 'label',
-            text: 'Umpan balik visual pada robot',
+            text: 'Pose karakter dan umpan balik visual',
             'web-class': 'flyout-subtitle',
           },
           {
             kind: 'sep',
             gap: 12,
+          },
+          {
+            kind: 'block',
+            type: BLOCK_TYPES.LOOK_SET_COSTUME,
+          },
+          {
+            kind: 'block',
+            type: BLOCK_TYPES.LOOK_NEXT_COSTUME,
+          },
+          {
+            kind: 'block',
+            type: BLOCK_TYPES.LOOK_SHRINK,
+            inputs: {
+              AMOUNT: {
+                shadow: {
+                  type: BLOCK_TYPES.OPERATOR_NUMBER,
+                  fields: { NUM: 20 },
+                },
+              },
+            },
+          },
+          {
+            kind: 'block',
+            type: BLOCK_TYPES.LOOK_GROW,
+            inputs: {
+              AMOUNT: {
+                shadow: {
+                  type: BLOCK_TYPES.OPERATOR_NUMBER,
+                  fields: { NUM: 20 },
+                },
+              },
+            },
+          },
+          {
+            kind: 'block',
+            type: BLOCK_TYPES.LOOK_RESET_SIZE,
           },
           {
             kind: 'block',

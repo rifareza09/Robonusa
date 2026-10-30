@@ -114,12 +114,15 @@ export const BLOCK_TYPES = {
   // Kejadian
   EVENT_START: 'event_start',
   EVENT_KEY_PRESSED: 'event_key_pressed',
+  EVENT_CLICK_ROBOT: 'event_click_robot',
 
   // Gerakan
   MOTION_FORWARD: 'motion_forward',
   MOTION_BACKWARD: 'motion_backward',
   MOTION_TURN_LEFT: 'motion_turn_left',
   MOTION_TURN_RIGHT: 'motion_turn_right',
+  MOTION_STEP_RIGHT: 'motion_step_right',
+  MOTION_STEP_LEFT: 'motion_step_left',
   MOTION_STOP: 'motion_stop',
   MOTION_SET_SPEED: 'motion_set_speed',
 
@@ -149,6 +152,11 @@ export const BLOCK_TYPES = {
 
   // Tampilan
   DISPLAY_TEXT: 'display_text',
+  LOOK_SET_COSTUME: 'look_set_costume',
+  LOOK_NEXT_COSTUME: 'look_next_costume',
+  LOOK_SHRINK: 'look_shrink',
+  LOOK_GROW: 'look_grow',
+  LOOK_RESET_SIZE: 'look_reset_size',
 
   // Suara
   SOUND_PLAY_TONE: 'sound_play_tone',
@@ -169,6 +177,8 @@ export interface RobotState {
   angle: number;      // arah hadap dalam derajat (0 = atas, searah jarum jam)
   speed: number;      // kecepatan (1-10)
   isMoving: boolean;
+  costume?: 'default' | 'walk_left' | 'walk_right' | 'mouth_open' | 'active';
+  size?: number;       // ukuran persen (default: 100)
 }
 
 export type ArenaMode = 'empty' | 'obstacles' | 'lines' | 'both';
@@ -221,6 +231,8 @@ export interface SimulatorAPI {
   mundur(langkah: number): Promise<void>;
   belokKiri(derajat: number): Promise<void>;
   belokKanan(derajat: number): Promise<void>;
+  geserKanan(langkah: number): Promise<void>;
+  geserKiri(langkah: number): Promise<void>;
   berhenti(): Promise<void>;
   aturKecepatan(kecepatan: number): void;
 
@@ -228,8 +240,12 @@ export interface SimulatorAPI {
   cekRintangan(): boolean;
   cekGaris(): boolean;
 
-  // Tampilan
+  // Tampilan / Kostum & Ukuran
   tampilkanTeks(teks: string): void;
+  aturKostum(kostum: string): void;
+  gantiKostumBerikutnya(): void;
+  ubahUkuran(perubahan: number): void;
+  aturUkuran(persen: number): void;
 
   // Suara
   mainkanNada(nada: string, durasi: number): Promise<void>;

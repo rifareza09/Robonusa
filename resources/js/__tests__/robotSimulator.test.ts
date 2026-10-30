@@ -221,3 +221,55 @@ describe('RobotSimulator — sensor rintangan', () => {
     expect(sim.cekRintangan()).toBe(false);
   });
 });
+
+describe('RobotSimulator — gerakan horizontal & tampilan kostum', () => {
+  it('geserKanan dan geserKiri menggeser posisi X robot dan mengubah pose', async () => {
+    const sim = new RobotSimulator(createDefaultArena(), () => {});
+    const initialX = sim.getState().robot.x;
+
+    await sim.geserKanan(2);
+    expect(sim.getState().robot.x).toBeGreaterThan(initialX);
+    expect(sim.getState().robot.costume).toBe('walk_right');
+
+    const rightX = sim.getState().robot.x;
+    await sim.geserKiri(1);
+    expect(sim.getState().robot.x).toBeLessThan(rightX);
+    expect(sim.getState().robot.costume).toBe('walk_left');
+  });
+
+  it('aturKostum dan gantiKostumBerikutnya memperbarui pose karakter robot', () => {
+    const sim = new RobotSimulator(createDefaultArena(), () => {});
+    sim.aturKostum('mouth_open');
+    expect(sim.getState().robot.costume).toBe('mouth_open');
+
+    sim.gantiKostumBerikutnya();
+    expect(sim.getState().robot.costume).toBe('active');
+
+    sim.aturKostum('invalid_pose_name');
+    expect(sim.getState().robot.costume).toBe('default');
+  });
+
+  it('ubahUkuran dan aturUkuran dapat memperkecil dan memperbesar ukuran karakter', () => {
+    const sim = new RobotSimulator(createDefaultArena(), () => {});
+    expect(sim.getState().robot.size).toBe(100);
+
+    // Perkecil sebesar 20 (menjadi 80%)
+    sim.ubahUkuran(-20);
+    expect(sim.getState().robot.size).toBe(80);
+
+    // Perbesar sebesar 40 (menjadi 120%)
+    sim.ubahUkuran(40);
+    expect(sim.getState().robot.size).toBe(120);
+
+    // Atur langsung ke persentase tertentu
+    sim.aturUkuran(150);
+    expect(sim.getState().robot.size).toBe(150);
+
+    // Batas minimum dan maksimum aman
+    sim.aturUkuran(5);
+    expect(sim.getState().robot.size).toBe(20);
+
+    sim.aturUkuran(500);
+    expect(sim.getState().robot.size).toBe(300);
+  });
+});

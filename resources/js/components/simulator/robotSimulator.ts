@@ -156,6 +156,8 @@ export class RobotSimulator {
         angle: 0,
         speed: 5,
         isMoving: false,
+        costume: 'default',
+        size: 100,
       },
       arena: initialArena,
       displayText: '',
@@ -179,6 +181,8 @@ export class RobotSimulator {
         angle: 0,
         speed: 5,
         isMoving: false,
+        costume: 'default',
+        size: 100,
       },
       displayText: '',
       logs: [],
@@ -289,6 +293,115 @@ export class RobotSimulator {
     };
     this.emitUpdate();
     await this.sleep(150);
+  }
+
+  /** Geser robot ke kanan (ScratchJr / PictoBlox style) */
+  async geserKanan(langkah: number): Promise<void> {
+    const steps = Math.max(0, Math.min(langkah, 100));
+    const dist = steps * PIXELS_PER_STEP;
+    const newX = this.state.robot.x + dist;
+    const clampedX = Math.max(ROBOT_RADIUS, Math.min(this.state.arena.width - ROBOT_RADIUS, newX));
+
+    this.state = {
+      ...this.state,
+      robot: {
+        ...this.state.robot,
+        x: clampedX,
+        costume: 'walk_right',
+        isMoving: true,
+      },
+    };
+    this.addLog(`👉 Robot bergeser ke kanan sejauh ${steps} langkah`, 'info');
+    this.emitUpdate();
+
+    if (process.env.NODE_ENV !== 'test') {
+      await this.sleep(150);
+    }
+
+    this.state = {
+      ...this.state,
+      robot: { ...this.state.robot, isMoving: false },
+    };
+    this.emitUpdate();
+  }
+
+  /** Geser robot ke kiri (ScratchJr / PictoBlox style) */
+  async geserKiri(langkah: number): Promise<void> {
+    const steps = Math.max(0, Math.min(langkah, 100));
+    const dist = steps * PIXELS_PER_STEP;
+    const newX = this.state.robot.x - dist;
+    const clampedX = Math.max(ROBOT_RADIUS, Math.min(this.state.arena.width - ROBOT_RADIUS, newX));
+
+    this.state = {
+      ...this.state,
+      robot: {
+        ...this.state.robot,
+        x: clampedX,
+        costume: 'walk_left',
+        isMoving: true,
+      },
+    };
+    this.addLog(`👈 Robot bergeser ke kiri sejauh ${steps} langkah`, 'info');
+    this.emitUpdate();
+
+    if (process.env.NODE_ENV !== 'test') {
+      await this.sleep(150);
+    }
+
+    this.state = {
+      ...this.state,
+      robot: { ...this.state.robot, isMoving: false },
+    };
+    this.emitUpdate();
+  }
+
+  /** Ganti pose / kostum karakter robot */
+  aturKostum(kostum: string): void {
+    const validCostumes = ['default', 'walk_right', 'walk_left', 'mouth_open', 'active'];
+    const selected = validCostumes.includes(kostum) ? (kostum as NonNullable<RobotState['costume']>) : 'default';
+    this.state = {
+      ...this.state,
+      robot: { ...this.state.robot, costume: selected },
+    };
+    this.addLog(`🎭 Ganti pose robot ke: ${selected}`, 'info');
+    this.emitUpdate();
+  }
+
+  /** Berganti ke pose karakter robot berikutnya secara siklus */
+  gantiKostumBerikutnya(): void {
+    const order: Array<NonNullable<RobotState['costume']>> = ['default', 'walk_right', 'walk_left', 'mouth_open', 'active'];
+    const current = this.state.robot.costume || 'default';
+    const nextIdx = (order.indexOf(current) + 1) % order.length;
+    const nextPose = order[nextIdx];
+    this.state = {
+      ...this.state,
+      robot: { ...this.state.robot, costume: nextPose },
+    };
+    this.addLog(`🔄 Pose berikutnya: ${nextPose}`, 'info');
+    this.emitUpdate();
+  }
+
+  /** Mengubah ukuran robot (perkecil / perbesar sebesar angka) */
+  ubahUkuran(perubahan: number): void {
+    const current = this.state.robot.size ?? 100;
+    const newSize = Math.max(20, Math.min(300, current + perubahan));
+    this.state = {
+      ...this.state,
+      robot: { ...this.state.robot, size: newSize },
+    };
+    this.addLog(`📏 Ukuran karakter diubah menjadi ${newSize}%`, 'info');
+    this.emitUpdate();
+  }
+
+  /** Mengatur ukuran robot ke persen tertentu */
+  aturUkuran(persen: number): void {
+    const newSize = Math.max(20, Math.min(300, persen));
+    this.state = {
+      ...this.state,
+      robot: { ...this.state.robot, size: newSize },
+    };
+    this.addLog(`📏 Ukuran karakter diatur ke ${newSize}%`, 'info');
+    this.emitUpdate();
   }
 
   async berhenti(): Promise<void> {

@@ -60,6 +60,18 @@ Blockly.Blocks[BLOCK_TYPES.EVENT_KEY_PRESSED] = {
   },
 };
 
+Blockly.Blocks[BLOCK_TYPES.EVENT_CLICK_ROBOT] = {
+  init(this: Blockly.Block) {
+    this.appendDummyInput()
+      .appendField('🤖')
+      .appendField('Saat Karakter Robot Diklik');
+    this.setNextStatement(true, null);
+    this.setColour(COLORS.KEJADIAN);
+    this.setTooltip('Menjalankan perintah ketika karakter robot pada kanvas panggung diklik.');
+    this.setHelpUrl('');
+  },
+};
+
 // ─── GERAKAN ──────────────────────────────────────────────────────────────────
 
 Blockly.Blocks[BLOCK_TYPES.MOTION_FORWARD] = {
@@ -114,6 +126,38 @@ Blockly.Blocks[BLOCK_TYPES.MOTION_TURN_RIGHT] = {
     this.setNextStatement(true, null);
     this.setColour(COLORS.GERAKAN);
     this.setTooltip('Robot berputar ke kanan.');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.Blocks[BLOCK_TYPES.MOTION_STEP_RIGHT] = {
+  init(this: Blockly.Block) {
+    this.appendValueInput('STEPS')
+      .setCheck('Number')
+      .appendField('👉')
+      .appendField('Gerak ke kanan');
+    this.appendDummyInput().appendField('langkah');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(COLORS.GERAKAN);
+    this.setTooltip('Menggerakkan karakter robot langsung ke arah kanan.');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.Blocks[BLOCK_TYPES.MOTION_STEP_LEFT] = {
+  init(this: Blockly.Block) {
+    this.appendValueInput('STEPS')
+      .setCheck('Number')
+      .appendField('👈')
+      .appendField('Gerak ke kiri');
+    this.appendDummyInput().appendField('langkah');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(COLORS.GERAKAN);
+    this.setTooltip('Menggerakkan karakter robot langsung ke arah kiri.');
     this.setHelpUrl('');
   },
 };
@@ -398,6 +442,85 @@ Blockly.Blocks[BLOCK_TYPES.DISPLAY_TEXT] = {
     this.setNextStatement(true, null);
     this.setColour(COLORS.TAMPILAN);
     this.setTooltip('Menampilkan teks pada layar simulator.');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.Blocks[BLOCK_TYPES.LOOK_SET_COSTUME] = {
+  init(this: Blockly.Block) {
+    this.appendDummyInput()
+      .appendField('🎭')
+      .appendField('Ganti pose ke')
+      .appendField(
+        new Blockly.FieldDropdown([
+          ['Normal (Berdiri)', 'default'],
+          ['Jalan ke Kanan', 'walk_right'],
+          ['Jalan ke Kiri', 'walk_left'],
+          ['Buka Mulut', 'mouth_open'],
+          ['Aktif Melompat', 'active'],
+        ]),
+        'COSTUME'
+      );
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(COLORS.TAMPILAN);
+    this.setTooltip('Mengubah pose tampilan karakter robot.');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.Blocks[BLOCK_TYPES.LOOK_NEXT_COSTUME] = {
+  init(this: Blockly.Block) {
+    this.appendDummyInput()
+      .appendField('🔄')
+      .appendField('Pose berikutnya');
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(COLORS.TAMPILAN);
+    this.setTooltip('Berganti ke pose berikutnya secara berurutan.');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.Blocks[BLOCK_TYPES.LOOK_SHRINK] = {
+  init(this: Blockly.Block) {
+    this.appendValueInput('AMOUNT')
+      .setCheck('Number')
+      .appendField('📉')
+      .appendField('Perkecil karakter sebesar');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(COLORS.TAMPILAN);
+    this.setTooltip('Mengecilkan ukuran karakter robot sesuai angka (misal: 20).');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.Blocks[BLOCK_TYPES.LOOK_GROW] = {
+  init(this: Blockly.Block) {
+    this.appendValueInput('AMOUNT')
+      .setCheck('Number')
+      .appendField('📈')
+      .appendField('Perbesar karakter sebesar');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(COLORS.TAMPILAN);
+    this.setTooltip('Membesarkan ukuran karakter robot sesuai angka (misal: 20).');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.Blocks[BLOCK_TYPES.LOOK_RESET_SIZE] = {
+  init(this: Blockly.Block) {
+    this.appendDummyInput()
+      .appendField('🎯')
+      .appendField('Atur ukuran normal (100%)');
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(COLORS.TAMPILAN);
+    this.setTooltip('Mengembalikan ukuran robot ke ukuran normal 100%.');
     this.setHelpUrl('');
   },
 };

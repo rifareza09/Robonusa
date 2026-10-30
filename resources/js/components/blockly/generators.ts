@@ -23,7 +23,8 @@ javascriptGenerator.scrub_ = function (
 ): string {
   if (
     block.type === BLOCK_TYPES.EVENT_START ||
-    block.type === BLOCK_TYPES.EVENT_KEY_PRESSED
+    block.type === BLOCK_TYPES.EVENT_KEY_PRESSED ||
+    block.type === BLOCK_TYPES.EVENT_CLICK_ROBOT
   ) {
     return code;
   }
@@ -50,6 +51,15 @@ javascriptGenerator.forBlock[BLOCK_TYPES.EVENT_KEY_PRESSED] = function (
   const nextBlock = block.getNextBlock();
   const body = nextBlock ? generator.blockToCode(nextBlock) : '';
   return `// [event_key_pressed: ${key}]\n{\n  const __onKey_${key.replace(/[^a-zA-Z0-9]/g, '_')}__ = async () => {\n${body}  };\n  __robot__.daftarkanKeyHandler('${key}', __onKey_${key.replace(/[^a-zA-Z0-9]/g, '_')}__);\n}\n`;
+};
+
+javascriptGenerator.forBlock[BLOCK_TYPES.EVENT_CLICK_ROBOT] = function (
+  block: Blockly.Block,
+  generator: typeof javascriptGenerator
+) {
+  const nextBlock = block.getNextBlock();
+  const body = nextBlock ? generator.blockToCode(nextBlock) : '';
+  return `// [event_click_robot]\n{\n  const __onRobotClick__ = async () => {\n${body}  };\n  __tasks__.push(__onRobotClick__());\n}\n`;
 };
 
 // ─── GERAKAN ──────────────────────────────────────────────────────────────────
@@ -88,6 +98,22 @@ javascriptGenerator.forBlock[BLOCK_TYPES.MOTION_TURN_RIGHT] = function (
     ? generator.valueToCode(block, 'DEGREES', Order.ATOMIC) || '90'
     : '90';
   return `await __robot__.belokKanan(${degrees});\n`;
+};
+
+javascriptGenerator.forBlock[BLOCK_TYPES.MOTION_STEP_RIGHT] = function (
+  block: Blockly.Block,
+  generator: typeof javascriptGenerator
+) {
+  const steps = generator.valueToCode(block, 'STEPS', Order.ATOMIC) || '10';
+  return `await __robot__.geserKanan(${steps});\n`;
+};
+
+javascriptGenerator.forBlock[BLOCK_TYPES.MOTION_STEP_LEFT] = function (
+  block: Blockly.Block,
+  generator: typeof javascriptGenerator
+) {
+  const steps = generator.valueToCode(block, 'STEPS', Order.ATOMIC) || '10';
+  return `await __robot__.geserKiri(${steps});\n`;
 };
 
 javascriptGenerator.forBlock[BLOCK_TYPES.MOTION_STOP] = function () {
@@ -278,6 +304,37 @@ javascriptGenerator.forBlock[BLOCK_TYPES.DISPLAY_TEXT] = function (
   return `__robot__.tampilkanTeks(String(${text}));\nawait __robot__.tidur(500);\n`;
 };
 
+javascriptGenerator.forBlock[BLOCK_TYPES.LOOK_SET_COSTUME] = function (
+  block: Blockly.Block
+) {
+  const costume = block.getFieldValue('COSTUME') || 'default';
+  return `__robot__.aturKostum('${costume}');\n`;
+};
+
+javascriptGenerator.forBlock[BLOCK_TYPES.LOOK_NEXT_COSTUME] = function () {
+  return `__robot__.gantiKostumBerikutnya();\n`;
+};
+
+javascriptGenerator.forBlock[BLOCK_TYPES.LOOK_SHRINK] = function (
+  block: Blockly.Block,
+  generator: typeof javascriptGenerator
+) {
+  const amount = generator.valueToCode(block, 'AMOUNT', Order.ATOMIC) || '20';
+  return `__robot__.ubahUkuran(-(${amount}));\n`;
+};
+
+javascriptGenerator.forBlock[BLOCK_TYPES.LOOK_GROW] = function (
+  block: Blockly.Block,
+  generator: typeof javascriptGenerator
+) {
+  const amount = generator.valueToCode(block, 'AMOUNT', Order.ATOMIC) || '20';
+  return `__robot__.ubahUkuran(${amount});\n`;
+};
+
+javascriptGenerator.forBlock[BLOCK_TYPES.LOOK_RESET_SIZE] = function () {
+  return `__robot__.aturUkuran(100);\n`;
+};
+
 // ─── SUARA ────────────────────────────────────────────────────────────────────
 
 javascriptGenerator.forBlock[BLOCK_TYPES.SOUND_PLAY_TONE] = function (
@@ -314,19 +371,24 @@ export function generateProgramCode(workspace: Blockly.Workspace): {
 } {
   // Ambil semua blok teratas
   const allTopBlocks = workspace.getTopBlocks(true);
-  const hasEventStart = allTopBlocks.some((b: Blockly.Block) => b.type === BLOCK_TYPES.EVENT_START);
+  const hasEventStart = allTopBlocks.some(
+    (b: Blockly.Block) =>
+      b.type === BLOCK_TYPES.EVENT_START ||
+      b.type === BLOCK_TYPES.EVENT_CLICK_ROBOT
+  );
   const topBlockTypes = allTopBlocks.map((b: Blockly.Block) => b.type);
 
   // Inisialisasi generator untuk workspace ini
   javascriptGenerator.init(workspace);
 
-  // Hanya blok Event (Saat Mulai Diklik, Saat Tombol Ditekan) yang menjadi entry point.
+  // Hanya blok Event (Saat Mulai Diklik, Saat Karakter Diklik, Saat Tombol Ditekan) yang menjadi entry point.
   // Blok yang terlepas/terpisah (orphan blocks) yang tidak tersambung ke blok Event
   // TIDAK akan dieksekusi (seperti pada Scratch / PictoBlox).
   const eventBlocks = allTopBlocks.filter(
     (b: Blockly.Block) =>
       b.type === BLOCK_TYPES.EVENT_START ||
-      b.type === BLOCK_TYPES.EVENT_KEY_PRESSED
+      b.type === BLOCK_TYPES.EVENT_KEY_PRESSED ||
+      b.type === BLOCK_TYPES.EVENT_CLICK_ROBOT
   );
 
   let rawCode = 'const __tasks__ = [];\n';

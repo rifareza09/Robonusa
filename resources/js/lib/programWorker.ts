@@ -73,8 +73,14 @@ function createRobotProxy(config: RuntimeConfig) {
     mundur: (langkah: number) => callRobotAPI('mundur', [langkah]),
     belokKiri: (derajat: number) => callRobotAPI('belokKiri', [derajat]),
     belokKanan: (derajat: number) => callRobotAPI('belokKanan', [derajat]),
+    geserKanan: (langkah: number) => callRobotAPI('geserKanan', [langkah]),
+    geserKiri: (langkah: number) => callRobotAPI('geserKiri', [langkah]),
     berhenti: () => callRobotAPI('berhenti', []),
     aturKecepatan: (kecepatan: number) => { void callRobotAPI('aturKecepatan', [kecepatan]); },
+    aturKostum: (kostum: string) => { void callRobotAPI('aturKostum', [kostum]); },
+    gantiKostumBerikutnya: () => { void callRobotAPI('gantiKostumBerikutnya', []); },
+    ubahUkuran: (perubahan: number) => { void callRobotAPI('ubahUkuran', [perubahan]); },
+    aturUkuran: (persen: number) => { void callRobotAPI('aturUkuran', [persen]); },
     cekRintangan: () => {
       // Sensor adalah synchronous — menggunakan SharedArrayBuffer jika tersedia
       // Fallback: kirim pesan sync (dibatasi oleh browser)

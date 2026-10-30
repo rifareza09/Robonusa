@@ -111,15 +111,16 @@ describe('Validasi struktur file JSON', () => {
 // Test validasi blok yang tidak dikenal
 describe('Validasi jenis blok', () => {
   const VALID_TYPES = new Set([
-    'event_start', 'event_key_pressed',
+    'event_start', 'event_key_pressed', 'event_click_robot',
     'motion_forward', 'motion_backward', 'motion_turn_left', 'motion_turn_right',
+    'motion_step_right', 'motion_step_left',
     'motion_stop', 'motion_set_speed',
     'control_repeat', 'control_forever', 'control_if', 'control_if_else',
     'operator_add', 'operator_subtract', 'operator_compare', 'operator_and',
     'operator_or', 'operator_not', 'operator_number',
     'variable_set', 'variable_change', 'variable_get',
     'sensor_obstacle', 'sensor_line',
-    'display_text',
+    'display_text', 'look_set_costume', 'look_next_costume', 'look_shrink', 'look_grow', 'look_reset_size',
     'sound_play_tone', 'sound_stop',
     'rk_text',
   ]);
