@@ -31,6 +31,13 @@ export const Home: React.FC = () => {
 
             <div className="flex items-center gap-4">
               <a
+                href="/contoh-proyek"
+                className="inline-flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-teal-700 font-semibold text-sm rounded-xl transition-colors"
+              >
+                <span>📚</span>
+                <span>Contoh Proyek</span>
+              </a>
+              <a
                 href="/robokreasi"
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold text-sm rounded-xl transition-all shadow-md shadow-blue-600/25 hover:shadow-lg hover:shadow-blue-600/35 hover:-translate-y-0.5 cursor-pointer"
               >

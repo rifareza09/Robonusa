@@ -22,7 +22,7 @@ test('database seeder can be executed repeatedly without generating duplicate re
 
     expect($categoryCount1)->toBe(8);
     expect($blockCount1)->toBe(30);
-    expect($projectCount1)->toBe(3);
+    expect($projectCount1)->toBe(5);
     expect($guideCount1)->toBe(1);
     expect($stepCount1)->toBe(8);
 

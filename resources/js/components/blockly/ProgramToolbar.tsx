@@ -218,6 +218,19 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
             </button>
           )}
 
+          {/* Tombol Contoh Proyek (di Navbar) */}
+          {onOpenExamplesModal && (
+            <button
+              type="button"
+              onClick={onOpenExamplesModal}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-teal-50 border border-teal-300 text-teal-700 text-xs font-bold rounded-xl transition-colors shadow-sm"
+              title="Pilih proyek contoh untuk latihan"
+            >
+              <span>📚</span>
+              <span>Contoh Proyek</span>
+            </button>
+          )}
+
           {/* Tombol Panduan */}
           {onOpenGuide && (
             <button
@@ -247,19 +260,6 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
 
         {/* Kontrol & Status */}
         <div className="flex items-center gap-2">
-          {/* Tombol Contoh Proyek Modal */}
-          {onOpenExamplesModal && (
-            <button
-              type="button"
-              onClick={onOpenExamplesModal}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-gray-50 border border-gray-300 text-gray-800 text-xs font-bold rounded-xl transition-colors shadow-sm"
-              title="Pilih proyek contoh untuk latihan"
-            >
-              <span>📚</span>
-              <span>Contoh Proyek</span>
-            </button>
-          )}
-
           {/* Status Badge Pill (Sesuai Figma) */}
           <div
             className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-colors ${status.className}`}

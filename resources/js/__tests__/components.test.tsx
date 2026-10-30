@@ -169,8 +169,6 @@ describe('SimulatorCanvas', () => {
     expect(screen.getByText('🤖 Simulator Robot')).toBeInTheDocument();
     expect(screen.getByText('Siap')).toBeInTheDocument();
     expect(screen.getByText('Robot Siap!')).toBeInTheDocument();
-    expect(screen.getByText(/Kecepatan: 6\/10/)).toBeInTheDocument();
-    expect(screen.getByText(/Arah: 90°/)).toBeInTheDocument();
     expect(screen.getByText('Tes log 1')).toBeInTheDocument();
   });
 });

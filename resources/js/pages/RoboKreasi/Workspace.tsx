@@ -183,6 +183,24 @@ const Workspace: React.FC<WorkspacePageProps> = ({
     }
   }, [workspace, resetSimulator, setArenaMode, showNotification]);
 
+  // Muat proyek contoh secara otomatis jika terdapat parameter query ?example=<slug>
+  useEffect(() => {
+    if (!workspace || exampleProjects.length === 0) return;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const exampleSlug = params.get('example');
+      if (exampleSlug) {
+        const found = exampleProjects.find((p) => p.slug === exampleSlug);
+        if (found) {
+          handleLoadExample(found);
+          window.history.replaceState({}, '', window.location.pathname);
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }, [workspace, exampleProjects, handleLoadExample]);
+
   // Konfirmasi sebelum membuka proyek lain / keluar jika ada perubahan yang belum disimpan
   const confirmIfUnsaved = useCallback(
     (action: () => void, mode: UnsavedModalMode = 'open') => {
@@ -516,19 +534,6 @@ const Workspace: React.FC<WorkspacePageProps> = ({
                   />
                 </div>
 
-                {/* Panduan Cepat untuk Siswa */}
-                <div className="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-3 text-xs text-blue-900 shadow-2xs flex-shrink-0">
-                  <p className="font-bold mb-1 flex items-center gap-1.5 text-blue-800">
-                    <span>💡</span>
-                    <span>Cara belajar:</span>
-                  </p>
-                  <ol className="list-decimal list-inside space-y-0.5 text-[11px] text-blue-950/80">
-                    <li>Pilih blok di panel sebelah kiri</li>
-                    <li>Susun dan hubungkan di kanvas tengah</li>
-                    <li>Klik <strong>▶ Jalankan</strong> untuk menguji robot</li>
-                    <li>Lihat respon sensor dan pergerakan virtual! 🤖</li>
-                  </ol>
-                </div>
               </>
             )}
           </div>

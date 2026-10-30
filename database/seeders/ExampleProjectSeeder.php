@@ -280,6 +280,151 @@ class ExampleProjectSeeder extends Seeder
                     ],
                 ],
             ],
+
+            // ─── PROYEK 4: Robot Mengikuti Garis ────────────────────────────────
+            [
+                'name'        => 'Robot Mengikuti Garis',
+                'slug'        => 'robot-mengikuti-garis',
+                'description' => 'Arahkan robot mengikuti garis dengan membaca sensor dan menyesuaikan gerakan.',
+                'difficulty'  => 'menengah',
+                'thumbnail'   => null,
+                'sort_order'  => 4,
+                'is_active'   => true,
+                'workspace_json' => [
+                    'blocks' => [
+                        'languageVersion' => 0,
+                        'blocks' => [
+                            [
+                                'type' => 'event_start',
+                                'id' => 'start_line',
+                                'x' => 40,
+                                'y' => 40,
+                                'next' => [
+                                    'block' => [
+                                        'type' => 'control_forever',
+                                        'id' => 'forever_line',
+                                        'inputs' => [
+                                            'DO' => [
+                                                'block' => [
+                                                    'type' => 'control_if_else',
+                                                    'id' => 'if_line',
+                                                    'inputs' => [
+                                                        'CONDITION' => [
+                                                            'block' => [
+                                                                'type' => 'sensor_line',
+                                                                'id' => 'chk_line',
+                                                            ],
+                                                        ],
+                                                        'DO' => [
+                                                            'block' => [
+                                                                'type' => 'motion_forward',
+                                                                'id' => 'fwd_line',
+                                                                'inputs' => [
+                                                                    'STEPS' => [
+                                                                        'block' => [
+                                                                            'type' => 'operator_number',
+                                                                            'id' => 'num_line_step',
+                                                                            'fields' => ['NUM' => 2],
+                                                                        ],
+                                                                    ],
+                                                                ],
+                                                            ],
+                                                        ],
+                                                        'ELSE' => [
+                                                            'block' => [
+                                                                'type' => 'motion_turn_right',
+                                                                'id' => 'turn_line',
+                                                                'inputs' => [
+                                                                    'DEGREES' => [
+                                                                        'block' => [
+                                                                            'type' => 'operator_number',
+                                                                            'id' => 'num_line_turn',
+                                                                            'fields' => ['NUM' => 15],
+                                                                        ],
+                                                                    ],
+                                                                ],
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+
+            // ─── PROYEK 5: Robot Bergerak Membentuk Pola ────────────────────────
+            [
+                'name'        => 'Robot Bergerak Membentuk Pola',
+                'slug'        => 'robot-bergerak-membentuk-pola',
+                'description' => 'Ulangi gerak maju dan putaran untuk membuat jalur berbentuk persegi.',
+                'difficulty'  => 'pemula',
+                'thumbnail'   => null,
+                'sort_order'  => 5,
+                'is_active'   => true,
+                'workspace_json' => [
+                    'blocks' => [
+                        'languageVersion' => 0,
+                        'blocks' => [
+                            [
+                                'type' => 'event_start',
+                                'id' => 'start_pola',
+                                'x' => 40,
+                                'y' => 40,
+                                'next' => [
+                                    'block' => [
+                                        'type' => 'control_repeat',
+                                        'id' => 'repeat_pola',
+                                        'inputs' => [
+                                            'TIMES' => [
+                                                'block' => [
+                                                    'type' => 'operator_number',
+                                                    'id' => 'num_repeat_pola',
+                                                    'fields' => ['NUM' => 4],
+                                                ],
+                                            ],
+                                            'DO' => [
+                                                'block' => [
+                                                    'type' => 'motion_forward',
+                                                    'id' => 'fwd_pola',
+                                                    'inputs' => [
+                                                        'STEPS' => [
+                                                            'block' => [
+                                                                'type' => 'operator_number',
+                                                                'id' => 'num_pola_fwd',
+                                                                'fields' => ['NUM' => 8],
+                                                            ],
+                                                        ],
+                                                    ],
+                                                    'next' => [
+                                                        'block' => [
+                                                            'type' => 'motion_turn_right',
+                                                            'id' => 'turn_pola',
+                                                            'inputs' => [
+                                                                'DEGREES' => [
+                                                                    'block' => [
+                                                                        'type' => 'operator_number',
+                                                                        'id' => 'num_pola_deg',
+                                                                        'fields' => ['NUM' => 90],
+                                                                    ],
+                                                                ],
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         foreach ($projects as $projectData) {

@@ -21,6 +21,29 @@ class RoboKreasiController extends Controller
     }
 
     /**
+     * Menampilkan halaman Contoh Proyek (dedicated page sesuai Figma).
+     */
+    public function exampleProjects(): Response
+    {
+        $exampleProjects = ExampleProject::active()
+            ->select([
+                'id',
+                'name',
+                'slug',
+                'description',
+                'difficulty',
+                'thumbnail',
+                'workspace_json',
+                'sort_order',
+            ])
+            ->get();
+
+        return Inertia::render('RoboKreasi/ExampleProjects', [
+            'exampleProjects' => $exampleProjects,
+        ]);
+    }
+
+    /**
      * Menampilkan halaman workspace RoboKreasi via Inertia.js.
      * Mengirim props sesuai kontrak resmi:
      * - blockCategories

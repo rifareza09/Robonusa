@@ -376,37 +376,6 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
           </div>
         </div>
 
-        {/* ─── Telemetri & Sensor Card ──────────────────────────────────── */}
-        <div className="grid grid-cols-2 gap-2 p-2.5 bg-gray-50 rounded-xl border border-gray-200/80 text-xs">
-          <div>
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">
-              Arah Robot
-            </span>
-            <span className="font-bold text-gray-800 text-xs mt-0.5 block">
-              {getCompassDirection(state.robot.angle)}
-            </span>
-            <span className="text-[10px] text-gray-500">
-              Arah: {Math.round(state.robot.angle)}°
-            </span>
-          </div>
-
-          <div>
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">
-              Sensor Terakhir
-            </span>
-            <span className="font-semibold text-gray-800 text-xs mt-0.5 block truncate">
-              {state.arena.obstacles.length > 0
-                ? 'Deteksi rintangan aktif'
-                : state.arena.lines.length > 0
-                  ? 'Sensor garis aktif'
-                  : 'Belum dibaca'}
-            </span>
-            <span className="text-[10px] text-gray-500">
-              Kecepatan: {state.robot.speed}/10
-            </span>
-          </div>
-        </div>
-
         {/* ─── Urutan Eksekusi / Catatan Log Figma ───────────────────────── */}
         <div className="p-3 bg-gray-50/80 rounded-xl border border-gray-200/80 flex flex-col gap-1 text-xs">
           <p className="font-bold text-[11px] text-gray-700 uppercase tracking-wider">
