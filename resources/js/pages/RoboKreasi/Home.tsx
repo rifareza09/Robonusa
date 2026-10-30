@@ -1,6 +1,6 @@
 /**
  * RoboKreasi — Halaman Depan Racero Scratch
- * Mengacu pada desain Figma: "Halaman depan Racero Scratch.png" & "Kit desain • RoboNusa.png"
+ * Desain sejalan dengan halaman Contoh Proyek (Teal & Mint Palette RoboNusa).
  */
 
 import React from 'react';
@@ -11,89 +11,102 @@ export const Home: React.FC = () => {
     <>
       <Head title="RoboKreasi — Berkreasi dengan Racero Scratch" />
 
-      <div className="min-h-screen bg-white text-gray-900 font-sans flex flex-col selection:bg-blue-100 selection:text-blue-900">
-        {/* ─── Navbar ───────────────────────────────────────────────────────── */}
-        <header className="border-b border-gray-100 bg-white/90 backdrop-blur-md sticky top-0 z-40 px-6 py-4">
-          <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-xl shadow-md shadow-blue-500/20">
-                🤖
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-extrabold tracking-tight text-blue-600">
+      <div className="min-h-screen bg-[#FBFDFD] text-gray-900 font-sans flex flex-col selection:bg-teal-100 selection:text-teal-900">
+        {/* ─── Navbar Utama (Identik dengan Contoh Proyek) ───────────────────── */}
+        <nav className="border-b border-gray-200 bg-white sticky top-0 z-20">
+          <div className="max-w-6xl mx-auto px-6 py-3.5 flex items-center justify-between gap-4">
+            {/* Logo & Nav Tabs */}
+            <div className="flex items-center gap-8">
+              <a href="/beranda" className="flex items-center gap-2.5 group">
+                <div className="w-8 h-8 rounded-xl bg-teal-700 flex items-center justify-center text-white text-base shadow-sm group-hover:bg-teal-800 transition-colors">
+                  🤖
+                </div>
+                <span className="text-xl font-extrabold tracking-tight text-teal-800 font-sans">
                   RoboNusa!
                 </span>
-                <span className="text-[10px] font-semibold tracking-wider text-gray-400 uppercase -mt-1">
-                  Racero Scratch
+              </a>
+
+              {/* Menu Navigasi Utama */}
+              <div className="flex items-center gap-6 text-sm">
+                <span className="text-teal-800 font-bold border-b-2 border-teal-700 pb-1 cursor-default">
+                  Beranda
                 </span>
+                <a
+                  href="/contoh-proyek"
+                  className="text-gray-600 hover:text-teal-700 font-medium transition-colors"
+                >
+                  Contoh Proyek
+                </a>
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            {/* Aksi Kanan Navbar */}
+            <div className="flex items-center gap-3">
               <a
                 href="/contoh-proyek"
-                className="inline-flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-teal-700 font-semibold text-sm rounded-xl transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-600 hover:text-teal-800 transition-colors"
               >
-                <span>📚</span>
-                <span>Contoh Proyek</span>
+                <span className="w-5 h-5 rounded-full border border-gray-300 flex items-center justify-center text-[11px] font-bold">
+                  ?
+                </span>
+                <span>Bantuan</span>
               </a>
               <a
                 href="/robokreasi"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold text-sm rounded-xl transition-all shadow-md shadow-blue-600/25 hover:shadow-lg hover:shadow-blue-600/35 hover:-translate-y-0.5 cursor-pointer"
+                className="flex items-center gap-1.5 px-4 py-2 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold rounded-xl transition-colors shadow-sm cursor-pointer shadow-teal-700/20"
               >
-                <span>Mulai Membuat</span>
-                <span>→</span>
+                <span className="text-sm font-bold leading-none">+</span>
+                <span>Proyek baru</span>
               </a>
             </div>
           </div>
-        </header>
+        </nav>
 
-        {/* ─── Hero Section Sesuai Figma ────────────────────────────────────── */}
-        <section className="flex-1 max-w-6xl mx-auto px-6 py-12 md:py-20 flex flex-col justify-center">
+        {/* ─── Hero Section Sesuai Skema Contoh Proyek ───────────────────────── */}
+        <section className="flex-1 max-w-6xl mx-auto px-6 py-12 md:py-20 flex flex-col justify-center w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Teks Hero */}
             <div className="lg:col-span-7 flex flex-col items-start text-left">
-              <div className="inline-block px-3 py-1 bg-gray-100 text-gray-700 font-bold text-xs tracking-wider uppercase rounded-md mb-5 border border-gray-200">
-                RACERO SCRATCH
+              <div className="inline-block px-3 py-1 bg-teal-50 text-teal-800 font-bold text-xs tracking-wider uppercase rounded-md mb-5 border border-teal-200">
+                RACERO SCRATCH • ROBOKREASI
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-950 tracking-tight leading-[1.12] mb-6">
                 Berkreasi dengan <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-700 to-teal-900">
                   Racero Scratch
                 </span>
               </h1>
 
-              <p className="text-lg text-gray-600 leading-relaxed max-w-xl mb-8">
-                Susun blok kode untuk membuat animasi, permainan, dan proyek robotik.
-                Wujudkan ide kreatifmu dengan cara yang mudah dan menyenangkan.
+              <p className="text-base sm:text-lg text-gray-600 leading-relaxed max-w-xl mb-8">
+                Susun blok kode visual untuk membuat algoritma robot virtual, uji sensor garis dan rintangan, serta wujudkan imajinasi robotikamu secara interaktif.
               </p>
 
               <div className="flex items-center gap-4 flex-wrap">
                 <a
                   href="/robokreasi"
-                  className="px-7 py-3.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold text-base rounded-2xl transition-all shadow-lg shadow-blue-600/30 hover:shadow-xl hover:shadow-blue-600/40 hover:-translate-y-0.5 cursor-pointer"
+                  className="px-7 py-3.5 bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white font-bold text-base rounded-2xl transition-all shadow-lg shadow-teal-700/25 hover:shadow-xl hover:shadow-teal-700/35 hover:-translate-y-0.5 cursor-pointer"
                 >
-                  Mulai Membuat
+                  Mulai Membuat →
                 </a>
 
                 <a
-                  href="/robokreasi"
-                  className="px-6 py-3.5 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-base rounded-2xl border border-gray-200 transition-colors shadow-2xs"
+                  href="/contoh-proyek"
+                  className="px-6 py-3.5 bg-white hover:bg-teal-50 text-teal-800 font-bold text-base rounded-2xl border-2 border-teal-200 hover:border-teal-300 transition-colors shadow-2xs"
                 >
                   Lihat Contoh Proyek 💡
                 </a>
               </div>
             </div>
 
-            {/* Ilustrasi Puzzle Blok Sesuai Figma */}
+            {/* Ilustrasi Puzzle Blok Sesuai Tema RoboNusa Teal ───────────────── */}
             <div className="lg:col-span-5 flex justify-center lg:justify-end">
-              <div className="relative w-full max-w-md p-6 bg-gradient-to-br from-blue-50/60 to-indigo-50/40 rounded-3xl border border-blue-100/80 shadow-xl shadow-blue-500/5">
-                {/* Blok Utama Biru & Kuning Sesuai Figma "Halaman depan Racero Scratch.png" */}
+              <div className="relative w-full max-w-md p-6 bg-[#F0FDF9] rounded-3xl border border-teal-100 shadow-xl shadow-teal-700/5">
+                {/* Blok Utama Hijau Toska / Teal & Kuning */}
                 <div className="flex items-center justify-center py-6">
-                  <div className="flex items-stretch shadow-lg rounded-2xl overflow-hidden transition-transform hover:scale-105 duration-200">
-                    {/* Blok Biru */}
-                    <div className="bg-[#2563EB] text-white px-7 py-6 font-extrabold text-lg flex items-center gap-2 border-r border-blue-700/40 select-none">
+                  <div className="flex items-stretch shadow-md rounded-2xl overflow-hidden transition-transform hover:scale-105 duration-200">
+                    {/* Blok Gerak Teal */}
+                    <div className="bg-teal-700 text-white px-7 py-6 font-extrabold text-lg flex items-center gap-2 border-r border-teal-800/40 select-none">
                       <span>🧩</span>
                       <span>Maju 10 cm</span>
                     </div>
@@ -104,17 +117,17 @@ export const Home: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Sub-blok dekorasi floating */}
+                {/* Sub-blok dekorasi telemetri */}
                 <div className="mt-4 flex flex-col gap-2.5">
-                  <div className="bg-white/90 backdrop-blur-xs p-3 rounded-xl border border-blue-100 shadow-xs flex items-center justify-between text-xs font-semibold text-gray-700">
+                  <div className="bg-white/95 backdrop-blur-xs p-3 rounded-xl border border-teal-100 shadow-2xs flex items-center justify-between text-xs font-semibold text-gray-700">
                     <span className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-teal-500 animate-ping" />
                       <span>Simulator Robot Virtual Siap</span>
                     </span>
-                    <span className="text-blue-600 font-bold">120 × 90 cm</span>
+                    <span className="text-teal-700 font-bold">120 × 90 cm</span>
                   </div>
 
-                  <div className="bg-white/90 backdrop-blur-xs p-3 rounded-xl border border-purple-100 shadow-xs flex items-center gap-2.5 text-xs text-gray-600">
+                  <div className="bg-white/95 backdrop-blur-xs p-3 rounded-xl border border-teal-100 shadow-2xs flex items-center gap-2.5 text-xs text-gray-600">
                     <span className="text-base">🎯</span>
                     <span>Sensor rintangan & sensor pendeteksi garis terintegrasi</span>
                   </div>
@@ -123,27 +136,26 @@ export const Home: React.FC = () => {
             </div>
           </div>
 
-          {/* ─── Fitur Dua Kolom Sesuai Figma ───────────────────────────────── */}
-          <div className="mt-20 pt-16 border-t border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* ─── Fitur Tiga Kolom Sesuai Gaya Kartu Contoh Proyek ────────────── */}
+          <div className="mt-20 pt-16 border-t border-gray-200/80 grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Fitur 1: Didesain Aksesibel */}
-            <div className="p-7 rounded-3xl bg-[#F8FAFC] border border-gray-200/80 flex flex-col justify-between hover:shadow-md transition-shadow">
+            <div className="p-7 rounded-3xl bg-white border border-gray-200/80 flex flex-col justify-between hover:shadow-md transition-shadow shadow-2xs">
               <div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-3 tracking-tight">
                   Didesain Aksesibel
                 </h3>
                 <p className="text-sm text-gray-600 leading-relaxed mb-6">
-                  Dirancang agar siapa saja bisa berinteraksi dengan kode visual — membantu
-                  pengembang menciptakan pengalaman yang inklusif untuk semua pengguna.
+                  Dirancang agar siapa saja bisa berinteraksi dengan kode visual — membantu siswa menciptakan algoritma robot secara intuitif dan inklusif.
                 </p>
               </div>
 
-              {/* Ilustrasi Aksesibel Figma */}
-              <div className="h-32 rounded-2xl bg-white border border-gray-200 flex items-center justify-center p-4">
+              {/* Ilustrasi Aksesibel */}
+              <div className="h-32 rounded-2xl bg-teal-50/50 border border-teal-100 flex items-center justify-center p-4">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl shadow-xs">
                     👁️
                   </div>
-                  <div className="w-14 h-14 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-2xl shadow-xs">
+                  <div className="w-14 h-14 rounded-2xl bg-teal-700 text-white flex items-center justify-center text-2xl shadow-xs">
                     🧍
                   </div>
                 </div>
@@ -151,36 +163,35 @@ export const Home: React.FC = () => {
             </div>
 
             {/* Fitur 2: Dirancang Fleksibel */}
-            <div className="p-7 rounded-3xl bg-[#F8FAFC] border border-gray-200/80 flex flex-col justify-between hover:shadow-md transition-shadow">
+            <div className="p-7 rounded-3xl bg-white border border-gray-200/80 flex flex-col justify-between hover:shadow-md transition-shadow shadow-2xs">
               <div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-3 tracking-tight">
                   Dirancang Fleksibel
                 </h3>
                 <p className="text-sm text-gray-600 leading-relaxed mb-6">
-                  Pustaka open-source yang mudah disesuaikan dengan kebutuhanmu.
-                  Dilengkapi API, generator, dan integrasi, Blockly cocok untuk berbagai platform dan lingkungan.
+                  Blok logika visual kompatibel dengan Blockly dan simulator robot virtual. Mudah dijalankan langsung di peramban tanpa instalasi driver tambahan.
                 </p>
               </div>
 
-              {/* Ilustrasi Fleksibel Figma */}
-              <div className="h-32 rounded-2xl bg-white border border-gray-200 flex items-center justify-center p-4">
+              {/* Ilustrasi Fleksibel */}
+              <div className="h-32 rounded-2xl bg-teal-50/50 border border-teal-100 flex items-center justify-center p-4">
                 <div className="flex items-center gap-2">
-                  <div className="px-3 py-2 bg-blue-100 text-blue-700 font-mono text-xs font-bold rounded-lg border border-blue-200">
+                  <div className="px-3 py-2 bg-teal-100 text-teal-800 font-mono text-xs font-bold rounded-lg border border-teal-200">
                     &lt;code&gt;
                   </div>
                   <span className="text-gray-300">⇄</span>
-                  <div className="px-3 py-2 bg-emerald-600 text-white text-xs font-bold rounded-lg shadow-xs">
+                  <div className="px-3 py-2 bg-teal-700 text-white text-xs font-bold rounded-lg shadow-xs">
                     🧩 Visual
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Kartu Maskot Robot Sesuai Figma */}
-            <div className="p-7 rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex flex-col justify-between shadow-xl shadow-blue-600/20">
+            {/* Kartu Maskot Robot Teal Sesuai Gaya Contoh Proyek */}
+            <div className="p-7 rounded-3xl bg-gradient-to-br from-teal-700 to-teal-900 text-white flex flex-col justify-between shadow-xl shadow-teal-700/20">
               <div>
-                {/* Bubble Pesan Maskot Sesuai Figma */}
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-500/60 rounded-xl text-xs font-bold mb-4 backdrop-blur-xs border border-blue-400/40">
+                {/* Bubble Pesan Maskot */}
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-teal-600/60 rounded-xl text-xs font-bold mb-4 backdrop-blur-xs border border-teal-400/40">
                   <span>Pesan:</span>
                   <span>Hi, Aku RoboNusa! 🤖</span>
                 </div>
@@ -188,14 +199,14 @@ export const Home: React.FC = () => {
                 <h3 className="text-2xl font-bold mb-3 tracking-tight text-white">
                   Siap Belajar Logika Pemrograman?
                 </h3>
-                <p className="text-sm text-blue-100 leading-relaxed mb-6">
+                <p className="text-sm text-teal-100 leading-relaxed mb-6">
                   Pelajari logika komputer melalui gerak robot virtual, sensor jarak, dan rintangan arena.
                 </p>
               </div>
 
               <a
                 href="/robokreasi"
-                className="w-full py-3 bg-white hover:bg-blue-50 text-blue-700 font-extrabold text-sm rounded-xl text-center transition-colors shadow-md cursor-pointer"
+                className="w-full py-3 bg-white hover:bg-teal-50 text-teal-800 font-extrabold text-sm rounded-xl text-center transition-colors shadow-md cursor-pointer"
               >
                 Buka Workspace RoboKreasi 🚀
               </a>
@@ -203,19 +214,21 @@ export const Home: React.FC = () => {
           </div>
         </section>
 
-        {/* ─── Footer Sesuai Figma ─────────────────────────────────────────── */}
-        <footer className="border-t border-gray-100 bg-gray-50 py-6 px-6 text-xs text-gray-500">
-          <div className="max-w-6xl mx-auto flex items-center justify-between flex-wrap gap-3">
+        {/* ─── Footer Bawah Sesuai Tema Contoh Proyek ───────────────────────── */}
+        <footer className="border-t border-gray-200 bg-white py-6 px-6 text-xs text-gray-500">
+          <div className="max-w-6xl mx-auto flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-gray-700">RoboNusa!</span>
+              <span className="font-extrabold text-teal-800">RoboNusa!</span>
               <span>•</span>
               <span>© {new Date().getFullYear()} Racer Robotic. Berkreasi dengan Racero Scratch.</span>
             </div>
 
-            <div className="flex items-center gap-3 text-[11px]">
-              <span>🇮🇩 Bahasa Indonesia</span>
-              <span>•</span>
-              <a href="/robokreasi" className="text-blue-600 font-semibold hover:underline">
+            <div className="flex items-center gap-4 text-xs font-medium">
+              <a href="/contoh-proyek" className="text-teal-700 hover:underline">
+                Contoh Proyek
+              </a>
+              <span className="text-gray-300">•</span>
+              <a href="/robokreasi" className="text-teal-700 hover:underline">
                 Ruang Pemrograman
               </a>
             </div>
