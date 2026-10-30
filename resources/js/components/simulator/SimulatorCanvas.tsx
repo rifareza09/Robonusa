@@ -18,6 +18,8 @@ interface SimulatorCanvasProps {
   onRun?: () => void;
   onStop?: () => void;
   onReset?: () => void;
+  onCostumeChange?: (costume: NonNullable<SimulatorState['robot']['costume']>) => void;
+  onSizeChange?: (size: number) => void;
 }
 
 // ─── Warna Figma ──────────────────────────────────────────────────────────────
@@ -42,6 +44,19 @@ const COSTUME_MAP: Record<string, string> = {
   mouth_open: '/images/robot/pose_mouth_open.png',
   active: '/images/robot/pose_active.png',
 };
+
+const COSTUME_OPTIONS: Array<{
+  id: NonNullable<SimulatorState['robot']['costume']>;
+  label: string;
+  desc: string;
+  src: string;
+}> = [
+  { id: 'default', label: 'Berdiri', desc: 'Pose tegak santai', src: '/images/robot/pose_default.png' },
+  { id: 'walk_right', label: 'Kanan', desc: 'Melangkah ke kanan', src: '/images/robot/pose_walk_right.png' },
+  { id: 'walk_left', label: 'Kiri', desc: 'Melangkah ke kiri', src: '/images/robot/pose_walk_left.png' },
+  { id: 'mouth_open', label: 'Buka Mulut', desc: 'Pose kaget mulut terbuka', src: '/images/robot/pose_mouth_open.png' },
+  { id: 'active', label: 'Lompat', desc: 'Pose aktif lompat ceria', src: '/images/robot/pose_active.png' },
+];
 
 // ─── Komponen Robot ───────────────────────────────────────────────────────────
 
@@ -192,6 +207,8 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
   onRun,
   onStop,
   onReset,
+  onCostumeChange,
+  onSizeChange,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const isRunning = programStatus === 'running';
@@ -383,6 +400,84 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
               </g>
             )}
           </svg>
+        </div>
+
+        {/* ─── Panel Karakter & Pose (PictoBlox / ScratchJr Style) ─────── */}
+        <div className="p-2.5 bg-gradient-to-r from-teal-50/70 via-slate-50 to-teal-50/70 rounded-xl border border-teal-100 flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs font-bold text-gray-800 flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
+                Karakter & Pose
+              </span>
+              <span className="text-[10px] text-teal-700 bg-teal-100/70 font-semibold px-1.5 py-0.5 rounded">
+                {COSTUME_OPTIONS.find((c) => c.id === (state.robot.costume || 'default'))?.label || 'Berdiri'}
+              </span>
+            </div>
+
+            {/* Kontrol Ukuran Karakter */}
+            <div className="flex items-center gap-1 text-[11px] font-medium text-gray-600 bg-white px-2 py-0.5 rounded-lg border border-gray-200 shadow-2xs">
+              <span className="text-[10px] text-gray-400">Ukuran:</span>
+              <button
+                type="button"
+                onClick={() => onSizeChange?.(Math.max(20, (state.robot.size ?? 100) - 10))}
+                className="w-4 h-4 flex items-center justify-center rounded hover:bg-gray-100 text-gray-700 font-bold leading-none cursor-pointer"
+                title="Perkecil karakter (-10%)"
+              >
+                −
+              </button>
+              <span className="font-semibold text-teal-700 min-w-[32px] text-center">
+                {state.robot.size ?? 100}%
+              </span>
+              <button
+                type="button"
+                onClick={() => onSizeChange?.(Math.min(300, (state.robot.size ?? 100) + 10))}
+                className="w-4 h-4 flex items-center justify-center rounded hover:bg-gray-100 text-gray-700 font-bold leading-none cursor-pointer"
+                title="Perbesar karakter (+10%)"
+              >
+                +
+              </button>
+              {(state.robot.size ?? 100) !== 100 && (
+                <button
+                  type="button"
+                  onClick={() => onSizeChange?.(100)}
+                  className="ml-0.5 text-[9px] text-teal-600 hover:text-teal-800 font-bold underline cursor-pointer"
+                  title="Kembalikan ke ukuran normal 100%"
+                >
+                  Reset
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Tombol Thumbnail 5 Pose Karakter */}
+          <div className="grid grid-cols-5 gap-1.5">
+            {COSTUME_OPTIONS.map((c) => {
+              const isActive = (state.robot.costume || 'default') === c.id;
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => onCostumeChange?.(c.id)}
+                  title={`${c.label} (${c.desc})`}
+                  className={`flex flex-col items-center justify-center p-1 rounded-lg border transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-white border-teal-500 shadow-sm ring-2 ring-teal-400/40 text-teal-700 font-bold'
+                      : 'bg-white/70 hover:bg-white border-gray-200/80 text-gray-600 hover:border-teal-300'
+                  }`}
+                >
+                  <img
+                    src={c.src}
+                    alt={c.label}
+                    className="w-7 h-7 object-contain drop-shadow-2xs"
+                  />
+                  <span className="text-[9.5px] mt-0.5 truncate max-w-full leading-tight">
+                    {c.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* ─── Tombol Eksekusi Simulator (Figma) ─────────────────────────── */}

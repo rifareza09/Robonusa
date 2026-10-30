@@ -45,6 +45,8 @@ export interface UseSimulatorReturn {
   runProgram: (code: string, topBlocks: string[], allBlockTypes: string[]) => Promise<void>;
   stopProgram: () => void;
   resetSimulator: () => void;
+  setCostume: (costume: NonNullable<SimulatorState['robot']['costume']>) => void;
+  setSize: (size: number) => void;
 }
 
 export function useSimulator(): UseSimulatorReturn {
@@ -158,6 +160,14 @@ export function useSimulator(): UseSimulatorReturn {
     setErrorMessage(null);
   }, []);
 
+  const setCostume = useCallback((costume: NonNullable<SimulatorState['robot']['costume']>) => {
+    simulatorRef.current?.aturKostum(costume);
+  }, []);
+
+  const setSize = useCallback((size: number) => {
+    simulatorRef.current?.aturUkuran(size);
+  }, []);
+
   return {
     simulatorState,
     programStatus,
@@ -168,6 +178,8 @@ export function useSimulator(): UseSimulatorReturn {
     runProgram,
     stopProgram,
     resetSimulator,
+    setCostume,
+    setSize,
   };
 }
 

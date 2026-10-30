@@ -102,6 +102,8 @@ const Workspace: React.FC<WorkspacePageProps> = ({
     runProgram,
     stopProgram,
     resetSimulator,
+    setCostume,
+    setSize,
   } = useSimulator();
 
   // ─── Notifikasi Toast ──────────────────────────────────────────────────────
@@ -531,6 +533,8 @@ const Workspace: React.FC<WorkspacePageProps> = ({
                     onRun={handleRun}
                     onStop={stopProgram}
                     onReset={resetSimulator}
+                    onCostumeChange={setCostume}
+                    onSizeChange={setSize}
                   />
                 </div>
 
