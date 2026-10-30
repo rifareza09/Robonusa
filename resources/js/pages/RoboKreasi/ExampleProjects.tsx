@@ -102,28 +102,23 @@ const DIFFICULTY_COLORS: Record<string, string> = {
 function RobotIcon({ x, y }: { x: number; y: number }) {
   return (
     <g transform={`translate(${x}, ${y})`}>
-      <rect x="-14" y="-18" width="28" height="36" rx="6" fill="#0d9488" />
-      <circle cx="-6" cy="-8" r="3" fill="#ffffff" />
-      <circle cx="6" cy="-8" r="3" fill="#ffffff" />
-      <rect x="-8" y="2" width="16" height="4" rx="2" fill="#5eead4" />
-      <path d="M0 10 L-4 16 L4 16 Z" fill="#ffffff" />
+      <image
+        href="/images/robot_sprite.png"
+        x={-18}
+        y={-20}
+        width={36}
+        height={40}
+        preserveAspectRatio="xMidYMid meet"
+      />
     </g>
   );
 }
 
 function ThumbnailPlaceholder({ slug }: { slug: string }) {
-  const gridPattern = (
-    <pattern id={`grid-${slug}`} width="20" height="20" patternUnits="userSpaceOnUse">
-      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e6f2f0" strokeWidth="0.8" />
-    </pattern>
-  );
-
   if (slug.includes('jalur') || slug.includes('pemilih')) {
     return (
       <svg viewBox="0 0 300 140" className="w-full h-full" fill="none">
-        <defs>{gridPattern}</defs>
         <rect width="300" height="140" fill="#f8fdfc" />
-        <rect width="300" height="140" fill={`url(#grid-${slug})`} />
         {/* Y-Split Path */}
         <line x1="80" y1="105" x2="140" y2="65" stroke="#99f6e4" strokeWidth="3" strokeDasharray="6,4" />
         <line x1="140" y1="65" x2="220" y2="35" stroke="#99f6e4" strokeWidth="3" strokeDasharray="6,4" />
@@ -136,9 +131,7 @@ function ThumbnailPlaceholder({ slug }: { slug: string }) {
   if (slug.includes('rintangan')) {
     return (
       <svg viewBox="0 0 300 140" className="w-full h-full" fill="none">
-        <defs>{gridPattern}</defs>
         <rect width="300" height="140" fill="#f8fdfc" />
-        <rect width="300" height="140" fill={`url(#grid-${slug})`} />
         {/* Rintangan Kotak Orange X */}
         <g transform="translate(130, 35)">
           <rect width="34" height="34" rx="6" fill="#fed7aa" stroke="#f97316" strokeWidth="1.5" />
@@ -155,9 +148,7 @@ function ThumbnailPlaceholder({ slug }: { slug: string }) {
   if (slug.includes('garis')) {
     return (
       <svg viewBox="0 0 300 140" className="w-full h-full" fill="none">
-        <defs>{gridPattern}</defs>
         <rect width="300" height="140" fill="#f8fdfc" />
-        <rect width="300" height="140" fill={`url(#grid-${slug})`} />
         {/* Track Garis Hitam Tebal */}
         <path
           d="M 60 100 L 110 100 C 170 100, 160 40, 220 40 L 245 40"
@@ -189,9 +180,7 @@ function ThumbnailPlaceholder({ slug }: { slug: string }) {
   if (slug.includes('pola') || slug.includes('persegi')) {
     return (
       <svg viewBox="0 0 300 140" className="w-full h-full" fill="none">
-        <defs>{gridPattern}</defs>
         <rect width="300" height="140" fill="#f8fdfc" />
-        <rect width="300" height="140" fill={`url(#grid-${slug})`} />
         {/* Persegi Jalur Putus-putus */}
         <rect
           x="100"
@@ -211,9 +200,7 @@ function ThumbnailPlaceholder({ slug }: { slug: string }) {
 
   return (
     <svg viewBox="0 0 300 140" className="w-full h-full" fill="none">
-      <defs>{gridPattern}</defs>
       <rect width="300" height="140" fill="#f8fdfc" />
-      <rect width="300" height="140" fill={`url(#grid-${slug})`} />
       <RobotIcon x={150} y={70} />
     </svg>
   );
@@ -385,9 +372,6 @@ export default function ExampleProjects({ exampleProjects = [] }: Props) {
                 {/* Visual Thumbnail */}
                 <div className="h-[140px] bg-teal-50/30 relative border-b border-gray-100">
                   <ThumbnailPlaceholder slug={project.slug} />
-                  <span className="absolute bottom-2 right-2 text-[10px] text-gray-400 font-mono bg-white/70 px-1.5 py-0.5 rounded">
-                    1 petak = 10 cm
-                  </span>
                 </div>
 
                 {/* Konten Kartu */}

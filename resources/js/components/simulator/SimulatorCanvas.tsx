@@ -23,16 +23,16 @@ interface SimulatorCanvasProps {
 // ─── Warna Figma ──────────────────────────────────────────────────────────────
 
 const COLORS = {
-  ARENA_BG: '#F8FAFC',
+  ARENA_BG: '#FFFFFF',
   ARENA_BORDER: '#E2E8F0',
-  ROBOT_BODY: '#2563EB',
-  ROBOT_BODY_MOVING: '#16A34A',
+  ROBOT_BODY: '#0D9488',
+  ROBOT_BODY_MOVING: '#10B981',
   ROBOT_DIRECTION: '#FFFFFF',
-  ROBOT_ERROR: '#DC2626',
-  OBSTACLE: '#FEF2F2',
+  ROBOT_ERROR: '#EF4444',
+  OBSTACLE: '#FFF7ED',
   OBSTACLE_BORDER: '#EA580C',
   LINE: '#1E293B',
-  DISPLAY_TEXT_BG: 'rgba(37, 99, 235, 0.95)',
+  DISPLAY_TEXT_BG: 'rgba(13, 148, 136, 0.95)',
 } as const;
 
 // ─── Komponen Robot ───────────────────────────────────────────────────────────
@@ -44,52 +44,74 @@ const Robot: React.FC<{
   isMoving: boolean;
   status: ProgramStatus;
 }> = ({ x, y, angle, isMoving, status }) => {
-  const bodyColor =
-    status === 'error'
-      ? COLORS.ROBOT_ERROR
-      : isMoving
-        ? COLORS.ROBOT_BODY_MOVING
-        : COLORS.ROBOT_BODY;
+  const spriteWidth = 52;
+  const spriteHeight = 56;
 
   return (
     <g transform={`translate(${x}, ${y})`}>
-      {/* Label "Mulai" saat diam di titik awal */}
-      <g transform="translate(24, 4)">
-        <rect x={0} y={-10} width={42} height={18} rx={6} fill="#EFF6FF" stroke="#BFDBFE" strokeWidth={1} />
-        <text x={21} y={3} textAnchor="middle" fontSize={10} fontWeight="bold" fill="#2563EB">
-          Mulai
-        </text>
-      </g>
+      {/* Bayangan halus robot di kanvas */}
+      <ellipse
+        cx={0}
+        cy={spriteHeight / 2 - 2}
+        rx={spriteWidth / 2.6}
+        ry={6}
+        fill="rgba(0, 0, 0, 0.12)"
+      />
 
-      <g transform={`rotate(${angle})`}>
-        {/* Roda kiri */}
-        <rect x={-20} y={-9} width={5} height={18} rx={2} fill="#1E293B" />
-        {/* Roda kanan */}
-        <rect x={15} y={-9} width={5} height={18} rx={2} fill="#1E293B" />
+      {/* Badan robot dapat berputar sesuai orientasi (angle) */}
+      <g
+        transform={`rotate(${angle})`}
+        style={{
+          transition: isMoving ? 'transform 0.08s linear' : 'transform 0.2s ease-out',
+          transformOrigin: '0px 0px',
+        }}
+      >
+        {/* Indikator status visual saat error */}
+        {status === 'error' && (
+          <circle
+            cx={0}
+            cy={0}
+            r={spriteWidth / 1.7}
+            fill="none"
+            stroke="#EF4444"
+            strokeWidth={3}
+            strokeDasharray="4,3"
+            className="animate-pulse"
+          />
+        )}
 
-        {/* Badan Robot berbentuk kotak rounded modern seperti Figma */}
-        <rect
-          x={-15}
-          y={-15}
-          width={30}
-          height={30}
-          rx={8}
-          fill={bodyColor}
-          stroke="#1E40AF"
-          strokeWidth={2}
-          style={{ transition: 'transform 0.15s ease' }}
+        {/* Efek visual glow saat robot bergerak */}
+        {isMoving && (
+          <circle
+            cx={0}
+            cy={0}
+            r={spriteWidth / 1.7}
+            fill="none"
+            stroke="#10B981"
+            strokeWidth={2}
+            opacity={0.6}
+          />
+        )}
+
+        {/* Karakter Robot (Sprite baru) */}
+        <image
+          href="/images/robot_sprite.png"
+          x={-spriteWidth / 2}
+          y={-spriteHeight / 2}
+          width={spriteWidth}
+          height={spriteHeight}
+          preserveAspectRatio="xMidYMid meet"
         />
 
-        {/* Layar/Mata Robot */}
-        <rect x={-9} y={-10} width={18} height={9} rx={3} fill="#FFFFFF" opacity={0.9} />
-        <circle cx={-4} cy={-5.5} r={1.5} fill="#1E40AF" />
-        <circle cx={4} cy={-5.5} r={1.5} fill="#1E40AF" />
-
-        {/* Panah Arah Hadap (Utara) */}
-        <path d="M 0 10 L 0 1 M -3 5 L 0 0 L 3 5" stroke="#FFFFFF" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" fill="none" />
-
-        {/* Sensor Garis / Rintangan di depan */}
-        <circle cx={0} cy={-13} r={2.5} fill="#FACC15" />
+        {/* Indikator Titik Sensor Depan (Ujung Antena) */}
+        <circle
+          cx={0}
+          cy={-spriteHeight / 2 + 2}
+          r={3}
+          fill={isMoving ? '#10B981' : '#6366F1'}
+          stroke="#FFFFFF"
+          strokeWidth={1.5}
+        />
       </g>
     </g>
   );
@@ -219,41 +241,35 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
       </div>
 
       <div className="p-3 flex-1 flex flex-col gap-2.5 overflow-y-auto">
-        {/* Label Ukuran Arena */}
+        {/* Label Kanvas */}
         <div className="flex items-center justify-between text-xs text-gray-500 px-1">
-          <span className="font-semibold text-gray-700">
+          <span className="font-bold text-gray-700">
             {arenaMode === 'empty'
-              ? 'Arena bebas'
+              ? 'Kanvas Kreasi'
               : arenaMode === 'obstacles'
-                ? 'Arena rintangan'
-                : 'Arena sensor garis'}
+                ? 'Arena Rintangan'
+                : 'Arena Garis'}
           </span>
-          <span className="font-mono text-[11px] text-gray-400">120 × 90 cm</span>
+          <span className="text-[11px] text-teal-700 font-semibold bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200">
+            Kanvas Original
+          </span>
         </div>
 
-        {/* ─── Kanvas SVG Arena ────────────────────────────────────────── */}
+        {/* ─── Kanvas SVG Arena (Original Bersih Tanpa Garis Petak) ──────── */}
         <div
-          className="relative w-full bg-slate-50 rounded-xl border border-gray-200 overflow-hidden p-1 flex-shrink-0"
+          className="relative w-full bg-white rounded-2xl border-2 border-gray-200 overflow-hidden shadow-xs flex-shrink-0"
           style={{ aspectRatio: `${width} / ${height}` }}
         >
           <svg
             ref={svgRef}
             viewBox={`0 0 ${width} ${height}`}
-            className="w-full h-full rounded-lg block"
-            aria-label="Arena Robot"
+            className="w-full h-full block bg-white"
+            aria-label="Kanvas Robot"
           >
-            {/* Background */}
-            <rect width={width} height={height} fill={COLORS.ARENA_BG} />
+            {/* Latar Putih Bersih (Original Kanvas) */}
+            <rect width={width} height={height} fill="#FFFFFF" />
 
-            {/* Grid 1 petak = 10 cm */}
-            <defs>
-              <pattern id="grid10" width={30} height={30} patternUnits="userSpaceOnUse">
-                <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#E2E8F0" strokeWidth={0.8} />
-              </pattern>
-            </defs>
-            <rect width={width} height={height} fill="url(#grid10)" />
-
-            {/* Garis lintasan sensor */}
+            {/* Garis lintasan sensor (jika ada pada contoh proyek) */}
             {state.arena.lines.map((line) => (
               <line
                 key={line.id}
@@ -267,7 +283,7 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
               />
             ))}
 
-            {/* Rintangan */}
+            {/* Rintangan (jika ada pada contoh proyek) */}
             {state.arena.obstacles.map((obs) => (
               <ObstacleBlock
                 key={obs.id}
@@ -278,7 +294,7 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
               />
             ))}
 
-            {/* Robot */}
+            {/* Karakter Robot */}
             <Robot
               x={state.robot.x}
               y={state.robot.y}
@@ -297,7 +313,7 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
                   height={32}
                   rx={8}
                   fill={COLORS.DISPLAY_TEXT_BG}
-                  stroke="#1D4ED8"
+                  stroke="#0F766E"
                   strokeWidth={1.5}
                 />
                 <text
@@ -313,24 +329,7 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
                 </text>
               </g>
             )}
-
-            {/* Label Skala Petak */}
-            <text x={width - 80} y={height - 10} fontSize={9} fill="#94A3B8" fontFamily="sans-serif">
-              1 petak = 10 cm
-            </text>
           </svg>
-        </div>
-
-        {/* Legend Lintasan */}
-        <div className="flex items-center justify-center gap-4 text-[11px] text-gray-500 py-0.5">
-          <span className="flex items-center gap-1.5">
-            <span className="w-4 h-0.5 border-b-2 border-dashed border-gray-400" />
-            <span>Ilustratif, bukan jejak</span>
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-4 h-0.5 bg-blue-600 rounded" />
-            <span>Jejak eksekusi</span>
-          </span>
         </div>
 
         {/* ─── Tombol Eksekusi Simulator (Figma) ─────────────────────────── */}

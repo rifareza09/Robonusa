@@ -102,16 +102,21 @@ export const Home: React.FC = () => {
             {/* Ilustrasi Puzzle Blok Sesuai Tema RoboNusa Teal ───────────────── */}
             <div className="lg:col-span-5 flex justify-center lg:justify-end">
               <div className="relative w-full max-w-md p-6 bg-[#F0FDF9] rounded-3xl border border-teal-100 shadow-xl shadow-teal-700/5">
-                {/* Blok Utama Hijau Toska / Teal & Kuning */}
-                <div className="flex items-center justify-center py-6">
+                {/* Blok Utama Hijau Toska / Teal & Karakter Robot */}
+                <div className="flex items-center justify-center gap-5 py-4">
+                  <img
+                    src="/images/robot_sprite.png"
+                    alt="RoboNusa Robot"
+                    className="w-16 h-auto drop-shadow-md hover:scale-105 transition-transform"
+                  />
                   <div className="flex items-stretch shadow-md rounded-2xl overflow-hidden transition-transform hover:scale-105 duration-200">
                     {/* Blok Gerak Teal */}
-                    <div className="bg-teal-700 text-white px-7 py-6 font-extrabold text-lg flex items-center gap-2 border-r border-teal-800/40 select-none">
+                    <div className="bg-teal-700 text-white px-5 py-4 font-extrabold text-base flex items-center gap-2 border-r border-teal-800/40 select-none">
                       <span>🧩</span>
                       <span>Maju 10 cm</span>
                     </div>
                     {/* Sambungan Blok Kuning */}
-                    <div className="bg-[#F59E0B] text-white px-6 py-6 font-extrabold text-lg flex items-center justify-center select-none">
+                    <div className="bg-[#F59E0B] text-white px-4 py-4 font-extrabold text-base flex items-center justify-center select-none">
                       <span>✓</span>
                     </div>
                   </div>
@@ -124,7 +129,7 @@ export const Home: React.FC = () => {
                       <span className="w-2.5 h-2.5 rounded-full bg-teal-500 animate-ping" />
                       <span>Simulator Robot Virtual Siap</span>
                     </span>
-                    <span className="text-teal-700 font-bold">120 × 90 cm</span>
+                    <span className="text-teal-700 font-bold">Kanvas Original</span>
                   </div>
 
                   <div className="bg-white/95 backdrop-blur-xs p-3 rounded-xl border border-teal-100 shadow-2xs flex items-center gap-2.5 text-xs text-gray-600">
