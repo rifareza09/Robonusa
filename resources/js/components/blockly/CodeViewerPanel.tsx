@@ -153,7 +153,7 @@ export const CodeViewerPanel: React.FC<CodeViewerPanelProps> = ({ code, onClose 
           <button
             type="button"
             onClick={handleCopy}
-            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-bold rounded-xl shadow-sm transition-colors shadow-blue-500/20 flex items-center gap-1.5 cursor-pointer"
+            className="px-5 py-2.5 bg-[#37BD71] hover:bg-[#2CA360] active:bg-[#1E7341] text-white text-xs font-bold rounded-xl shadow-sm transition-colors shadow-[#37BD71]/20 flex items-center gap-1.5 cursor-pointer"
           >
             <span>Salin kode</span>
           </button>

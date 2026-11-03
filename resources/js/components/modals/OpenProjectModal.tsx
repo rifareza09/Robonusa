@@ -88,8 +88,8 @@ export const OpenProjectModal: React.FC<OpenProjectModalProps> = ({
             onDrop={handleDrop}
             className={`border-2 border-dashed rounded-3xl p-7 text-center flex flex-col items-center justify-center transition-colors cursor-pointer ${
               isDragging
-                ? 'border-blue-500 bg-blue-50/70'
-                : 'border-gray-300 hover:border-blue-400 bg-white'
+                ? 'border-[#37BD71] bg-[#E8F8F0]/70'
+                : 'border-gray-300 hover:border-[#37BD71] bg-white'
             }`}
             onClick={() => fileInputRef.current?.click()}
           >
@@ -100,7 +100,7 @@ export const OpenProjectModal: React.FC<OpenProjectModalProps> = ({
               accept=".json,.robonusa.json,application/json"
               className="hidden"
             />
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center mb-3">
+            <div className="w-12 h-12 rounded-2xl bg-[#E8F8F0] border border-[#37BD71]/30 text-[#1E7341] flex items-center justify-center mb-3">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
               </svg>
@@ -121,7 +121,7 @@ export const OpenProjectModal: React.FC<OpenProjectModalProps> = ({
 
           {/* Kartu Berkas Terpilih (Sesuai Figma) */}
           {selectedFileName && (
-            <div className="p-3.5 bg-blue-50/50 rounded-2xl border border-blue-200/80 flex items-center justify-between animate-in fade-in">
+            <div className="p-3.5 bg-[#E8F8F0]/60 rounded-2xl border border-[#37BD71]/40 flex items-center justify-between animate-in fade-in">
               <div className="min-w-0">
                 <h4 className="font-mono text-xs font-bold text-gray-900 truncate">
                   {selectedFileName}
@@ -133,7 +133,7 @@ export const OpenProjectModal: React.FC<OpenProjectModalProps> = ({
               <button
                 type="button"
                 onClick={handleConfirm}
-                className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-xs transition-colors flex-shrink-0 cursor-pointer"
+                className="px-3.5 py-1.5 bg-[#37BD71] hover:bg-[#2CA360] text-white text-xs font-bold rounded-xl shadow-xs transition-colors flex-shrink-0 cursor-pointer"
               >
                 Buka
               </button>
@@ -141,9 +141,9 @@ export const OpenProjectModal: React.FC<OpenProjectModalProps> = ({
           )}
 
           {/* Info Card Sesuai Figma */}
-          <div className="p-3.5 bg-blue-50/50 border border-blue-100 rounded-2xl text-xs text-blue-900 flex items-start gap-2.5">
+          <div className="p-3.5 bg-[#E8F8F0]/50 border border-[#37BD71]/30 rounded-2xl text-xs text-[#1E7341] flex items-start gap-2.5">
             <span className="text-sm leading-none mt-0.5">ℹ️</span>
-            <p className="leading-relaxed text-[11px] text-blue-950/80">
+            <p className="leading-relaxed text-[11px] text-[#1E7341]">
               Nama, JSON proyek, susunan blok, parameter, dan arena harus valid. Proyek lama belum diganti sampai seluruh pemeriksaan berhasil.
             </p>
           </div>
@@ -161,7 +161,7 @@ export const OpenProjectModal: React.FC<OpenProjectModalProps> = ({
               <button
                 type="button"
                 onClick={handleConfirm}
-                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md transition-colors shadow-blue-500/20 cursor-pointer"
+                className="px-5 py-2.5 bg-[#37BD71] hover:bg-[#2CA360] active:bg-[#1E7341] text-white text-xs font-bold rounded-xl shadow-md transition-colors shadow-[#37BD71]/20 cursor-pointer"
               >
                 Buka proyek
               </button>

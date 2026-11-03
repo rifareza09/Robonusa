@@ -27,14 +27,14 @@ interface SimulatorCanvasProps {
 const COLORS = {
   ARENA_BG: '#FFFFFF',
   ARENA_BORDER: '#E2E8F0',
-  ROBOT_BODY: '#0D9488',
-  ROBOT_BODY_MOVING: '#10B981',
+  ROBOT_BODY: '#37BD71',
+  ROBOT_BODY_MOVING: '#2CA360',
   ROBOT_DIRECTION: '#FFFFFF',
   ROBOT_ERROR: '#EF4444',
   OBSTACLE: '#FFF7ED',
   OBSTACLE_BORDER: '#EA580C',
   LINE: '#1E293B',
-  DISPLAY_TEXT_BG: 'rgba(13, 148, 136, 0.95)',
+  DISPLAY_TEXT_BG: 'rgba(55, 189, 113, 0.95)',
 } as const;
 
 const COSTUME_MAP: Record<string, string> = {
@@ -292,7 +292,7 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
                 ? 'Arena Rintangan'
                 : 'Arena Garis'}
           </span>
-          <span className="text-[11px] text-teal-700 font-semibold bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200">
+          <span className="text-[11px] text-[#1E7341] font-bold bg-[#E8F8F0] px-2.5 py-0.5 rounded-full border border-[#37BD71]/30">
             Kanvas Original
           </span>
         </div>
@@ -356,8 +356,8 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
                 width={180}
                 height={18}
                 rx={9}
-                fill="rgba(240, 253, 250, 0.9)"
-                stroke="#CCFBF1"
+                fill="rgba(232, 248, 240, 0.95)"
+                stroke="#37BD71"
                 strokeWidth={1}
               />
               <text
@@ -366,7 +366,7 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
                 textAnchor="middle"
                 fontSize={9.5}
                 fontWeight="600"
-                fill="#0F766E"
+                fill="#1E7341"
                 fontFamily="sans-serif"
               >
                 ✨ Klik robot untuk menjalankan
@@ -402,91 +402,176 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
           </svg>
         </div>
 
-        {/* ─── Panel Karakter & Pose (PictoBlox / ScratchJr Style) ─────── */}
-        <div className="p-2.5 bg-gradient-to-r from-teal-50/70 via-slate-50 to-teal-50/70 rounded-xl border border-teal-100 flex flex-col gap-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <span className="text-xs font-bold text-gray-800 flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
-                Karakter & Pose
-              </span>
-              <span className="text-[10px] text-teal-700 bg-teal-100/70 font-semibold px-1.5 py-0.5 rounded">
-                {COSTUME_OPTIONS.find((c) => c.id === (state.robot.costume || 'default'))?.label || 'Berdiri'}
-              </span>
-            </div>
-
-            {/* Kontrol Ukuran Karakter */}
-            <div className="flex items-center gap-1 text-[11px] font-medium text-gray-600 bg-white px-2 py-0.5 rounded-lg border border-gray-200 shadow-2xs">
-              <span className="text-[10px] text-gray-400">Ukuran:</span>
-              <button
-                type="button"
-                onClick={() => onSizeChange?.(Math.max(20, (state.robot.size ?? 100) - 10))}
-                className="w-4 h-4 flex items-center justify-center rounded hover:bg-gray-100 text-gray-700 font-bold leading-none cursor-pointer"
-                title="Perkecil karakter (-10%)"
-              >
-                −
-              </button>
-              <span className="font-semibold text-teal-700 min-w-[32px] text-center">
-                {state.robot.size ?? 100}%
-              </span>
-              <button
-                type="button"
-                onClick={() => onSizeChange?.(Math.min(300, (state.robot.size ?? 100) + 10))}
-                className="w-4 h-4 flex items-center justify-center rounded hover:bg-gray-100 text-gray-700 font-bold leading-none cursor-pointer"
-                title="Perbesar karakter (+10%)"
-              >
-                +
-              </button>
-              {(state.robot.size ?? 100) !== 100 && (
+        {/* ─── Panel Karakter & Panggung Ala PictoBlox (#37BD71) ────────── */}
+        <div className="p-2.5 bg-gradient-to-r from-[#E8F8F0]/80 via-slate-50 to-[#E8F8F0]/80 rounded-2xl border border-[#37BD71]/30 flex flex-col gap-2.5 shadow-2xs">
+          {/* Baris 1: Dua Kartu PictoBlox (Karakter / Sprite & Panggung / Backdrop) */}
+          <div className="grid grid-cols-2 gap-2">
+            {/* Kartu Karakter (Sprite Card Ala PictoBlox) */}
+            <div className="relative bg-white rounded-xl border-2 border-[#37BD71] p-1.5 flex flex-col items-center justify-between shadow-xs">
+              {/* Tombol Aksi Melayang di Sudut Kartu (Ganti Pose & Reset Posisi) */}
+              <div className="w-full flex items-center justify-between px-0.5">
                 <button
                   type="button"
-                  onClick={() => onSizeChange?.(100)}
-                  className="ml-0.5 text-[9px] text-teal-600 hover:text-teal-800 font-bold underline cursor-pointer"
-                  title="Kembalikan ke ukuran normal 100%"
+                  onClick={() => {
+                    const currentIndex = COSTUME_OPTIONS.findIndex((c) => c.id === (state.robot.costume || 'default'));
+                    const nextIndex = (currentIndex + 1) % COSTUME_OPTIONS.length;
+                    onCostumeChange?.(COSTUME_OPTIONS[nextIndex].id);
+                  }}
+                  className="w-5 h-5 rounded-full bg-[#37BD71] hover:bg-[#2CA360] text-white flex items-center justify-center text-[10px] shadow-xs cursor-pointer transition-transform hover:scale-110"
+                  title="Ganti pose karakter (Kostum)"
                 >
-                  Reset
+                  ✏️
                 </button>
-              )}
+                <button
+                  type="button"
+                  onClick={onReset}
+                  className="w-5 h-5 rounded-full bg-[#37BD71] hover:bg-[#2CA360] text-white flex items-center justify-center text-[10px] shadow-xs cursor-pointer transition-transform hover:scale-110"
+                  title="Kembalikan robot ke titik awal"
+                >
+                  🔄
+                </button>
+              </div>
+
+              {/* Gambar Maskot Robot */}
+              <div className="py-1">
+                <img
+                  src={COSTUME_MAP[state.robot.costume || 'default'] || COSTUME_MAP.default}
+                  alt="Robot Sprite"
+                  className="w-10 h-10 object-contain drop-shadow-xs"
+                />
+              </div>
+
+              {/* Label Pill Karakter di Bawah Kartu Ala PictoBlox */}
+              <div className="w-full py-0.5 bg-[#37BD71] text-white text-[10px] font-extrabold text-center rounded-md truncate px-1">
+                Robot RoboNusa
+              </div>
+            </div>
+
+            {/* Kartu Panggung / Arena (Backdrop Card Ala PictoBlox) */}
+            <div
+              onClick={() => {
+                const nextMode: ArenaMode =
+                  arenaMode === 'empty' ? 'lines' : arenaMode === 'lines' ? 'obstacles' : 'empty';
+                onArenaModeChange?.(nextMode);
+              }}
+              className="relative bg-white rounded-xl border-2 border-[#37BD71] p-1.5 flex flex-col items-center justify-between shadow-xs cursor-pointer hover:border-[#2CA360] transition-colors group"
+              title="Klik untuk mengganti tema arena (Original / Garis / Rintangan)"
+              role="button"
+              tabIndex={0}
+            >
+              <div className="w-full flex items-center justify-between px-0.5">
+                <span className="w-5 h-5 rounded-full bg-[#37BD71] text-white flex items-center justify-center text-[10px] shadow-xs">
+                  🖼️
+                </span>
+                <span className="text-[9px] font-bold text-[#1E7341] bg-[#E8F8F0] px-1 rounded">
+                  Ganti
+                </span>
+              </div>
+
+              {/* Ilustrasi Mini Panggung */}
+              <div className="py-2 flex items-center justify-center">
+                <div className="w-10 h-7 rounded border border-dashed border-gray-300 bg-gray-50 flex items-center justify-center text-xs">
+                  {arenaMode === 'empty' ? '⚪' : arenaMode === 'obstacles' ? '🧱' : '〰️'}
+                </div>
+              </div>
+
+              {/* Label Pill Panggung di Bawah Kartu Ala PictoBlox */}
+              <div className="w-full py-0.5 bg-[#37BD71] text-white text-[10px] font-extrabold text-center rounded-md truncate px-1">
+                {arenaMode === 'empty'
+                  ? 'Scene 1 • Original'
+                  : arenaMode === 'obstacles'
+                    ? 'Scene 2 • Rintangan'
+                    : 'Scene 3 • Garis'}
+              </div>
             </div>
           </div>
 
-          {/* Tombol Thumbnail 5 Pose Karakter */}
-          <div className="grid grid-cols-5 gap-1.5">
-            {COSTUME_OPTIONS.map((c) => {
-              const isActive = (state.robot.costume || 'default') === c.id;
-              return (
+          {/* Baris 2: Pemilih Pose Karakter & Kontrol Skala Ukuran */}
+          <div className="flex flex-col gap-1.5 pt-1 border-t border-[#37BD71]/20">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-bold text-gray-800 flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-[#37BD71] animate-pulse" />
+                  Pose Karakter:
+                </span>
+                <span className="text-[10px] text-[#1E7341] bg-[#E8F8F0] font-bold px-1.5 py-0.5 rounded border border-[#37BD71]/30">
+                  {COSTUME_OPTIONS.find((c) => c.id === (state.robot.costume || 'default'))?.label || 'Berdiri'}
+                </span>
+              </div>
+
+              {/* Kontrol Ukuran Karakter */}
+              <div className="flex items-center gap-1 text-[11px] font-medium text-gray-600 bg-white px-2 py-0.5 rounded-lg border border-gray-200 shadow-2xs">
+                <span className="text-[10px] text-gray-400">Ukuran:</span>
                 <button
-                  key={c.id}
                   type="button"
-                  onClick={() => onCostumeChange?.(c.id)}
-                  title={`${c.label} (${c.desc})`}
-                  className={`flex flex-col items-center justify-center p-1 rounded-lg border transition-all cursor-pointer ${
-                    isActive
-                      ? 'bg-white border-teal-500 shadow-sm ring-2 ring-teal-400/40 text-teal-700 font-bold'
-                      : 'bg-white/70 hover:bg-white border-gray-200/80 text-gray-600 hover:border-teal-300'
-                  }`}
+                  onClick={() => onSizeChange?.(Math.max(20, (state.robot.size ?? 100) - 10))}
+                  className="w-4 h-4 flex items-center justify-center rounded hover:bg-gray-100 text-gray-700 font-bold leading-none cursor-pointer"
+                  title="Perkecil karakter (-10%)"
                 >
-                  <img
-                    src={c.src}
-                    alt={c.label}
-                    className="w-7 h-7 object-contain drop-shadow-2xs"
-                  />
-                  <span className="text-[9.5px] mt-0.5 truncate max-w-full leading-tight">
-                    {c.label}
-                  </span>
+                  −
                 </button>
-              );
-            })}
+                <span className="font-bold text-[#1E7341] min-w-[32px] text-center">
+                  {state.robot.size ?? 100}%
+                </span>
+                <button
+                  type="button"
+                  onClick={() => onSizeChange?.(Math.min(300, (state.robot.size ?? 100) + 10))}
+                  className="w-4 h-4 flex items-center justify-center rounded hover:bg-gray-100 text-gray-700 font-bold leading-none cursor-pointer"
+                  title="Perbesar karakter (+10%)"
+                >
+                  +
+                </button>
+                {(state.robot.size ?? 100) !== 100 && (
+                  <button
+                    type="button"
+                    onClick={() => onSizeChange?.(100)}
+                    className="ml-0.5 text-[9px] text-[#37BD71] hover:text-[#2CA360] font-bold underline cursor-pointer"
+                    title="Kembalikan ke ukuran normal 100%"
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Tombol Thumbnail 5 Pose Karakter */}
+            <div className="grid grid-cols-5 gap-1.5">
+              {COSTUME_OPTIONS.map((c) => {
+                const isActive = (state.robot.costume || 'default') === c.id;
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => onCostumeChange?.(c.id)}
+                    title={`${c.label} (${c.desc})`}
+                    className={`flex flex-col items-center justify-center p-1 rounded-lg border transition-all cursor-pointer ${
+                      isActive
+                        ? 'bg-white border-[#37BD71] shadow-sm ring-2 ring-[#37BD71]/40 text-[#1E7341] font-bold'
+                        : 'bg-white/80 hover:bg-white border-gray-200/80 text-gray-600 hover:border-[#37BD71]/40'
+                    }`}
+                  >
+                    <img
+                      src={c.src}
+                      alt={c.label}
+                      className="w-6 h-6 object-contain drop-shadow-2xs"
+                    />
+                    <span className="text-[9px] mt-0.5 truncate max-w-full leading-tight">
+                      {c.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
-        {/* ─── Tombol Eksekusi Simulator (Figma) ─────────────────────────── */}
+        {/* ─── Tombol Eksekusi Simulator ─────────────────────────────────── */}
         <div className="grid grid-cols-3 gap-2">
           {isRunning ? (
             <button
               type="button"
               onClick={onStop}
-              className="col-span-2 flex items-center justify-center gap-1.5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow-sm transition-colors shadow-red-500/20"
+              className="col-span-2 flex items-center justify-center gap-1.5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow-sm transition-colors shadow-red-500/20 cursor-pointer"
             >
               <span>⏹</span>
               <span>Hentikan</span>
@@ -495,7 +580,7 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
             <button
               type="button"
               onClick={onRun}
-              className="col-span-2 flex items-center justify-center gap-1.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm transition-colors shadow-emerald-500/20"
+              className="col-span-2 flex items-center justify-center gap-1.5 py-2 bg-[#37BD71] hover:bg-[#2CA360] active:bg-[#1E7341] text-white text-xs font-bold rounded-xl shadow-sm transition-colors shadow-[#37BD71]/20 cursor-pointer"
             >
               <span>▶</span>
               <span>Jalankan</span>
@@ -505,7 +590,7 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
           <button
             type="button"
             onClick={onReset}
-            className="flex items-center justify-center gap-1 py-2 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 text-xs font-bold rounded-xl shadow-sm transition-colors"
+            className="flex items-center justify-center gap-1 py-2 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 text-xs font-bold rounded-xl shadow-sm transition-colors cursor-pointer"
           >
             <span>🔄</span>
             <span>Atur ulang</span>

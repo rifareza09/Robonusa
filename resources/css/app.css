@@ -6,6 +6,11 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-robonusa: #37BD71;
+    --color-robonusa-dark: #2CA360;
+    --color-robonusa-darker: #1E7341;
+    --color-robonusa-light: #E8F8F0;
+    --color-robonusa-lighter: #F2FBF6;
 }
 
 /* 
@@ -129,21 +134,21 @@ g[display="none"],
     display: block !important;
 }
 
-/* Saat Kategori Dipilih: Latar Belakang Pill Lembut #EFF6FF & Teks Biru #2563EB (Sesuai Figma) */
+/* Saat Kategori Dipilih: Latar Belakang Pill Lembut #E8F8F0 & Teks Hijau RoboNusa #1E7341 */
 .blocklyToolboxCategory.blocklyToolboxSelected,
 .blocklyToolboxSelected {
-    background-color: #EFF6FF !important;
+    background-color: #E8F8F0 !important;
     border-radius: 12px !important;
 }
 
 .blocklyToolboxCategory.blocklyToolboxSelected .blocklyToolboxCategoryLabel,
 .blocklyToolboxSelected .blocklyToolboxCategoryLabel {
-    color: #2563EB !important;
+    color: #1E7341 !important;
     font-weight: 700 !important;
 }
 
 .blocklyToolboxCategory.blocklyToolboxSelected .category-icon-squircle {
-    box-shadow: 0 3px 8px rgba(37, 99, 235, 0.35) !important;
+    box-shadow: 0 3px 8px rgba(55, 189, 113, 0.45) !important;
     transform: scale(1.04);
 }
 
@@ -174,7 +179,7 @@ g[display="none"],
     font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif !important;
     font-size: 16px !important;
     font-weight: 800 !important;
-    fill: #2563EB !important;
+    fill: #1E7341 !important;
 }
 
 .flyout-subtitle {
@@ -227,9 +232,9 @@ g[display="none"],
 
 /* Efek Seleksi Blok */
 .blocklySelected > .blocklyPath {
-    stroke: #2563EB !important;
+    stroke: #37BD71 !important;
     stroke-width: 2.5px !important;
-    filter: drop-shadow(0 2px 6px rgba(37, 99, 235, 0.35)) !important;
+    filter: drop-shadow(0 2px 6px rgba(55, 189, 113, 0.45)) !important;
 }
 
 /* Scrollbar Blockly */
@@ -278,12 +283,12 @@ g[display="none"],
 
 .dark .blocklyToolboxCategory.blocklyToolboxSelected,
 .dark .blocklyToolboxSelected {
-    background-color: #1E3A8A !important;
+    background-color: #14532D !important;
 }
 
 .dark .blocklyToolboxCategory.blocklyToolboxSelected .blocklyToolboxCategoryLabel,
 .dark .blocklyToolboxSelected .blocklyToolboxCategoryLabel {
-    color: #60A5FA !important;
+    color: #4ADE80 !important;
 }
 
 .dark .blocklyFlyoutBackground {
@@ -296,7 +301,7 @@ g[display="none"],
 }
 
 .dark .flyout-title {
-    fill: #60A5FA !important;
+    fill: #4ADE80 !important;
 }
 
 .dark .flyout-subtitle,

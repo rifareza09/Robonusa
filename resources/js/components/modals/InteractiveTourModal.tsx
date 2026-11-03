@@ -80,7 +80,7 @@ export const InteractiveTourModal: React.FC<InteractiveTourModalProps> = ({
         {/* Header: Progress Stepper */}
         <div className="px-6 pt-6 pb-2">
           <div className="flex items-center justify-between text-xs text-gray-500 font-bold mb-3">
-            <span className="text-blue-600 font-extrabold tracking-wide uppercase">
+            <span className="text-[#37BD71] font-extrabold tracking-wide uppercase">
               {current.badge}
             </span>
             <button
@@ -98,7 +98,7 @@ export const InteractiveTourModal: React.FC<InteractiveTourModalProps> = ({
               <div
                 key={s}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
-                  s <= currentStep ? 'bg-blue-600' : 'bg-gray-200'
+                  s <= currentStep ? 'bg-[#37BD71]' : 'bg-gray-200'
                 }`}
               />
             ))}
@@ -116,7 +116,7 @@ export const InteractiveTourModal: React.FC<InteractiveTourModalProps> = ({
           </p>
 
           {/* Tip Box Sesuai Figma */}
-          <div className="p-3.5 bg-blue-50/70 border border-blue-200/80 rounded-2xl text-xs font-semibold text-blue-900 mb-6 flex items-start gap-2.5">
+          <div className="p-3.5 bg-[#E8F8F0]/80 border border-[#37BD71]/30 rounded-2xl text-xs font-semibold text-[#1E7341] mb-6 flex items-start gap-2.5">
             <span>💡</span>
             <span className="leading-snug">{current.tip}</span>
           </div>
@@ -141,7 +141,7 @@ export const InteractiveTourModal: React.FC<InteractiveTourModalProps> = ({
             <button
               type="button"
               onClick={handleNext}
-              className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-extrabold rounded-xl transition-all shadow-md shadow-blue-500/20 hover:shadow-blue-500/30 flex items-center gap-2 cursor-pointer"
+              className="px-6 py-2.5 bg-[#37BD71] hover:bg-[#2CA360] active:bg-[#1E7341] text-white text-xs font-extrabold rounded-xl transition-all shadow-md shadow-[#37BD71]/20 hover:shadow-[#37BD71]/30 flex items-center gap-2 cursor-pointer"
             >
               <span>{currentStep === 3 ? '✓ Selesai' : 'Lanjut'}</span>
               {currentStep < 3 && <span>→</span>}

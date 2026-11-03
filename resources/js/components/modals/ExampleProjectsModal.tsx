@@ -77,18 +77,18 @@ export const ExampleProjectsModal: React.FC<ExampleProjectsModalProps> = ({
                 onClick={() => setSelectedProject(project)}
                 className={`flex flex-col justify-between p-5 rounded-3xl border-2 transition-all cursor-pointer bg-white text-left ${
                   isSelected
-                    ? 'border-blue-600 bg-blue-50/20 shadow-md ring-2 ring-blue-500/20'
-                    : 'border-gray-200/90 hover:border-blue-300 shadow-2xs hover:shadow-xs'
+                    ? 'border-[#37BD71] bg-[#E8F8F0]/30 shadow-md ring-2 ring-[#37BD71]/30'
+                    : 'border-gray-200/90 hover:border-[#37BD71]/50 shadow-2xs hover:shadow-xs'
                 }`}
               >
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-3">
-                    <div className="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 rounded-2xl bg-[#E8F8F0] border border-[#37BD71]/30 text-[#1E7341] flex items-center justify-center flex-shrink-0">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
                       </svg>
                     </div>
-                    <span className="text-[11px] font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-100/80">
+                    <span className="text-[11px] font-bold text-[#1E7341] bg-[#E8F8F0] px-2.5 py-1 rounded-full border border-[#37BD71]/30">
                       {topic}
                     </span>
                   </div>
@@ -106,11 +106,11 @@ export const ExampleProjectsModal: React.FC<ExampleProjectsModalProps> = ({
                     Latihan robotika • {project.difficulty ? (project.difficulty.charAt(0).toUpperCase() + project.difficulty.slice(1)) : 'Pemula'}
                   </span>
                   {isSelected ? (
-                    <span className="text-xs font-bold text-blue-600 flex items-center gap-1">
+                    <span className="text-xs font-bold text-[#1E7341] flex items-center gap-1">
                       ✓ Contoh dipilih
                     </span>
                   ) : (
-                    <span className="text-xs font-bold text-blue-600 hover:underline">
+                    <span className="text-xs font-bold text-[#37BD71] hover:underline">
                       Pilih contoh
                     </span>
                   )}
@@ -141,7 +141,7 @@ export const ExampleProjectsModal: React.FC<ExampleProjectsModalProps> = ({
             type="button"
             onClick={handleConfirm}
             disabled={!selectedProject}
-            className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs font-bold rounded-xl shadow-md transition-colors shadow-blue-500/20 cursor-pointer"
+            className="px-6 py-2.5 bg-[#37BD71] hover:bg-[#2CA360] active:bg-[#1E7341] disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs font-bold rounded-xl shadow-md transition-colors shadow-[#37BD71]/20 cursor-pointer"
           >
             Gunakan contoh
           </button>

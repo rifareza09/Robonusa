@@ -315,8 +315,8 @@ const Workspace: React.FC<WorkspacePageProps> = ({
 
       {/* Layout Utama Full Screen */}
       <div className={`flex flex-col h-screen ${isDarkMode ? 'dark bg-[#0F172A] text-gray-100' : 'bg-[#F8FAFC] text-gray-800'} overflow-hidden font-sans`}>
-        {/* Header & Subheader Navigasi (Sesuai Figma) */}
-        <header className={`flex-shrink-0 ${isDarkMode ? 'bg-[#1E293B] border-gray-800' : 'bg-white border-gray-200/80'} border-b px-6 py-2 shadow-xs`}>
+        {/* Header & Subheader Navigasi Tema Hijau PictoBlox (#37BD71) */}
+        <header className={`flex-shrink-0 ${isDarkMode ? 'bg-[#1E293B] border-b border-[#37BD71]/30' : 'bg-[#37BD71]'} shadow-sm z-20`}>
           <ProgramToolbar
             programStatus={programStatus}
             canUndo={canUndo}
@@ -347,7 +347,7 @@ const Workspace: React.FC<WorkspacePageProps> = ({
             onClick={() => setMobileTab('program')}
             className={`flex-1 py-2.5 flex items-center justify-center gap-2 text-xs font-bold border-b-2 transition-colors cursor-pointer ${
               mobileTab === 'program'
-                ? 'border-blue-600 text-blue-600 bg-blue-50/30'
+                ? 'border-[#37BD71] text-[#1E7341] bg-[#E8F8F0]/50'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
@@ -364,7 +364,7 @@ const Workspace: React.FC<WorkspacePageProps> = ({
             onClick={() => setMobileTab('simulator')}
             className={`flex-1 py-2.5 flex items-center justify-center gap-2 text-xs font-bold border-b-2 transition-colors cursor-pointer ${
               mobileTab === 'simulator'
-                ? 'border-blue-600 text-blue-600 bg-blue-50/30'
+                ? 'border-[#37BD71] text-[#1E7341] bg-[#E8F8F0]/50'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
@@ -386,8 +386,8 @@ const Workspace: React.FC<WorkspacePageProps> = ({
             <div className={`${isDarkMode ? 'bg-[#1E293B] border-gray-800' : 'bg-white border-gray-100'} border-b flex items-stretch flex-wrap sm:flex-nowrap`}>
               {/* Kolom Kiri: Pustaka Blok Header & Pencarian Sesuai Figma */}
               <div className={`w-full sm:w-[270px] flex-shrink-0 border-b sm:border-b-0 sm:border-r ${isDarkMode ? 'border-gray-800 bg-[#0F172A]/40' : 'border-gray-200/80 bg-[#F8FAFC]/60'} px-3.5 py-2 flex flex-col justify-center gap-1.5`}>
-                <div className="flex items-center gap-2 text-xs font-bold text-teal-800">
-                  <svg className="w-4 h-4 text-teal-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#1E7341]">
+                  <svg className="w-4 h-4 text-[#37BD71] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
                     <rect x="3" y="3" width="7" height="7" rx="1.5" />
                     <rect x="14" y="3" width="7" height="7" rx="1.5" />
                     <rect x="8.5" y="14" width="7" height="7" rx="1.5" />
@@ -401,7 +401,7 @@ const Workspace: React.FC<WorkspacePageProps> = ({
                     value={searchQuery}
                     onChange={(e) => handleSearchChange(e.target.value)}
                     placeholder="Cari blok..."
-                    className={`w-full ${isDarkMode ? 'bg-[#0F172A] border-gray-700 text-gray-200 placeholder:text-gray-500' : 'bg-white border-gray-200 text-gray-700 placeholder:text-gray-400'} border rounded-lg pl-7 pr-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-2xs`}
+                    className={`w-full ${isDarkMode ? 'bg-[#0F172A] border-gray-700 text-gray-200 placeholder:text-gray-500' : 'bg-white border-gray-200 text-gray-700 placeholder:text-gray-400'} border rounded-lg pl-7 pr-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-[#37BD71] focus:border-[#37BD71] shadow-2xs`}
                   />
                   <svg className="w-3.5 h-3.5 text-gray-400 absolute left-2 top-2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
                     <circle cx="11" cy="11" r="7" />
@@ -417,7 +417,7 @@ const Workspace: React.FC<WorkspacePageProps> = ({
                     <span>🧩</span>
                     <span>Programku</span>
                   </h2>
-                  <span className="bg-blue-50 text-blue-700 text-xs px-2.5 py-0.5 rounded-full font-bold border border-blue-200">
+                  <span className="bg-[#E8F8F0] text-[#1E7341] text-xs px-2.5 py-0.5 rounded-full font-bold border border-[#37BD71]/30">
                     {blockCount} blok
                   </span>
                 </div>
@@ -453,7 +453,7 @@ const Workspace: React.FC<WorkspacePageProps> = ({
                     onClick={handleToggleCodeViewer}
                     className={`flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold border transition-colors shadow-2xs cursor-pointer ${
                       isCodeViewerOpen
-                        ? 'bg-blue-600 text-white border-blue-600 shadow-blue-500/20'
+                        ? 'bg-[#37BD71] hover:bg-[#2CA360] text-white border-[#37BD71] shadow-[#37BD71]/25'
                         : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300'
                     }`}
                     title={isCodeViewerOpen ? 'Kembali ke Simulasi Robot' : 'Buka padanan kode JavaScript/teks'}
@@ -493,11 +493,26 @@ const Workspace: React.FC<WorkspacePageProps> = ({
             )}
 
             {/* Target Injeksi Blockly */}
-            <div
-              id="blockly-workspace"
-              ref={workspaceRef}
-              className="flex-1 w-full"
-            />
+            <div className="relative flex-1 w-full overflow-hidden">
+              <div
+                id="blockly-workspace"
+                ref={workspaceRef}
+                className="w-full h-full"
+              />
+
+              {/* Tombol Ekstensi & Contoh Proyek Ala PictoBlox (Hijau #37BD71) */}
+              <button
+                type="button"
+                onClick={exampleProjects.length > 0 ? () => confirmIfUnsaved(() => setIsExamplesModalOpen(true)) : undefined}
+                className="absolute left-2.5 bottom-3 z-10 w-11 h-11 rounded-2xl bg-[#37BD71] hover:bg-[#2CA360] active:scale-95 text-white shadow-lg shadow-[#37BD71]/35 flex items-center justify-center transition-all hover:scale-105 cursor-pointer group"
+                title="Buka Contoh Proyek & Ekstensi (Ala PictoBlox)"
+              >
+                <span className="text-lg">🧩</span>
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-white text-[#1E7341] rounded-full text-[10px] font-black flex items-center justify-center shadow-xs border border-[#37BD71]/20">
+                  +
+                </span>
+              </button>
+            </div>
 
             {/* Footnote Helper Kanvas Sesuai Figma */}
             <div className="px-4 py-1.5 bg-gray-50/80 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-400">
