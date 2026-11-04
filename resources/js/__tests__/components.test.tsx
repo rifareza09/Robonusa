@@ -48,35 +48,19 @@ describe('ProgramToolbar', () => {
     onExport: vi.fn(),
     onImport: vi.fn(),
     onProjectNameChange: vi.fn(),
+    onOpenGuide: vi.fn(),
+    onOpenExamplesModal: vi.fn(),
   };
 
-  it('harus merender tombol Mulai saat status idle', () => {
+  it('harus merender menu File, Edit, Panduan/Belajar, dan nama proyek', () => {
     render(<ProgramToolbar {...defaultProps} />);
-    expect(screen.getByText('Mulai')).toBeInTheDocument();
+    expect(screen.getByText('File')).toBeInTheDocument();
+    expect(screen.getByText('Edit')).toBeInTheDocument();
+    expect(screen.getByText('Panduan/Belajar')).toBeInTheDocument();
     expect(screen.getByText('Robot Keren')).toBeInTheDocument();
   });
 
-  it('harus memanggil onRun saat tombol Mulai diklik', () => {
-    const onRun = vi.fn();
-    render(<ProgramToolbar {...defaultProps} onRun={onRun} />);
-    fireEvent.click(screen.getByText('Mulai'));
-    expect(onRun).toHaveBeenCalledTimes(1);
-  });
-
-  it('harus merender tombol Berhenti saat status running', () => {
-    render(<ProgramToolbar {...defaultProps} programStatus="running" />);
-    expect(screen.getByText('Berhenti')).toBeInTheDocument();
-    expect(screen.queryByText('Mulai')).not.toBeInTheDocument();
-  });
-
-  it('harus memanggil onStop saat tombol Berhenti diklik', () => {
-    const onStop = vi.fn();
-    render(<ProgramToolbar {...defaultProps} programStatus="running" onStop={onStop} />);
-    fireEvent.click(screen.getByText('Berhenti'));
-    expect(onStop).toHaveBeenCalledTimes(1);
-  });
-
-  it('harus memanggil onUndo dan onRedo', () => {
+  it('harus membuka dropdown Edit dan memanggil onUndo dan onRedo', () => {
     const onUndo = vi.fn();
     const onRedo = vi.fn();
     render(
@@ -88,11 +72,62 @@ describe('ProgramToolbar', () => {
         onRedo={onRedo}
       />
     );
-    fireEvent.click(screen.getByText(/Batal/));
+    // Buka menu Edit
+    fireEvent.click(screen.getByText('Edit'));
+    expect(screen.getByText('Urungkan')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Urungkan'));
     expect(onUndo).toHaveBeenCalledTimes(1);
 
-    fireEvent.click(screen.getByText(/Ulangi/));
+    // Buka menu Edit lagi untuk Ulangi
+    fireEvent.click(screen.getByText('Edit'));
+    expect(screen.getByText('Ulangi')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Ulangi'));
     expect(onRedo).toHaveBeenCalledTimes(1);
+  });
+
+  it('harus membuka dropdown File dan memanggil onImport dan onExport', () => {
+    const onImport = vi.fn();
+    const onExport = vi.fn();
+    render(
+      <ProgramToolbar
+        {...defaultProps}
+        onImport={onImport}
+        onExport={onExport}
+      />
+    );
+    // Buka menu File
+    fireEvent.click(screen.getByText('File'));
+    expect(screen.getByText('Buka proyek')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Buka proyek'));
+    expect(onImport).toHaveBeenCalledTimes(1);
+
+    // Buka menu File lagi untuk Simpan proyek
+    fireEvent.click(screen.getByText('File'));
+    expect(screen.getByText('Simpan proyek')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Simpan proyek'));
+    expect(onExport).toHaveBeenCalledTimes(1);
+  });
+
+  it('harus membuka dropdown Panduan/Belajar dan memanggil modal terkait', () => {
+    const onOpenExamples = vi.fn();
+    const onOpenGuide = vi.fn();
+    render(
+      <ProgramToolbar
+        {...defaultProps}
+        onOpenExamplesModal={onOpenExamples}
+        onOpenGuide={onOpenGuide}
+      />
+    );
+    // Buka menu Panduan/Belajar
+    fireEvent.click(screen.getByText('Panduan/Belajar'));
+    expect(screen.getByText('Contoh Proyek')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Contoh Proyek'));
+    expect(onOpenExamples).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(screen.getByText('Panduan/Belajar'));
+    expect(screen.getByText('Panduan')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Panduan'));
+    expect(onOpenGuide).toHaveBeenCalledTimes(1);
   });
 
   it('harus menampilkan pesan error jika ada', () => {
@@ -170,5 +205,53 @@ describe('SimulatorCanvas', () => {
     expect(screen.getByText('Siap')).toBeInTheDocument();
     expect(screen.getByText('Robot Siap!')).toBeInTheDocument();
     expect(screen.getByText('Tes log 1')).toBeInTheDocument();
+  });
+
+  it('harus memanggil onRun saat bendera hijau diklik', () => {
+    const onRun = vi.fn();
+    render(
+      <SimulatorCanvas
+        state={dummyState}
+        programStatus="idle"
+        width={500}
+        height={400}
+        onRun={onRun}
+      />
+    );
+    const flagBtn = screen.getByRole('button', { name: /bendera hijau/i });
+    fireEvent.click(flagBtn);
+    expect(onRun).toHaveBeenCalledTimes(1);
+  });
+
+  it('harus memanggil onStop saat tombol hentikan diklik ketika status running', () => {
+    const onStop = vi.fn();
+    render(
+      <SimulatorCanvas
+        state={dummyState}
+        programStatus="running"
+        width={500}
+        height={400}
+        onStop={onStop}
+      />
+    );
+    const stopBtn = screen.getByRole('button', { name: /hentikan program/i });
+    fireEvent.click(stopBtn);
+    expect(onStop).toHaveBeenCalledTimes(1);
+  });
+
+  it('harus memanggil onReset saat tombol atur ulang diklik', () => {
+    const onReset = vi.fn();
+    render(
+      <SimulatorCanvas
+        state={dummyState}
+        programStatus="idle"
+        width={500}
+        height={400}
+        onReset={onReset}
+      />
+    );
+    const resetBtn = screen.getByRole('button', { name: /atur ulang/i });
+    fireEvent.click(resetBtn);
+    expect(onReset).toHaveBeenCalledTimes(1);
   });
 });

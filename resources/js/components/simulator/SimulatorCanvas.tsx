@@ -419,36 +419,51 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
 
         {/* ─── Tombol Kontrol Panggung Alami (Bawah Kanvas) ─────────────── */}
         <div className="flex items-center justify-between gap-2 pt-1">
-          {/* Tombol Eksekusi: Jalankan & Atur Ulang */}
-          <div className="flex items-center gap-2">
-            {isRunning ? (
+          {/* Tombol Eksekusi: Bendera Hijau (Jalankan), Hentikan & Atur Ulang */}
+          <div className="flex items-center gap-1.5">
+            <button
+              id="btn-run-flag"
+              type="button"
+              onClick={onRun}
+              className={`p-2 rounded-xl transition-all shadow-xs flex items-center justify-center cursor-pointer ${
+                isRunning
+                  ? 'bg-emerald-600 text-white ring-2 ring-emerald-400 ring-offset-1 scale-105'
+                  : 'bg-emerald-500 hover:bg-emerald-600 text-white hover:scale-105 active:scale-95'
+              }`}
+              title="Jalankan program (Bendera Hijau)"
+              aria-label="Bendera hijau"
+            >
+              <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                <path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6h-5.6z" />
+              </svg>
+            </button>
+
+            {isRunning && (
               <button
+                id="btn-stop-program"
                 type="button"
                 onClick={onStop}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
+                className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-xs transition-all flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 animate-pulse"
+                title="Hentikan program"
+                aria-label="Hentikan program"
               >
-                <span>⏹</span>
-                <span>Hentikan</span>
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={onRun}
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
-              >
-                <span>▶</span>
-                <span>Jalankan</span>
+                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                  <rect x="6" y="6" width="12" height="12" rx="2" />
+                </svg>
               </button>
             )}
 
             <button
+              id="btn-reset-simulator"
               type="button"
               onClick={onReset}
-              className="px-3 py-2 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 text-xs font-semibold rounded-xl shadow-2xs transition-colors flex items-center gap-1 cursor-pointer"
+              className="p-2 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 rounded-xl shadow-2xs transition-colors flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95"
               title="Atur ulang posisi robot"
+              aria-label="Atur ulang posisi robot"
             >
-              <span>🔄</span>
-              <span>Atur ulang</span>
+              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
+                <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </button>
           </div>
 

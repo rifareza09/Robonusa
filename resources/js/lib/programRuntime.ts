@@ -35,7 +35,7 @@ ALLOWED_BLOCK_TYPES.add('rk_text');
 // ─── Pesan error Bahasa Indonesia ────────────────────────────────────────────
 
 const ERROR_MESSAGES = {
-  NO_EVENT_START: '❌ Program harus dimulai dengan blok "Saat Mulai Diklik".',
+  NO_EVENT_START: '❌ Program harus dimulai dengan blok "ketika bendera hijau diklik".',
   WORKER_NOT_SUPPORTED: '❌ Browser kamu tidak mendukung Web Worker. Gunakan browser yang lebih baru.',
   MAX_ITERATIONS: '⚠️ Program dihentikan: terlalu banyak perulangan. Periksa loop "Selamanya" atau "Ulangi" kamu.',
   TIMEOUT: '⚠️ Program dihentikan: waktu eksekusi terlalu lama.',

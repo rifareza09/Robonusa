@@ -22,7 +22,7 @@ describe('validateProgram', () => {
       [BLOCK_TYPES.MOTION_FORWARD]
     );
     expect(result.valid).toBe(false);
-    expect(result.errors[0]).toContain('Saat Mulai Diklik');
+    expect(result.errors[0]).toContain('ketika bendera hijau diklik');
   });
 
   it('harus ditolak jika ada blok tidak dikenal', () => {

@@ -1,20 +1,20 @@
 /**
  * RoboKreasi — Toolbar & Header Navigasi Alami (Clean & Natural)
- * Menghilangkan nesting card/kotak berlebih agar terlihat natural dan tidak artifisial.
+ * Menu dropdown PictoBlox / Scratch (File, Edit, Panduan/Belajar)
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import type { ProgramStatus } from '../../types/robokreasi';
 
 interface ProgramToolbarProps {
-  programStatus: ProgramStatus;
+  programStatus?: ProgramStatus;
   canUndo: boolean;
   canRedo: boolean;
   errorMessage: string | null;
   projectName: string;
-  onRun: () => void;
-  onStop: () => void;
-  onReset: () => void;
+  onRun?: () => void;
+  onStop?: () => void;
+  onReset?: () => void;
   onUndo: () => void;
   onRedo: () => void;
   onExport: (name: string) => void;
@@ -29,14 +29,10 @@ interface ProgramToolbarProps {
 }
 
 export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
-  programStatus,
   canUndo,
   canRedo,
   errorMessage,
   projectName,
-  onRun,
-  onStop,
-  onReset,
   onUndo,
   onRedo,
   onExport,
@@ -45,14 +41,33 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
   onOpenGuide,
   onOpenExamplesModal,
   onNavigateHome,
-  isSavedLocally = false,
   isDarkMode = false,
   onToggleDarkMode,
 }) => {
   const [isEditingName, setIsEditingName] = useState(false);
   const [tempName, setTempName] = useState(projectName);
+  const [openMenu, setOpenMenu] = useState<'file' | 'edit' | 'learn' | null>(null);
 
-  const isRunning = programStatus === 'running';
+  const menuContainerRef = useRef<HTMLDivElement>(null);
+
+  // Tutup dropdown saat klik di luar area menu atau tombol Escape ditekan
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuContainerRef.current && !menuContainerRef.current.contains(e.target as Node)) {
+        setOpenMenu(null);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpenMenu(null);
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   const handleNameSubmit = useCallback(() => {
     const name = tempName.trim() || 'Proyek Saya';
@@ -64,30 +79,39 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
     onExport(projectName);
   }, [projectName, onExport]);
 
+  const toggleMenu = (menu: 'file' | 'edit' | 'learn') => {
+    setOpenMenu((prev) => (prev === menu ? null : menu));
+  };
+
+  const handleMouseEnterMenu = (menu: 'file' | 'edit' | 'learn') => {
+    if (openMenu !== null) {
+      setOpenMenu(menu);
+    }
+  };
+
   return (
     <div className={`w-full ${isDarkMode ? 'bg-[#1E293B] text-gray-100 border-gray-800' : 'bg-white text-gray-800 border-gray-200'} border-b select-none`}>
       {/* ─── Baris Navigasi Tunggal Alami ─────────────────────────────────── */}
-      <div className="px-5 py-2.5 flex items-center justify-between flex-wrap gap-3">
-        {/* Sisi Kiri: Logo, Navigasi Beranda, & Nama Dokumen Proyek */}
-        <div className="flex items-center gap-3">
+      <div className="px-4 py-2 flex items-center justify-between flex-wrap gap-3">
+        {/* Sisi Kiri: Logo, Navigasi Beranda, Menus (File, Edit, Panduan/Belajar), & Nama Proyek */}
+        <div className="flex items-center flex-wrap gap-2 sm:gap-3">
           {/* Logo Brand */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 mr-1">
             <span className="text-xl">🤖</span>
-            <span className={`text-lg font-extrabold tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <span className={`text-base font-extrabold tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               RoboNusa!
             </span>
           </div>
-
-          <div className={`h-4 w-px ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'} hidden sm:block`} />
 
           {/* Tombol Beranda */}
           {onNavigateHome ? (
             <button
               type="button"
               onClick={onNavigateHome}
-              className={`text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer ${
-                isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+              className={`text-xs font-medium px-2 py-1 rounded-lg transition-colors cursor-pointer flex items-center gap-1 ${
+                isDarkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
               }`}
+              title="Kembali ke Beranda"
             >
               <span>←</span>
               <span>Beranda</span>
@@ -95,8 +119,8 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
           ) : (
             <a
               href="/beranda"
-              className={`text-xs font-medium flex items-center gap-1.5 transition-colors ${
-                isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+              className={`text-xs font-medium px-2 py-1 rounded-lg transition-colors flex items-center gap-1 ${
+                isDarkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >
               <span>←</span>
@@ -106,7 +130,207 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
 
           <div className={`h-4 w-px ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'} hidden sm:block`} />
 
-          {/* Nama Proyek (Teks alami seperti dokumen Google Docs / Figma) */}
+          {/* ─── Menu Dropdown PictoBlox (File, Edit, Panduan/Belajar) ─────────── */}
+          <div ref={menuContainerRef} className="flex items-center gap-0.5 text-xs">
+            {/* Menu: File */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => toggleMenu('file')}
+                onMouseEnter={() => handleMouseEnterMenu('file')}
+                className={`px-2.5 py-1.5 rounded-lg font-semibold flex items-center gap-1 transition-colors cursor-pointer ${
+                  openMenu === 'file'
+                    ? isDarkMode
+                      ? 'bg-gray-800 text-white'
+                      : 'bg-gray-100 text-gray-900'
+                    : isDarkMode
+                      ? 'text-gray-300 hover:text-white hover:bg-gray-800/70'
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                }`}
+                title="Menu File"
+              >
+                <span>File</span>
+                <span className="text-[9px] opacity-60">▼</span>
+              </button>
+
+              {openMenu === 'file' && (
+                <div className={`absolute left-0 top-full mt-1 w-44 rounded-xl border shadow-lg py-1 z-50 animate-in fade-in zoom-in-95 duration-100 ${
+                  isDarkMode ? 'bg-[#1E293B] border-gray-700 text-gray-200' : 'bg-white border-gray-200 text-gray-800'
+                }`}>
+                  <button
+                    type="button"
+                    id="btn-open-project"
+                    onClick={() => {
+                      onImport();
+                      setOpenMenu(null);
+                    }}
+                    className={`w-full text-left px-3.5 py-2 flex items-center gap-2 transition-colors cursor-pointer ${
+                      isDarkMode ? 'hover:bg-gray-700/60 text-gray-200' : 'hover:bg-gray-50 text-gray-800'
+                    }`}
+                  >
+                    <span>📂</span>
+                    <span>Buka proyek</span>
+                  </button>
+                  <button
+                    type="button"
+                    id="btn-save-project"
+                    onClick={() => {
+                      handleExport();
+                      setOpenMenu(null);
+                    }}
+                    className={`w-full text-left px-3.5 py-2 flex items-center gap-2 transition-colors cursor-pointer ${
+                      isDarkMode ? 'hover:bg-gray-700/60 text-gray-200' : 'hover:bg-gray-50 text-gray-800'
+                    }`}
+                  >
+                    <span>💾</span>
+                    <span>Simpan proyek</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Menu: Edit */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => toggleMenu('edit')}
+                onMouseEnter={() => handleMouseEnterMenu('edit')}
+                className={`px-2.5 py-1.5 rounded-lg font-semibold flex items-center gap-1 transition-colors cursor-pointer ${
+                  openMenu === 'edit'
+                    ? isDarkMode
+                      ? 'bg-gray-800 text-white'
+                      : 'bg-gray-100 text-gray-900'
+                    : isDarkMode
+                      ? 'text-gray-300 hover:text-white hover:bg-gray-800/70'
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                }`}
+                title="Menu Edit"
+              >
+                <span>Edit</span>
+                <span className="text-[9px] opacity-60">▼</span>
+              </button>
+
+              {openMenu === 'edit' && (
+                <div className={`absolute left-0 top-full mt-1 w-48 rounded-xl border shadow-lg py-1 z-50 animate-in fade-in zoom-in-95 duration-100 ${
+                  isDarkMode ? 'bg-[#1E293B] border-gray-700 text-gray-200' : 'bg-white border-gray-200 text-gray-800'
+                }`}>
+                  <button
+                    type="button"
+                    id="menu-undo"
+                    onClick={() => {
+                      if (canUndo) {
+                        onUndo();
+                        setOpenMenu(null);
+                      }
+                    }}
+                    disabled={!canUndo}
+                    className={`w-full text-left px-3.5 py-2 flex items-center justify-between transition-colors ${
+                      canUndo
+                        ? isDarkMode
+                          ? 'hover:bg-gray-700/60 text-gray-200 cursor-pointer'
+                          : 'hover:bg-gray-50 text-gray-800 cursor-pointer'
+                        : 'opacity-40 cursor-not-allowed text-gray-400'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span>↩️</span>
+                      <span>Urungkan</span>
+                    </div>
+                    <span className="text-[10px] text-gray-400 font-mono">Ctrl+Z</span>
+                  </button>
+                  <button
+                    type="button"
+                    id="menu-redo"
+                    onClick={() => {
+                      if (canRedo) {
+                        onRedo();
+                        setOpenMenu(null);
+                      }
+                    }}
+                    disabled={!canRedo}
+                    className={`w-full text-left px-3.5 py-2 flex items-center justify-between transition-colors ${
+                      canRedo
+                        ? isDarkMode
+                          ? 'hover:bg-gray-700/60 text-gray-200 cursor-pointer'
+                          : 'hover:bg-gray-50 text-gray-800 cursor-pointer'
+                        : 'opacity-40 cursor-not-allowed text-gray-400'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span>↪️</span>
+                      <span>Ulangi</span>
+                    </div>
+                    <span className="text-[10px] text-gray-400 font-mono">Ctrl+Y</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Menu: Panduan/Belajar */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => toggleMenu('learn')}
+                onMouseEnter={() => handleMouseEnterMenu('learn')}
+                className={`px-2.5 py-1.5 rounded-lg font-semibold flex items-center gap-1 transition-colors cursor-pointer ${
+                  openMenu === 'learn'
+                    ? isDarkMode
+                      ? 'bg-gray-800 text-white'
+                      : 'bg-gray-100 text-gray-900'
+                    : isDarkMode
+                      ? 'text-gray-300 hover:text-white hover:bg-gray-800/70'
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                }`}
+                title="Menu Panduan / Belajar"
+              >
+                <span>Panduan/Belajar</span>
+                <span className="text-[9px] opacity-60">▼</span>
+              </button>
+
+              {openMenu === 'learn' && (
+                <div className={`absolute left-0 top-full mt-1 w-48 rounded-xl border shadow-lg py-1 z-50 animate-in fade-in zoom-in-95 duration-100 ${
+                  isDarkMode ? 'bg-[#1E293B] border-gray-700 text-gray-200' : 'bg-white border-gray-200 text-gray-800'
+                }`}>
+                  {onOpenExamplesModal && (
+                    <button
+                      type="button"
+                      id="btn-example-projects"
+                      onClick={() => {
+                        onOpenExamplesModal();
+                        setOpenMenu(null);
+                      }}
+                      className={`w-full text-left px-3.5 py-2 flex items-center gap-2 transition-colors cursor-pointer ${
+                        isDarkMode ? 'hover:bg-gray-700/60 text-gray-200' : 'hover:bg-gray-50 text-gray-800'
+                      }`}
+                    >
+                      <span>💡</span>
+                      <span>Contoh Proyek</span>
+                    </button>
+                  )}
+                  {onOpenGuide && (
+                    <button
+                      type="button"
+                      id="btn-guide-tour"
+                      onClick={() => {
+                        onOpenGuide();
+                        setOpenMenu(null);
+                      }}
+                      className={`w-full text-left px-3.5 py-2 flex items-center gap-2 transition-colors cursor-pointer ${
+                        isDarkMode ? 'hover:bg-gray-700/60 text-gray-200' : 'hover:bg-gray-50 text-gray-800'
+                      }`}
+                    >
+                      <span>📖</span>
+                      <span>Panduan</span>
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className={`h-4 w-px ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'} hidden sm:block`} />
+
+          {/* Nama Dokumen Proyek (Inline Editable) */}
           <div className="flex items-center gap-1.5">
             {isEditingName ? (
               <input
@@ -121,8 +345,8 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
                     setIsEditingName(false);
                   }
                 }}
-                className={`text-xs font-bold px-1.5 py-0.5 border-b-2 border-blue-500 focus:outline-none bg-transparent ${
-                  isDarkMode ? 'text-white' : 'text-gray-900'
+                className={`text-xs font-bold px-2 py-0.5 rounded border border-blue-500 focus:outline-none bg-transparent ${
+                  isDarkMode ? 'text-white bg-gray-850' : 'text-gray-900 bg-blue-50/40'
                 }`}
                 autoFocus
                 maxLength={60}
@@ -134,8 +358,8 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
                   setTempName(projectName);
                   setIsEditingName(true);
                 }}
-                className={`text-xs font-bold transition-colors flex items-center gap-1 cursor-pointer ${
-                  isDarkMode ? 'text-gray-200 hover:text-white' : 'text-gray-800 hover:text-blue-600'
+                className={`text-xs font-bold transition-colors flex items-center gap-1 px-1.5 py-0.5 rounded cursor-pointer ${
+                  isDarkMode ? 'text-gray-200 hover:text-white hover:bg-gray-800' : 'text-gray-800 hover:text-blue-600 hover:bg-gray-100'
                 }`}
                 title="Klik untuk mengubah nama proyek"
               >
@@ -146,128 +370,13 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
           </div>
         </div>
 
-        {/* Sisi Kanan: Menu Aksi Alami, Eksekusi, & Pengaturan */}
+        {/* Sisi Kanan: Pengaturan (Mode Gelap) */}
         <div className="flex items-center gap-2">
-          {/* Menu Navigasi Utama (Teks bersih natural tanpa card-in-card) */}
-          <div className="hidden md:flex items-center gap-1 text-xs">
-            {/* Buka Proyek */}
-            <button
-              id="btn-open-project"
-              type="button"
-              onClick={onImport}
-              className={`px-2.5 py-1.5 rounded-lg font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
-                isDarkMode ? 'hover:bg-gray-800 text-gray-300' : 'hover:bg-gray-100 text-gray-700'
-              }`}
-              title="Buka berkas proyek dari komputer"
-            >
-              <span>📂</span>
-              <span>Buka proyek</span>
-            </button>
-
-            {/* Simpan Proyek */}
-            <button
-              id="btn-save-project"
-              type="button"
-              onClick={handleExport}
-              className={`px-2.5 py-1.5 rounded-lg font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
-                isDarkMode ? 'hover:bg-gray-800 text-gray-300' : 'hover:bg-gray-100 text-gray-700'
-              }`}
-              title="Simpan proyek ke komputer"
-            >
-              <span>💾</span>
-              <span>Simpan proyek</span>
-            </button>
-
-            {/* Contoh Proyek */}
-            {onOpenExamplesModal && (
-              <button
-                type="button"
-                onClick={onOpenExamplesModal}
-                className={`px-2.5 py-1.5 rounded-lg font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
-                  isDarkMode ? 'hover:bg-gray-800 text-gray-300' : 'hover:bg-gray-100 text-gray-700'
-                }`}
-                title="Buka contoh proyek"
-              >
-                <span>Contoh Proyek</span>
-              </button>
-            )}
-
-            {/* Panduan */}
-            {onOpenGuide && (
-              <button
-                type="button"
-                onClick={onOpenGuide}
-                className={`px-2.5 py-1.5 rounded-lg font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
-                  isDarkMode ? 'hover:bg-gray-800 text-gray-300' : 'hover:bg-gray-100 text-gray-700'
-                }`}
-                title="Buka panduan"
-              >
-                <span>Panduan</span>
-              </button>
-            )}
-          </div>
-
-          <div className={`h-4 w-px ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'} hidden md:block mx-1`} />
-
-          {/* Tombol Batal & Ulangi */}
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              onClick={onUndo}
-              disabled={!canUndo}
-              className={`px-2 py-1 text-xs font-medium rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer ${
-                isDarkMode ? 'hover:bg-gray-800 text-gray-300' : 'hover:bg-gray-100 text-gray-700'
-              }`}
-              title="Urungkan (Ctrl+Z)"
-            >
-              ↩ Batal
-            </button>
-            <button
-              type="button"
-              onClick={onRedo}
-              disabled={!canRedo}
-              className={`px-2 py-1 text-xs font-medium rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer ${
-                isDarkMode ? 'hover:bg-gray-800 text-gray-300' : 'hover:bg-gray-100 text-gray-700'
-              }`}
-              title="Ulangi (Ctrl+Y)"
-            >
-              ↪ Ulangi
-            </button>
-          </div>
-
-          <div className={`h-4 w-px ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'} mx-1`} />
-
-          {/* Tombol Utama Mulai / Berhenti */}
-          {isRunning ? (
-            <button
-              id="btn-stop-program"
-              type="button"
-              onClick={onStop}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg shadow-xs transition-colors cursor-pointer"
-              title="Hentikan program"
-            >
-              <span>⏹</span>
-              <span>Berhenti</span>
-            </button>
-          ) : (
-            <button
-              id="btn-run-program"
-              type="button"
-              onClick={onRun}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow-xs transition-colors cursor-pointer"
-              title="Jalankan program"
-            >
-              <span>▶</span>
-              <span>Mulai</span>
-            </button>
-          )}
-
-          {/* Mode Gelap / Terang */}
           {onToggleDarkMode && (
             <button
               type="button"
               onClick={onToggleDarkMode}
-              className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ml-1 ${
+              className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
                 isDarkMode ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'
               }`}
               title={isDarkMode ? 'Mode Terang' : 'Mode Gelap'}

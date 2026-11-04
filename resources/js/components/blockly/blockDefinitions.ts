@@ -24,11 +24,11 @@ const COLORS = {
 Blockly.Blocks[BLOCK_TYPES.EVENT_START] = {
   init(this: Blockly.Block) {
     this.appendDummyInput()
-      .appendField('🚀')
-      .appendField('Saat Mulai Diklik');
+      .appendField('🚩')
+      .appendField('ketika bendera hijau diklik');
     this.setNextStatement(true, null);
     this.setColour(COLORS.KEJADIAN);
-    this.setTooltip('Blok ini dijalankan saat tombol Mulai diklik.');
+    this.setTooltip('Blok ini dijalankan saat bendera hijau diklik.');
     this.setHelpUrl('');
   },
 };
