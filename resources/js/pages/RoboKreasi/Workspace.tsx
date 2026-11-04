@@ -313,10 +313,10 @@ const Workspace: React.FC<WorkspacePageProps> = ({
         </div>
       )}
 
-      {/* Layout Utama Full Screen */}
-      <div className={`flex flex-col h-screen ${isDarkMode ? 'dark bg-[#0F172A] text-gray-100' : 'bg-[#F8FAFC] text-gray-800'} overflow-hidden font-sans`}>
-        {/* Header & Subheader Navigasi (Sesuai Figma) */}
-        <header className={`flex-shrink-0 ${isDarkMode ? 'bg-[#1E293B] border-gray-800' : 'bg-white border-gray-200/80'} border-b px-6 py-2 shadow-xs`}>
+      {/* Layout Utama Full Screen PictoBlox */}
+      <div className={`flex flex-col h-screen ${isDarkMode ? 'dark bg-[#0F172A] text-gray-100' : 'bg-[#F0F2F5] text-gray-800'} overflow-hidden font-sans`}>
+        {/* Header Navigasi PictoBlox */}
+        <header className="flex-shrink-0">
           <ProgramToolbar
             programStatus={programStatus}
             canUndo={canUndo}
@@ -492,27 +492,68 @@ const Workspace: React.FC<WorkspacePageProps> = ({
               </div>
             )}
 
-            {/* Target Injeksi Blockly */}
-            <div
-              id="blockly-workspace"
-              ref={workspaceRef}
-              className="flex-1 w-full"
-            />
+            {/* Target Injeksi Blockly dengan Floating Toolbar PictoBlox */}
+            <div className="relative flex-1 w-full overflow-hidden">
+              <div
+                id="blockly-workspace"
+                ref={workspaceRef}
+                className="w-full h-full"
+              />
 
-            {/* Footnote Helper Kanvas Sesuai Figma */}
-            <div className="px-4 py-1.5 bg-gray-50/80 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-400">
-              <span className="flex items-center gap-1.5">
-                <span>🗑️</span>
-                <span>Tarik ke sini untuk menghapus</span>
-              </span>
-              <span className="hidden sm:inline text-[10px]">
-                Scroll untuk zoom • Geser kanvas dengan drag mouse
-              </span>
+              {/* Floating Action Controls PictoBlox (Undo, Redo, Zoom) */}
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-1.5 bg-white/95 backdrop-blur-xs p-1.5 rounded-2xl border border-gray-200 shadow-md">
+                <button
+                  type="button"
+                  onClick={undo}
+                  disabled={!canUndo}
+                  className="w-8 h-8 rounded-xl flex items-center justify-center text-gray-700 hover:bg-purple-50 hover:text-purple-700 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer text-sm"
+                  title="Urungkan (Ctrl+Z)"
+                >
+                  ↶
+                </button>
+                <button
+                  type="button"
+                  onClick={redo}
+                  disabled={!canRedo}
+                  className="w-8 h-8 rounded-xl flex items-center justify-center text-gray-700 hover:bg-purple-50 hover:text-purple-700 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer text-sm"
+                  title="Ulangi (Ctrl+Y)"
+                >
+                  ↷
+                </button>
+                <div className="h-px bg-gray-200 mx-1" />
+                <button
+                  type="button"
+                  onClick={() => workspace?.zoomCenter(1)}
+                  className="w-8 h-8 rounded-xl flex items-center justify-center text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors cursor-pointer text-sm font-bold"
+                  title="Perbesar (Zoom In)"
+                >
+                  +
+                </button>
+                <button
+                  type="button"
+                  onClick={() => workspace?.zoomCenter(-1)}
+                  className="w-8 h-8 rounded-xl flex items-center justify-center text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors cursor-pointer text-sm font-bold"
+                  title="Perkecil (Zoom Out)"
+                >
+                  −
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    workspace?.setScale(0.9);
+                    workspace?.scrollCenter();
+                  }}
+                  className="w-8 h-8 rounded-xl flex items-center justify-center text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors cursor-pointer text-sm font-bold"
+                  title="Reset Zoom"
+                >
+                  =
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Kolom Kanan: Simulator Robot ATAU Panel Kode Teks */}
-          <div className={`w-full lg:w-[360px] flex-shrink-0 flex-col gap-2 overflow-hidden ${
+          <div className={`w-full lg:w-[420px] xl:w-[450px] flex-shrink-0 flex-col gap-2 overflow-hidden ${
             mobileTab === 'simulator' ? 'flex' : 'hidden lg:flex'
           }`}>
             {isCodeViewerOpen ? (
@@ -537,30 +578,10 @@ const Workspace: React.FC<WorkspacePageProps> = ({
                     onSizeChange={setSize}
                   />
                 </div>
-
               </>
             )}
           </div>
         </main>
-
-        {/* Footer Bar Sesuai Figma Kit Desain & Mode Gelap Toggle */}
-        <footer className={`flex-shrink-0 ${isDarkMode ? 'bg-[#1E293B] border-gray-800 text-gray-400' : 'bg-white border-gray-200 text-gray-500'} border-t px-6 py-1.5 flex items-center justify-between text-[11px]`}>
-          <div className="flex items-center gap-2">
-            <span>💾</span>
-            <span>Simpan ke komputer • Tidak disimpan otomatis</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span>🇮🇩 Bahasa Indonesia</span>
-            <span>•</span>
-            <button
-              type="button"
-              onClick={toggleDarkMode}
-              className="hover:text-blue-600 transition-colors cursor-pointer"
-            >
-              {isDarkMode ? '🌙 Mode gelap' : '☀️ Mode terang'}
-            </button>
-          </div>
-        </footer>
       </div>
 
       {/* ─── Modal Dialogs (Sesuai Figma) ─────────────────────────────────── */}
