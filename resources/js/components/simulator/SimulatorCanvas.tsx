@@ -261,32 +261,8 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
       id="robot-simulator"
       className="flex flex-col h-full bg-white rounded-2xl border border-gray-200 overflow-hidden text-left select-none shadow-xs"
     >
-      {/* ─── Header Simulator ─────────────────────────────────────────── */}
-      <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50/80 border-b border-gray-200">
-        <div className="flex items-center gap-2">
-          <span className="font-bold text-xs text-gray-800">
-            🤖 Simulator Robot
-          </span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-200/70 text-gray-600 font-medium">
-            Virtual
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {/* Status Label (Diperlukan oleh testing & monitoring) */}
-          <span
-            className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${
-              programStatus === 'running'
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
-                : programStatus === 'error'
-                  ? 'bg-red-50 text-red-700 border-red-300'
-                  : 'bg-blue-50 text-blue-700 border-blue-200'
-            }`}
-          >
-            {statusLabel}
-          </span>
-        </div>
-      </div>
+      {/* Screen-reader status label untuk aksesibilitas */}
+      <span className="sr-only" aria-live="polite">{statusLabel}</span>
 
       <div className="p-3.5 flex-1 flex flex-col gap-3 overflow-y-auto">
         {/* ─── Kanvas Panggung dengan Koordinat Rulers ─────────────────── */}

@@ -201,7 +201,7 @@ describe('SimulatorCanvas', () => {
     render(
       <SimulatorCanvas state={dummyState} programStatus="idle" width={500} height={400} />
     );
-    expect(screen.getByText('🤖 Simulator Robot')).toBeInTheDocument();
+    expect(screen.getByLabelText('Panggung Robot')).toBeInTheDocument();
     expect(screen.getByText('Siap')).toBeInTheDocument();
     expect(screen.getByText('Robot Siap!')).toBeInTheDocument();
     expect(screen.getByText('Tes log 1')).toBeInTheDocument();
