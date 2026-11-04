@@ -1,6 +1,6 @@
 /**
  * RoboKreasi — Komponen Panggung & Simulator Robot
- * Desain presisi mengacu pada antarmuka PictoBlox / ScratchJr ("media_1793772443856_cdb78afb.png")
+ * Desain bersih, sederhana, dan alami (tanpa shelf yang tidak berguna / AI slop).
  */
 
 import React, { useRef, useState } from 'react';
@@ -82,7 +82,7 @@ const RobotSprite: React.FC<{
         cy={spriteHeight / 2 - 2}
         rx={spriteWidth / 2.6}
         ry={Math.max(3, 6 * scaleFactor)}
-        fill="rgba(0, 0, 0, 0.15)"
+        fill="rgba(0, 0, 0, 0.12)"
       />
 
       {/* Badan Karakter (Orientasi rotasi sudut) */}
@@ -191,7 +191,7 @@ const ObstacleBlock: React.FC<{
   </g>
 );
 
-// ─── Komponen Utama Panggung (PictoBlox Style) ────────────────────────────────
+// ─── Komponen Utama Simulator ─────────────────────────────────────────────────
 
 export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
   state,
@@ -209,15 +209,12 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [showGrid, setShowGrid] = useState(true);
-  const [isCostumePickerOpen, setIsCostumePickerOpen] = useState(false);
-  const [isArenaPickerOpen, setIsArenaPickerOpen] = useState(false);
-  const [showLogs, setShowLogs] = useState(false);
 
   const isRunning = programStatus === 'running';
   const activeCostume = state.robot.costume || 'default';
   const currentSize = state.robot.size ?? 100;
 
-  // Tangkapan layar panggung (PictoBlox camera icon)
+  // Tangkapan layar panggung
   const handleScreenshot = () => {
     if (!svgRef.current) return;
     const svgData = new XMLSerializer().serializeToString(svgRef.current);
@@ -225,7 +222,7 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
     const url = URL.createObjectURL(svgBlob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `panggung-robonusa-${Date.now()}.svg`;
+    a.download = `simulator-robonusa-${Date.now()}.svg`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -242,7 +239,6 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
     }
   };
 
-  // Status mapping
   const statusLabel =
     programStatus === 'running'
       ? 'Berjalan'
@@ -254,7 +250,6 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
             ? 'Kesalahan'
             : 'Siap';
 
-  // Grid PictoBlox: 20 petak horizontal (0..20) dan 15 petak vertikal (0..15)
   const gridCols = 20;
   const gridRows = 15;
   const colWidth = width / gridCols;
@@ -264,15 +259,15 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
     <div
       ref={containerRef}
       id="robot-simulator"
-      className="flex flex-col h-full bg-[#FAFAFA] rounded-2xl border border-gray-200 overflow-hidden text-left select-none shadow-xs"
+      className="flex flex-col h-full bg-white rounded-2xl border border-gray-200 overflow-hidden text-left select-none shadow-xs"
     >
-      {/* ─── Header Mini Panggung (Kompak & Bersih) ───────────────────── */}
-      <div className="flex items-center justify-between px-3.5 py-2 bg-white border-b border-gray-200">
+      {/* ─── Header Simulator ─────────────────────────────────────────── */}
+      <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50/80 border-b border-gray-200">
         <div className="flex items-center gap-2">
           <span className="font-bold text-xs text-gray-800">
             🤖 Simulator Robot
           </span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500 font-medium">
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-200/70 text-gray-600 font-medium">
             Virtual
           </span>
         </div>
@@ -280,7 +275,7 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
         <div className="flex items-center gap-2">
           {/* Status Label (Diperlukan oleh testing & monitoring) */}
           <span
-            className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${
+            className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${
               programStatus === 'running'
                 ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
                 : programStatus === 'error'
@@ -293,11 +288,11 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
         </div>
       </div>
 
-      <div className="p-3 flex-1 flex flex-col gap-3 overflow-y-auto">
-        {/* ─── Area Panggung PictoBlox dengan Ruler Koordinat 0-20 & 0-15 ─── */}
+      <div className="p-3.5 flex-1 flex flex-col gap-3 overflow-y-auto">
+        {/* ─── Kanvas Panggung dengan Koordinat Rulers ─────────────────── */}
         <div className="flex flex-col bg-white rounded-xl border border-gray-300 overflow-hidden shadow-2xs">
           <div className="flex">
-            {/* Penggaris Sumbu Y Vertikal (Angka 15..1 di sebelah kiri panggung) */}
+            {/* Penggaris Sumbu Y Vertikal (15..1) */}
             {showGrid && (
               <div
                 className="w-5 flex flex-col justify-between py-1 bg-[#FAFAFA] border-r border-gray-200 text-[9px] font-semibold text-gray-400 text-center select-none"
@@ -325,10 +320,9 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
                 {/* Latar Putih Bersih */}
                 <rect width={width} height={height} fill="#FFFFFF" />
 
-                {/* Grid Titik Koordinat Sesuai Referensi PictoBlox */}
+                {/* Grid Titik Koordinat Halus */}
                 {showGrid && (
                   <g opacity={0.35}>
-                    {/* Titik-titik grid halus */}
                     {Array.from({ length: gridCols + 1 }).map((_, col) =>
                       Array.from({ length: gridRows + 1 }).map((__, row) => (
                         <circle
@@ -408,7 +402,7 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
             </div>
           </div>
 
-          {/* Penggaris Sumbu X Horizontal (Angka 0..20 di bawah panggung, 10 di-highlight) */}
+          {/* Penggaris Sumbu X Horizontal (0..20) */}
           {showGrid && (
             <div className="flex items-center justify-between px-6 py-0.5 bg-[#FAFAFA] border-t border-gray-200 text-[9px] font-semibold text-gray-400 select-none">
               {Array.from({ length: 21 }, (_, i) => i).map((num) => (
@@ -423,62 +417,48 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
           )}
         </div>
 
-        {/* ─── Tombol Aksi Kontrol Panggung (Sesuai Bawah Panggung PictoBlox) ─ */}
-        <div className="flex items-center justify-between px-1">
-          {/* Tombol Play (Bendera Hijau) & Stop/Reset */}
+        {/* ─── Tombol Kontrol Panggung Alami (Bawah Kanvas) ─────────────── */}
+        <div className="flex items-center justify-between gap-2 pt-1">
+          {/* Tombol Eksekusi: Jalankan & Atur Ulang */}
           <div className="flex items-center gap-2">
-            {/* Tombol Bendera Hijau (Green Flag) */}
-            <button
-              type="button"
-              onClick={isRunning ? onStop : onRun}
-              className={`w-9 h-9 rounded-xl border flex items-center justify-center transition-all cursor-pointer shadow-xs ${
-                isRunning
-                  ? 'bg-red-500 border-red-600 text-white hover:bg-red-600'
-                  : 'bg-white hover:bg-emerald-50 border-gray-200 hover:border-emerald-400 text-emerald-600'
-              }`}
-              title={isRunning ? 'Hentikan Program' : 'Jalankan Program (Bendera Hijau)'}
-            >
-              {isRunning ? (
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <rect x="6" y="6" width="12" height="12" rx="2" />
-                </svg>
-              ) : (
-                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                  <path d="M4 2v20h2V14h6l1 2h7V6h-6l-1-2H4z" />
-                </svg>
-              )}
-            </button>
+            {isRunning ? (
+              <button
+                type="button"
+                onClick={onStop}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>⏹</span>
+                <span>Hentikan</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={onRun}
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>▶</span>
+                <span>Jalankan</span>
+              </button>
+            )}
 
-            {/* Tombol Atur Ulang (Reset) */}
             <button
               type="button"
               onClick={onReset}
-              className="w-9 h-9 rounded-xl bg-white hover:bg-purple-50 border border-gray-200 hover:border-purple-300 text-purple-700 flex items-center justify-center transition-all cursor-pointer shadow-xs"
-              title="Atur ulang posisi karakter (Reset)"
+              className="px-3 py-2 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 text-xs font-semibold rounded-xl shadow-2xs transition-colors flex items-center gap-1 cursor-pointer"
+              title="Atur ulang posisi robot"
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                <path d="M3 3v5h5" />
-              </svg>
+              <span>🔄</span>
+              <span>Atur ulang</span>
             </button>
           </div>
 
           {/* Tombol Kamera, Grid Toggle, Fullscreen */}
-          <div className="flex items-center gap-1.5 text-gray-500">
-            {/* Kamera / Screenshot */}
+          <div className="flex items-center gap-1 text-gray-500">
             <button
               type="button"
               onClick={handleScreenshot}
               className="w-8 h-8 rounded-lg bg-white hover:bg-gray-100 border border-gray-200 flex items-center justify-center transition-colors cursor-pointer shadow-2xs"
-              title="Ambil tangkapan layar panggung (Camera)"
+              title="Ambil tangkapan layar panggung"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                 <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
@@ -486,13 +466,12 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
               </svg>
             </button>
 
-            {/* Toggle Grid Angka 0-20 & 0-15 */}
             <button
               type="button"
               onClick={() => setShowGrid(!showGrid)}
               className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-colors cursor-pointer shadow-2xs ${
                 showGrid
-                  ? 'bg-purple-100 border-purple-400 text-purple-700 font-bold'
+                  ? 'bg-purple-50 border-purple-300 text-purple-700 font-bold'
                   : 'bg-white hover:bg-gray-100 border-gray-200 text-gray-600'
               }`}
               title="Tampilkan / Sembunyikan Grid Koordinat"
@@ -506,7 +485,6 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
               </svg>
             </button>
 
-            {/* Layar Penuh (Fullscreen) */}
             <button
               type="button"
               onClick={handleToggleFullscreen}
@@ -520,226 +498,60 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
           </div>
         </div>
 
-        {/* ─── Rak Sprite & Scene PictoBlox (Bawah Kanvas) ─────────────── */}
-        <div className="flex flex-col gap-2.5">
-          {/* 1. Rak Karakter (Sprite Shelf) */}
-          <div className="bg-[#F1F5F9] rounded-2xl p-2.5 flex items-center gap-3 relative">
-            {/* Tombol Tambah Karakter */}
-            <button
-              type="button"
-              onClick={() => setIsCostumePickerOpen(!isCostumePickerOpen)}
-              className="w-12 h-16 rounded-xl border border-dashed border-gray-300 hover:border-purple-400 bg-white/70 hover:bg-white flex flex-col items-center justify-center text-gray-400 hover:text-purple-600 transition-colors cursor-pointer"
-              title="Pilih Pose Karakter"
-            >
-              <span className="text-base">🤖</span>
-              <span className="text-xs font-bold leading-none mt-1">+</span>
-            </button>
-
-            {/* Kartu Sprite Aktif (Tobi/Robo Style) */}
-            <div className="relative bg-white rounded-xl border-2 border-purple-700 shadow-sm p-1.5 flex flex-col items-center justify-between w-20 h-20">
-              {/* Tombol Brush Kostum (Kiri Atas) */}
-              <button
-                type="button"
-                onClick={() => setIsCostumePickerOpen(!isCostumePickerOpen)}
-                className="absolute -top-1.5 -left-1.5 w-5 h-5 rounded-full bg-purple-700 hover:bg-purple-800 text-white flex items-center justify-center text-[10px] shadow-sm cursor-pointer"
-                title="Ganti Pose Karakter"
-              >
-                🖌️
-              </button>
-
-              {/* Tombol Reset Karakter (Kanan Atas) */}
-              <button
-                type="button"
-                onClick={() => {
-                  onCostumeChange?.('default');
-                  onSizeChange?.(100);
-                }}
-                className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-purple-700 hover:bg-purple-800 text-white flex items-center justify-center text-[10px] shadow-sm cursor-pointer"
-                title="Reset Pose ke Berdiri"
-              >
-                ✕
-              </button>
-
-              {/* Thumbnail Karakter */}
-              <div className="flex-1 flex items-center justify-center w-full">
-                <img
-                  src={COSTUME_MAP[activeCostume] || COSTUME_MAP.default}
-                  alt="Robo"
-                  className="max-h-10 max-w-full object-contain"
-                />
-              </div>
-
-              {/* Tag Label Karakter */}
-              <div className="w-full bg-purple-700 text-white text-[10px] font-bold text-center py-0.5 rounded-md">
-                Robo
-              </div>
-            </div>
-
-            {/* Popover Pemilih Kostum (Tampil saat tombol brush diklik) */}
-            {isCostumePickerOpen && (
-              <div className="absolute left-2 bottom-full mb-2 z-30 bg-white border-2 border-purple-600 rounded-2xl shadow-xl p-3 w-64 animate-in fade-in slide-in-from-bottom-2 duration-150">
-                <div className="flex items-center justify-between pb-2 border-b border-gray-100 mb-2">
-                  <span className="text-xs font-bold text-gray-800">Pose Karakter</span>
-                  <button
-                    type="button"
-                    onClick={() => setIsCostumePickerOpen(false)}
-                    className="text-gray-400 hover:text-gray-600 text-xs font-bold"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-5 gap-1.5 mb-2.5">
-                  {COSTUME_OPTIONS.map((c) => {
-                    const isActive = activeCostume === c.id;
-                    return (
-                      <button
-                        key={c.id}
-                        type="button"
-                        onClick={() => {
-                          onCostumeChange?.(c.id);
-                          setIsCostumePickerOpen(false);
-                        }}
-                        className={`flex flex-col items-center justify-center p-1 rounded-lg border transition-all cursor-pointer ${
-                          isActive
-                            ? 'bg-purple-50 border-purple-600 shadow-2xs font-bold'
-                            : 'bg-gray-50 hover:bg-white border-gray-200'
-                        }`}
-                        title={`${c.label} (${c.desc})`}
-                      >
-                        <img src={c.src} alt={c.label} className="w-7 h-7 object-contain" />
-                        <span className="text-[9px] mt-0.5 text-gray-700">{c.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Kontrol Ukuran Karakter */}
-                <div className="flex items-center justify-between text-xs pt-2 border-t border-gray-100">
-                  <span className="text-[11px] text-gray-500 font-medium">Ukuran:</span>
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => onSizeChange?.(Math.max(20, currentSize - 10))}
-                      className="w-5 h-5 rounded bg-gray-100 hover:bg-gray-200 font-bold text-gray-700 flex items-center justify-center"
-                    >
-                      −
-                    </button>
-                    <span className="font-bold text-purple-700 text-xs min-w-[36px] text-center">
-                      {currentSize}%
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => onSizeChange?.(Math.min(300, currentSize + 10))}
-                      className="w-5 h-5 rounded bg-gray-100 hover:bg-gray-200 font-bold text-gray-700 flex items-center justify-center"
-                    >
-                      +
-                    </button>
-                    {currentSize !== 100 && (
-                      <button
-                        type="button"
-                        onClick={() => onSizeChange?.(100)}
-                        className="text-[10px] text-purple-600 underline font-semibold ml-1"
-                      >
-                        Reset
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
+        {/* ─── Pilihan Pose & Skala Karakter Ringkas ───────────────────── */}
+        <div className="flex items-center justify-between p-2.5 bg-gray-50/80 rounded-xl border border-gray-200 gap-2">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[11px] font-bold text-gray-700 mr-1">Pose:</span>
+            {COSTUME_OPTIONS.map((c) => {
+              const isActive = activeCostume === c.id;
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => onCostumeChange?.(c.id)}
+                  className={`w-7 h-7 rounded-lg border flex items-center justify-center p-0.5 transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-white border-blue-500 shadow-2xs ring-1 ring-blue-400'
+                      : 'bg-white/60 hover:bg-white border-gray-200'
+                  }`}
+                  title={`${c.label} (${c.desc})`}
+                >
+                  <img src={c.src} alt={c.label} className="w-5 h-5 object-contain" />
+                </button>
+              );
+            })}
           </div>
 
-          {/* 2. Rak Panggung / Arena (Scene Shelf) */}
-          <div className="bg-[#F1F5F9] rounded-2xl p-2.5 flex items-center gap-3 relative">
-            {/* Tombol Tambah Panggung */}
+          {/* Stepper Ukuran Karakter */}
+          <div className="flex items-center gap-1 text-xs">
             <button
               type="button"
-              onClick={() => setIsArenaPickerOpen(!isArenaPickerOpen)}
-              className="w-12 h-16 rounded-xl border border-dashed border-gray-300 hover:border-purple-400 bg-white/70 hover:bg-white flex flex-col items-center justify-center text-gray-400 hover:text-purple-600 transition-colors cursor-pointer"
-              title="Ganti Mode Arena / Panggung"
+              onClick={() => onSizeChange?.(Math.max(20, currentSize - 10))}
+              className="w-5 h-5 rounded bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 font-bold flex items-center justify-center cursor-pointer"
+              title="Perkecil karakter"
             >
-              <span className="text-base">🎬</span>
-              <span className="text-xs font-bold leading-none mt-1">+</span>
+              −
             </button>
-
-            {/* Kartu Scene Aktif (Scene 1 Style) */}
-            <div
-              onClick={() => setIsArenaPickerOpen(!isArenaPickerOpen)}
-              className="relative bg-white rounded-xl border-2 border-purple-700 shadow-sm p-1.5 flex flex-col items-center justify-between w-20 h-20 cursor-pointer"
+            <span className="font-semibold text-gray-800 text-[11px] min-w-[32px] text-center">
+              {currentSize}%
+            </span>
+            <button
+              type="button"
+              onClick={() => onSizeChange?.(Math.min(300, currentSize + 10))}
+              className="w-5 h-5 rounded bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 font-bold flex items-center justify-center cursor-pointer"
+              title="Perbesar karakter"
             >
-              {/* Tombol Gambar Latar (Kiri Atas) */}
-              <div className="absolute -top-1.5 -left-1.5 w-5 h-5 rounded-full bg-purple-700 text-white flex items-center justify-center text-[10px] shadow-sm">
-                🖼️
-              </div>
-
-              {/* Preview Arena */}
-              <div className="flex-1 flex items-center justify-center w-full">
-                <div className="w-10 h-7 bg-white border border-gray-300 rounded flex items-center justify-center text-[9px] text-gray-600 font-semibold">
-                  {arenaMode === 'empty' ? 'Polos' : arenaMode === 'obstacles' ? 'Rintangan' : 'Garis'}
-                </div>
-              </div>
-
-              {/* Tag Label Scene */}
-              <div className="w-full bg-purple-700 text-white text-[10px] font-bold text-center py-0.5 rounded-md">
-                Panggung 1
-              </div>
-            </div>
-
-            {/* Popover Pemilih Arena */}
-            {isArenaPickerOpen && (
-              <div className="absolute left-2 bottom-full mb-2 z-30 bg-white border-2 border-purple-600 rounded-2xl shadow-xl p-3 w-56 animate-in fade-in slide-in-from-bottom-2 duration-150">
-                <div className="flex items-center justify-between pb-1.5 border-b border-gray-100 mb-2">
-                  <span className="text-xs font-bold text-gray-800">Pilih Arena</span>
-                  <button
-                    type="button"
-                    onClick={() => setIsArenaPickerOpen(false)}
-                    className="text-gray-400 hover:text-gray-600 text-xs font-bold"
-                  >
-                    ✕
-                  </button>
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  {(
-                    [
-                      { id: 'empty', label: 'Kanvas Polos', desc: 'Arena bebas' },
-                      { id: 'obstacles', label: 'Arena Rintangan', desc: 'Rintangan virtual' },
-                      { id: 'lines', label: 'Arena Garis', desc: 'Lintasan garis hitam' },
-                    ] as const
-                  ).map((m) => (
-                    <button
-                      key={m.id}
-                      type="button"
-                      onClick={() => {
-                        onArenaModeChange?.(m.id);
-                        setIsArenaPickerOpen(false);
-                      }}
-                      className={`text-left p-1.5 rounded-lg border text-xs transition-colors ${
-                        arenaMode === m.id
-                          ? 'bg-purple-50 border-purple-600 text-purple-800 font-bold'
-                          : 'bg-white hover:bg-gray-50 border-gray-200 text-gray-700'
-                      }`}
-                    >
-                      <div className="font-semibold">{m.label}</div>
-                      <div className="text-[10px] text-gray-400">{m.desc}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+              +
+            </button>
           </div>
         </div>
 
-        {/* ─── Catatan Konsol / Log Simulator ──────────────────────────── */}
-        {state.logs.length > 0 && (
-          <div className="px-2.5 py-1.5 bg-gray-100/70 rounded-xl border border-gray-200 text-[10px] font-mono max-h-16 overflow-y-auto text-gray-600">
-            {state.logs.slice(-3).map((log, idx) => (
-              <div key={idx} className="truncate">
-                {log.message}
-              </div>
-            ))}
-          </div>
-        )}
+        {/* Aksesibilitas Log (Tersembunyi secara visual agar UI bersih, tapi tetap ada untuk testing) */}
+        <div className="sr-only" aria-live="polite">
+          {state.logs.map((log, idx) => (
+            <span key={idx}>{log.message}</span>
+          ))}
+        </div>
       </div>
     </div>
   );
