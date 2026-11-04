@@ -20,6 +20,7 @@ interface SimulatorCanvasProps {
   onReset?: () => void;
   onCostumeChange?: (costume: NonNullable<SimulatorState['robot']['costume']>) => void;
   onSizeChange?: (size: number) => void;
+  onToggleCodeViewer?: () => void;
 }
 
 // ─── Konstanta & Pustaka Pose Karakter ────────────────────────────────────────
@@ -205,6 +206,7 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
   onReset,
   onCostumeChange,
   onSizeChange,
+  onToggleCodeViewer,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -535,6 +537,22 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
               +
             </button>
           </div>
+        </div>
+
+        {/* ─── Area Kosong Bawah Kanan: Tombol Kode Teks ────────────────── */}
+        <div className="flex-1 min-h-[48px] flex items-end justify-end">
+          {onToggleCodeViewer && (
+            <button
+              id="btn-toggle-code"
+              type="button"
+              onClick={onToggleCodeViewer}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 shadow-2xs transition-all cursor-pointer hover:border-gray-400"
+              title="Buka padanan kode JavaScript / teks"
+            >
+              <span>💻</span>
+              <span>Kode teks</span>
+            </button>
+          )}
         </div>
 
         {/* Aksesibilitas Log (Tersembunyi secara visual agar UI bersih, tapi tetap ada untuk testing) */}

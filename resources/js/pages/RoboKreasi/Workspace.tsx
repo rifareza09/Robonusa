@@ -432,21 +432,6 @@ const Workspace: React.FC<WorkspacePageProps> = ({
                   =
                 </button>
               </div>
-
-              {/* Tombol Toggle Kode Teks di Pojok Kanan Bawah */}
-              <button
-                type="button"
-                onClick={handleToggleCodeViewer}
-                className={`absolute bottom-3 right-3 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all shadow-sm cursor-pointer ${
-                  isCodeViewerOpen
-                    ? 'bg-blue-600 text-white border-blue-600 shadow-blue-500/25 hover:bg-blue-700'
-                    : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300 hover:border-gray-400'
-                }`}
-                title={isCodeViewerOpen ? 'Kembali ke Simulasi Robot' : 'Buka Padanan Kode Teks (JavaScript)'}
-              >
-                <span>{isCodeViewerOpen ? '🤖' : '💻'}</span>
-                <span>{isCodeViewerOpen ? 'Simulasi' : 'Kode teks'}</span>
-              </button>
             </div>
           </div>
 
@@ -474,6 +459,7 @@ const Workspace: React.FC<WorkspacePageProps> = ({
                     onReset={resetSimulator}
                     onCostumeChange={setCostume}
                     onSizeChange={setSize}
+                    onToggleCodeViewer={handleToggleCodeViewer}
                   />
                 </div>
               </>

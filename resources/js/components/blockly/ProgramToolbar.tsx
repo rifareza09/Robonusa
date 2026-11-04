@@ -1,5 +1,5 @@
 /**
- * RoboKreasi — Toolbar & Header Navigasi Alami (Clean & Natural)
+ * RoboKreasi — Toolbar & Header Navigasi Hijau Alami
  * Menu dropdown PictoBlox / Scratch (File, Edit, Panduan/Belajar)
  */
 
@@ -90,15 +90,18 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
   };
 
   return (
-    <div className={`w-full ${isDarkMode ? 'bg-[#1E293B] text-gray-100 border-gray-800' : 'bg-white text-gray-800 border-gray-200'} border-b select-none`}>
-      {/* ─── Baris Navigasi Tunggal Alami ─────────────────────────────────── */}
-      <div className="px-4 py-2 flex items-center justify-between flex-wrap gap-3">
-        {/* Sisi Kiri: Logo, Navigasi Beranda, Menus (File, Edit, Panduan/Belajar), & Nama Proyek */}
-        <div className="flex items-center flex-wrap gap-2 sm:gap-3">
-          {/* Logo Brand */}
-          <div className="flex items-center gap-1.5 mr-1">
-            <span className="text-xl">🤖</span>
-            <span className={`text-base font-extrabold tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+    <div
+      className={`w-full ${
+        isDarkMode ? 'bg-[#064E3B] border-emerald-950' : 'bg-emerald-600 border-emerald-700'
+      } text-white border-b select-none shadow-xs transition-colors`}
+    >
+      {/* ─── Baris Navigasi Tunggal Alami (Sedikit Lebih Besar Sesuai Permintaan) ───── */}
+      <div className="px-5 py-2.5 sm:py-3 flex items-center justify-between flex-wrap gap-3">
+        {/* Sisi Kiri: Logo Brand, Navigasi Beranda, Menus (File, Edit, Panduan/Belajar), & Nama Proyek */}
+        <div className="flex items-center flex-wrap gap-2.5 sm:gap-4">
+          {/* Logo Brand: Tanpa emoji robot, teks RoboNusa! diperbesar */}
+          <div className="flex items-center mr-1">
+            <span className="text-xl sm:text-2xl font-black tracking-tight text-white drop-shadow-xs">
               RoboNusa!
             </span>
           </div>
@@ -108,9 +111,7 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
             <button
               type="button"
               onClick={onNavigateHome}
-              className={`text-xs font-medium px-2 py-1 rounded-lg transition-colors cursor-pointer flex items-center gap-1 ${
-                isDarkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-              }`}
+              className="text-xs font-semibold px-2.5 py-1.5 rounded-lg text-white/90 hover:text-white hover:bg-white/15 transition-colors cursor-pointer flex items-center gap-1.5"
               title="Kembali ke Beranda"
             >
               <span>←</span>
@@ -119,44 +120,36 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
           ) : (
             <a
               href="/beranda"
-              className={`text-xs font-medium px-2 py-1 rounded-lg transition-colors flex items-center gap-1 ${
-                isDarkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-              }`}
+              className="text-xs font-semibold px-2.5 py-1.5 rounded-lg text-white/90 hover:text-white hover:bg-white/15 transition-colors flex items-center gap-1.5"
             >
               <span>←</span>
               <span>Beranda</span>
             </a>
           )}
 
-          <div className={`h-4 w-px ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'} hidden sm:block`} />
+          <div className="h-5 w-px bg-white/20 hidden sm:block" />
 
           {/* ─── Menu Dropdown PictoBlox (File, Edit, Panduan/Belajar) ─────────── */}
-          <div ref={menuContainerRef} className="flex items-center gap-0.5 text-xs">
+          <div ref={menuContainerRef} className="flex items-center gap-1 text-xs">
             {/* Menu: File */}
             <div className="relative">
               <button
                 type="button"
                 onClick={() => toggleMenu('file')}
                 onMouseEnter={() => handleMouseEnterMenu('file')}
-                className={`px-2.5 py-1.5 rounded-lg font-semibold flex items-center gap-1 transition-colors cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1 transition-colors cursor-pointer ${
                   openMenu === 'file'
-                    ? isDarkMode
-                      ? 'bg-gray-800 text-white'
-                      : 'bg-gray-100 text-gray-900'
-                    : isDarkMode
-                      ? 'text-gray-300 hover:text-white hover:bg-gray-800/70'
-                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                    ? 'bg-white/25 text-white shadow-inner'
+                    : 'text-white/95 hover:text-white hover:bg-white/15'
                 }`}
                 title="Menu File"
               >
                 <span>File</span>
-                <span className="text-[9px] opacity-60">▼</span>
+                <span className="text-[9px] opacity-70">▼</span>
               </button>
 
               {openMenu === 'file' && (
-                <div className={`absolute left-0 top-full mt-1 w-44 rounded-xl border shadow-lg py-1 z-50 animate-in fade-in zoom-in-95 duration-100 ${
-                  isDarkMode ? 'bg-[#1E293B] border-gray-700 text-gray-200' : 'bg-white border-gray-200 text-gray-800'
-                }`}>
+                <div className="absolute left-0 top-full mt-1.5 w-48 rounded-xl border border-gray-200 bg-white text-gray-800 shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
                   <button
                     type="button"
                     id="btn-open-project"
@@ -164,12 +157,10 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
                       onImport();
                       setOpenMenu(null);
                     }}
-                    className={`w-full text-left px-3.5 py-2 flex items-center gap-2 transition-colors cursor-pointer ${
-                      isDarkMode ? 'hover:bg-gray-700/60 text-gray-200' : 'hover:bg-gray-50 text-gray-800'
-                    }`}
+                    className="w-full text-left px-3.5 py-2.5 flex items-center gap-2 hover:bg-gray-100 text-gray-800 transition-colors cursor-pointer"
                   >
                     <span>📂</span>
-                    <span>Buka proyek</span>
+                    <span className="font-medium">Buka proyek</span>
                   </button>
                   <button
                     type="button"
@@ -178,12 +169,10 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
                       handleExport();
                       setOpenMenu(null);
                     }}
-                    className={`w-full text-left px-3.5 py-2 flex items-center gap-2 transition-colors cursor-pointer ${
-                      isDarkMode ? 'hover:bg-gray-700/60 text-gray-200' : 'hover:bg-gray-50 text-gray-800'
-                    }`}
+                    className="w-full text-left px-3.5 py-2.5 flex items-center gap-2 hover:bg-gray-100 text-gray-800 transition-colors cursor-pointer"
                   >
                     <span>💾</span>
-                    <span>Simpan proyek</span>
+                    <span className="font-medium">Simpan proyek</span>
                   </button>
                 </div>
               )}
@@ -195,25 +184,19 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
                 type="button"
                 onClick={() => toggleMenu('edit')}
                 onMouseEnter={() => handleMouseEnterMenu('edit')}
-                className={`px-2.5 py-1.5 rounded-lg font-semibold flex items-center gap-1 transition-colors cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1 transition-colors cursor-pointer ${
                   openMenu === 'edit'
-                    ? isDarkMode
-                      ? 'bg-gray-800 text-white'
-                      : 'bg-gray-100 text-gray-900'
-                    : isDarkMode
-                      ? 'text-gray-300 hover:text-white hover:bg-gray-800/70'
-                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                    ? 'bg-white/25 text-white shadow-inner'
+                    : 'text-white/95 hover:text-white hover:bg-white/15'
                 }`}
                 title="Menu Edit"
               >
                 <span>Edit</span>
-                <span className="text-[9px] opacity-60">▼</span>
+                <span className="text-[9px] opacity-70">▼</span>
               </button>
 
               {openMenu === 'edit' && (
-                <div className={`absolute left-0 top-full mt-1 w-48 rounded-xl border shadow-lg py-1 z-50 animate-in fade-in zoom-in-95 duration-100 ${
-                  isDarkMode ? 'bg-[#1E293B] border-gray-700 text-gray-200' : 'bg-white border-gray-200 text-gray-800'
-                }`}>
+                <div className="absolute left-0 top-full mt-1.5 w-52 rounded-xl border border-gray-200 bg-white text-gray-800 shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
                   <button
                     type="button"
                     id="menu-undo"
@@ -224,17 +207,15 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
                       }
                     }}
                     disabled={!canUndo}
-                    className={`w-full text-left px-3.5 py-2 flex items-center justify-between transition-colors ${
+                    className={`w-full text-left px-3.5 py-2.5 flex items-center justify-between transition-colors ${
                       canUndo
-                        ? isDarkMode
-                          ? 'hover:bg-gray-700/60 text-gray-200 cursor-pointer'
-                          : 'hover:bg-gray-50 text-gray-800 cursor-pointer'
+                        ? 'hover:bg-gray-100 text-gray-800 cursor-pointer'
                         : 'opacity-40 cursor-not-allowed text-gray-400'
                     }`}
                   >
                     <div className="flex items-center gap-2">
                       <span>↩️</span>
-                      <span>Urungkan</span>
+                      <span className="font-medium">Urungkan</span>
                     </div>
                     <span className="text-[10px] text-gray-400 font-mono">Ctrl+Z</span>
                   </button>
@@ -248,17 +229,15 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
                       }
                     }}
                     disabled={!canRedo}
-                    className={`w-full text-left px-3.5 py-2 flex items-center justify-between transition-colors ${
+                    className={`w-full text-left px-3.5 py-2.5 flex items-center justify-between transition-colors ${
                       canRedo
-                        ? isDarkMode
-                          ? 'hover:bg-gray-700/60 text-gray-200 cursor-pointer'
-                          : 'hover:bg-gray-50 text-gray-800 cursor-pointer'
+                        ? 'hover:bg-gray-100 text-gray-800 cursor-pointer'
                         : 'opacity-40 cursor-not-allowed text-gray-400'
                     }`}
                   >
                     <div className="flex items-center gap-2">
                       <span>↪️</span>
-                      <span>Ulangi</span>
+                      <span className="font-medium">Ulangi</span>
                     </div>
                     <span className="text-[10px] text-gray-400 font-mono">Ctrl+Y</span>
                   </button>
@@ -272,25 +251,19 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
                 type="button"
                 onClick={() => toggleMenu('learn')}
                 onMouseEnter={() => handleMouseEnterMenu('learn')}
-                className={`px-2.5 py-1.5 rounded-lg font-semibold flex items-center gap-1 transition-colors cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1 transition-colors cursor-pointer ${
                   openMenu === 'learn'
-                    ? isDarkMode
-                      ? 'bg-gray-800 text-white'
-                      : 'bg-gray-100 text-gray-900'
-                    : isDarkMode
-                      ? 'text-gray-300 hover:text-white hover:bg-gray-800/70'
-                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                    ? 'bg-white/25 text-white shadow-inner'
+                    : 'text-white/95 hover:text-white hover:bg-white/15'
                 }`}
                 title="Menu Panduan / Belajar"
               >
                 <span>Panduan/Belajar</span>
-                <span className="text-[9px] opacity-60">▼</span>
+                <span className="text-[9px] opacity-70">▼</span>
               </button>
 
               {openMenu === 'learn' && (
-                <div className={`absolute left-0 top-full mt-1 w-48 rounded-xl border shadow-lg py-1 z-50 animate-in fade-in zoom-in-95 duration-100 ${
-                  isDarkMode ? 'bg-[#1E293B] border-gray-700 text-gray-200' : 'bg-white border-gray-200 text-gray-800'
-                }`}>
+                <div className="absolute left-0 top-full mt-1.5 w-52 rounded-xl border border-gray-200 bg-white text-gray-800 shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
                   {onOpenExamplesModal && (
                     <button
                       type="button"
@@ -299,12 +272,10 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
                         onOpenExamplesModal();
                         setOpenMenu(null);
                       }}
-                      className={`w-full text-left px-3.5 py-2 flex items-center gap-2 transition-colors cursor-pointer ${
-                        isDarkMode ? 'hover:bg-gray-700/60 text-gray-200' : 'hover:bg-gray-50 text-gray-800'
-                      }`}
+                      className="w-full text-left px-3.5 py-2.5 flex items-center gap-2 hover:bg-gray-100 text-gray-800 transition-colors cursor-pointer"
                     >
                       <span>💡</span>
-                      <span>Contoh Proyek</span>
+                      <span className="font-medium">Contoh Proyek</span>
                     </button>
                   )}
                   {onOpenGuide && (
@@ -315,12 +286,10 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
                         onOpenGuide();
                         setOpenMenu(null);
                       }}
-                      className={`w-full text-left px-3.5 py-2 flex items-center gap-2 transition-colors cursor-pointer ${
-                        isDarkMode ? 'hover:bg-gray-700/60 text-gray-200' : 'hover:bg-gray-50 text-gray-800'
-                      }`}
+                      className="w-full text-left px-3.5 py-2.5 flex items-center gap-2 hover:bg-gray-100 text-gray-800 transition-colors cursor-pointer"
                     >
                       <span>📖</span>
-                      <span>Panduan</span>
+                      <span className="font-medium">Panduan</span>
                     </button>
                   )}
                 </div>
@@ -328,9 +297,9 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
             </div>
           </div>
 
-          <div className={`h-4 w-px ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'} hidden sm:block`} />
+          <div className="h-5 w-px bg-white/20 hidden sm:block" />
 
-          {/* Nama Dokumen Proyek (Inline Editable) */}
+          {/* Nama Dokumen Proyek (Kotak Bergaya PictoBlox) */}
           <div className="flex items-center gap-1.5">
             {isEditingName ? (
               <input
@@ -345,9 +314,7 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
                     setIsEditingName(false);
                   }
                 }}
-                className={`text-xs font-bold px-2 py-0.5 rounded border border-blue-500 focus:outline-none bg-transparent ${
-                  isDarkMode ? 'text-white bg-gray-850' : 'text-gray-900 bg-blue-50/40'
-                }`}
+                className="text-xs font-bold px-3 py-1 rounded-lg border-2 border-white focus:outline-none bg-emerald-800 text-white shadow-inner"
                 autoFocus
                 maxLength={60}
               />
@@ -358,13 +325,11 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
                   setTempName(projectName);
                   setIsEditingName(true);
                 }}
-                className={`text-xs font-bold transition-colors flex items-center gap-1 px-1.5 py-0.5 rounded cursor-pointer ${
-                  isDarkMode ? 'text-gray-200 hover:text-white hover:bg-gray-800' : 'text-gray-800 hover:text-blue-600 hover:bg-gray-100'
-                }`}
+                className="text-xs font-bold transition-all flex items-center gap-2 px-3 py-1 rounded-lg cursor-pointer bg-emerald-700/60 hover:bg-emerald-700 text-white border border-emerald-500/50 shadow-2xs"
                 title="Klik untuk mengubah nama proyek"
               >
                 <span>{projectName}</span>
-                <span className="text-[10px] text-gray-400">✏️</span>
+                <span className="text-[10px] text-white/70">✏️</span>
               </button>
             )}
           </div>
@@ -376,9 +341,7 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
             <button
               type="button"
               onClick={onToggleDarkMode}
-              className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
-                isDarkMode ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'
-              }`}
+              className="p-2 rounded-lg text-xs text-white/80 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
               title={isDarkMode ? 'Mode Terang' : 'Mode Gelap'}
             >
               {isDarkMode ? '☀️' : '🌙'}
