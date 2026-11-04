@@ -216,21 +216,6 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
   const activeCostume = state.robot.costume || 'default';
   const currentSize = state.robot.size ?? 100;
 
-  // Tangkapan layar panggung
-  const handleScreenshot = () => {
-    if (!svgRef.current) return;
-    const svgData = new XMLSerializer().serializeToString(svgRef.current);
-    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-    const url = URL.createObjectURL(svgBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `simulator-robonusa-${Date.now()}.svg`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
   // Toggle layar penuh
   const handleToggleFullscreen = () => {
     if (!containerRef.current) return;
@@ -445,20 +430,8 @@ export const SimulatorCanvas: React.FC<SimulatorCanvasProps> = ({
             </button>
           </div>
 
-          {/* Tombol Kamera, Grid Toggle, Fullscreen */}
+          {/* Tombol Grid Toggle & Fullscreen */}
           <div className="flex items-center gap-1 text-gray-500">
-            <button
-              type="button"
-              onClick={handleScreenshot}
-              className="w-8 h-8 rounded-lg bg-white hover:bg-gray-100 border border-gray-200 flex items-center justify-center transition-colors cursor-pointer shadow-2xs"
-              title="Ambil tangkapan layar panggung"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                <circle cx="12" cy="13" r="4" />
-              </svg>
-            </button>
-
             <button
               type="button"
               onClick={() => setShowGrid(!showGrid)}

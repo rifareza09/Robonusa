@@ -299,39 +299,54 @@ export const ProgramToolbar: React.FC<ProgramToolbarProps> = ({
 
           <div className="h-5 w-px bg-white/20 hidden sm:block" />
 
-          {/* Nama Dokumen Proyek (Kotak Bergaya PictoBlox) */}
-          <div className="flex items-center gap-1.5">
-            {isEditingName ? (
-              <input
-                type="text"
-                value={tempName}
-                onChange={(e) => setTempName(e.target.value)}
-                onBlur={handleNameSubmit}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleNameSubmit();
-                  if (e.key === 'Escape') {
+          {/* Nama Dokumen Proyek (Kotak Bergaya PictoBlox Sesuai Gambar Referensi) */}
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              {isEditingName ? (
+                <input
+                  type="text"
+                  value={tempName}
+                  onChange={(e) => setTempName(e.target.value)}
+                  onBlur={handleNameSubmit}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleNameSubmit();
+                    if (e.key === 'Escape') {
+                      setTempName(projectName);
+                      setIsEditingName(false);
+                    }
+                  }}
+                  className="text-sm sm:text-base font-bold px-4 py-1.5 rounded-xl bg-emerald-800/90 text-white placeholder-white/60 border border-white/40 focus:outline-none focus:ring-2 focus:ring-white/50 shadow-inner min-w-[160px] sm:min-w-[200px]"
+                  autoFocus
+                  maxLength={60}
+                />
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
                     setTempName(projectName);
-                    setIsEditingName(false);
-                  }
-                }}
-                className="text-xs font-bold px-3 py-1 rounded-lg border-2 border-white focus:outline-none bg-emerald-800 text-white shadow-inner"
-                autoFocus
-                maxLength={60}
-              />
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  setTempName(projectName);
-                  setIsEditingName(true);
-                }}
-                className="text-xs font-bold transition-all flex items-center gap-2 px-3 py-1 rounded-lg cursor-pointer bg-emerald-700/60 hover:bg-emerald-700 text-white border border-emerald-500/50 shadow-2xs"
-                title="Klik untuk mengubah nama proyek"
-              >
-                <span>{projectName}</span>
-                <span className="text-[10px] text-white/70">✏️</span>
-              </button>
-            )}
+                    setIsEditingName(true);
+                  }}
+                  className="text-sm sm:text-base font-bold text-left px-4 py-1.5 rounded-xl cursor-pointer bg-emerald-700/60 hover:bg-emerald-700/80 active:bg-emerald-800 text-white border border-emerald-500/40 shadow-xs transition-all min-w-[160px] sm:min-w-[200px] flex items-center justify-between"
+                  title="Klik untuk mengubah nama proyek"
+                >
+                  <span className="truncate">{projectName}</span>
+                </button>
+              )}
+            </div>
+
+            {/* Tombol Simpan Cepat (Ikon Floppy Disk Sesuai Gambar PictoBlox) */}
+            <button
+              type="button"
+              id="btn-quick-save"
+              onClick={handleExport}
+              className="p-2 text-white hover:bg-white/20 active:bg-white/30 rounded-xl transition-all cursor-pointer flex items-center justify-center shadow-2xs hover:scale-105 active:scale-95"
+              title="Simpan proyek ke komputer"
+              aria-label="Simpan proyek"
+            >
+              <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                <path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zm-5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm3-10H6V5h9v4z" />
+              </svg>
+            </button>
           </div>
         </div>
 
