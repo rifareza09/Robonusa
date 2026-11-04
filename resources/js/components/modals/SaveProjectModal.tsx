@@ -67,7 +67,7 @@ export const SaveProjectModal: React.FC<SaveProjectModalProps> = ({
               type="text"
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border-2 border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-sm font-semibold text-gray-900"
+              className="w-full px-3.5 py-2.5 rounded-xl border-2 border-[#37BD71] focus:outline-none focus:ring-2 focus:ring-[#37BD71]/20 text-sm font-semibold text-gray-900"
               placeholder="Masukkan nama berkas..."
               maxLength={80}
               autoFocus
@@ -79,7 +79,7 @@ export const SaveProjectModal: React.FC<SaveProjectModalProps> = ({
 
           {/* Info Card Berkas Sesuai Figma */}
           <div className="flex items-start gap-3 p-3.5 bg-slate-50 rounded-2xl border border-slate-100 text-left">
-            <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-[#E8F8F0] border border-[#37BD71]/30 flex items-center justify-center text-[#1E7341] flex-shrink-0">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
               </svg>
@@ -107,7 +107,7 @@ export const SaveProjectModal: React.FC<SaveProjectModalProps> = ({
             </button>
             <button
               type="submit"
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-bold rounded-xl shadow-md transition-colors shadow-blue-500/20 flex items-center gap-2 cursor-pointer"
+              className="px-5 py-2.5 bg-[#37BD71] hover:bg-[#2CA360] active:bg-[#1E7341] text-white text-xs font-bold rounded-xl shadow-md transition-colors shadow-[#37BD71]/20 flex items-center gap-2 cursor-pointer"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.5V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />

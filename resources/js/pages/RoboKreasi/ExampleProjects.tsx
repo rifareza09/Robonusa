@@ -92,7 +92,7 @@ const DIFFICULTY_LABELS: Record<string, string> = {
 };
 
 const DIFFICULTY_COLORS: Record<string, string> = {
-  pemula: 'bg-teal-50 text-teal-800 border border-teal-200',
+  pemula: 'bg-[#E8F8F0] text-[#1E7341] border border-[#37BD71]/30',
   menengah: 'bg-amber-50 text-amber-800 border border-amber-200',
   mahir: 'bg-red-50 text-red-800 border border-red-200',
 };
@@ -250,10 +250,10 @@ export default function ExampleProjects({ exampleProjects = [] }: Props) {
           {/* Logo & Nav Tabs */}
           <div className="flex items-center gap-8">
             <a href="/beranda" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 rounded-xl bg-teal-700 flex items-center justify-center text-white text-base shadow-sm group-hover:bg-teal-800 transition-colors">
+              <div className="w-8 h-8 rounded-xl bg-[#37BD71] flex items-center justify-center text-white text-base shadow-sm group-hover:bg-[#2CA360] transition-colors">
                 🤖
               </div>
-              <span className="text-xl font-extrabold tracking-tight text-teal-800 font-sans">
+              <span className="text-xl font-extrabold tracking-tight text-[#1E7341] font-sans">
                 RoboNusa!
               </span>
             </a>
@@ -262,11 +262,11 @@ export default function ExampleProjects({ exampleProjects = [] }: Props) {
             <div className="flex items-center gap-6 text-sm">
               <a
                 href="/beranda"
-                className="text-gray-600 hover:text-teal-700 font-medium transition-colors"
+                className="text-gray-600 hover:text-[#37BD71] font-medium transition-colors"
               >
                 Beranda
               </a>
-              <span className="text-teal-800 font-bold border-b-2 border-teal-700 pb-1 cursor-default">
+              <span className="text-[#1E7341] font-bold border-b-2 border-[#37BD71] pb-1 cursor-default">
                 Contoh Proyek
               </span>
             </div>
@@ -276,7 +276,7 @@ export default function ExampleProjects({ exampleProjects = [] }: Props) {
           <div className="flex items-center gap-3">
             <a
               href="/beranda"
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-600 hover:text-teal-800 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-600 hover:text-[#1E7341] transition-colors"
             >
               <span className="w-5 h-5 rounded-full border border-gray-300 flex items-center justify-center text-[11px] font-bold">
                 ?
@@ -286,7 +286,7 @@ export default function ExampleProjects({ exampleProjects = [] }: Props) {
             <button
               type="button"
               onClick={handleNewProject}
-              className="flex items-center gap-1.5 px-4 py-2 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold rounded-xl transition-colors shadow-sm cursor-pointer shadow-teal-700/20"
+              className="flex items-center gap-1.5 px-4 py-2 bg-[#37BD71] hover:bg-[#2CA360] text-white text-xs font-bold rounded-xl transition-colors shadow-sm cursor-pointer shadow-[#37BD71]/20"
             >
               <span className="text-sm font-bold leading-none">+</span>
               <span>Proyek baru</span>
@@ -299,7 +299,7 @@ export default function ExampleProjects({ exampleProjects = [] }: Props) {
       <main className="flex-1 max-w-6xl w-full mx-auto px-6 pt-8 pb-12">
         <div className="flex items-start justify-between gap-4 flex-wrap mb-6">
           <div>
-            <p className="text-[11px] font-bold text-teal-700 uppercase tracking-widest mb-1.5">
+            <p className="text-[11px] font-bold text-[#37BD71] uppercase tracking-widest mb-1.5">
               BELAJAR SAMBIL MENCOBA
             </p>
             <h1 className="text-3xl font-extrabold text-gray-900 leading-tight">
@@ -311,13 +311,13 @@ export default function ExampleProjects({ exampleProjects = [] }: Props) {
           </div>
 
           {/* Badge Ide Figma */}
-          <div className="flex items-center gap-3 bg-teal-50/70 border border-teal-200/80 rounded-2xl px-4 py-3">
-            <span className="text-teal-600 text-xl">✨</span>
+          <div className="flex items-center gap-3 bg-[#E8F8F0]/80 border border-[#37BD71]/30 rounded-2xl px-4 py-3">
+            <span className="text-[#37BD71] text-xl">✨</span>
             <div>
-              <p className="text-xs font-bold text-teal-900">
+              <p className="text-xs font-bold text-[#1E7341]">
                 5 ide untuk penjelajah muda
               </p>
-              <p className="text-[11px] text-teal-700">
+              <p className="text-[11px] text-[#1E7341]">
                 Semua proyek bisa diubah dan disimpan.
               </p>
             </div>
@@ -336,14 +336,14 @@ export default function ExampleProjects({ exampleProjects = [] }: Props) {
                 placeholder="Cari contoh proyek..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-8 pr-3 py-1.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 shadow-2xs"
+                className="w-full pl-8 pr-3 py-1.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#37BD71] focus:border-[#37BD71] shadow-2xs"
               />
             </div>
 
             <select
               value={difficultyFilter}
               onChange={(e) => setDifficultyFilter(e.target.value)}
-              className="px-3 py-1.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-teal-500 shadow-2xs cursor-pointer"
+              className="px-3 py-1.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-[#37BD71] shadow-2xs cursor-pointer"
             >
               <option value="semua">Semua tingkat</option>
               <option value="pemula">Pemula</option>
@@ -370,7 +370,7 @@ export default function ExampleProjects({ exampleProjects = [] }: Props) {
                 className="border border-gray-200 rounded-2xl overflow-hidden bg-white shadow-2xs hover:shadow-md transition-all hover:-translate-y-0.5 flex flex-col"
               >
                 {/* Visual Thumbnail */}
-                <div className="h-[140px] bg-teal-50/30 relative border-b border-gray-100">
+                <div className="h-[140px] bg-[#E8F8F0]/30 relative border-b border-gray-100">
                   <ThumbnailPlaceholder slug={project.slug} />
                 </div>
 
@@ -398,7 +398,7 @@ export default function ExampleProjects({ exampleProjects = [] }: Props) {
                     {(project.tags || ['Logika & sensor']).map((tag) => (
                       <span
                         key={tag}
-                        className="flex items-center gap-1 text-[11px] text-teal-800 bg-teal-50 border border-teal-100 rounded-lg px-2 py-0.5 font-medium"
+                        className="flex items-center gap-1 text-[11px] text-[#1E7341] bg-[#E8F8F0] border border-[#37BD71]/20 rounded-lg px-2 py-0.5 font-medium"
                       >
                         <span>🧩</span>
                         <span>{tag}</span>
@@ -410,7 +410,7 @@ export default function ExampleProjects({ exampleProjects = [] }: Props) {
                   <button
                     type="button"
                     onClick={() => handleOpenProject(project)}
-                    className="w-full flex items-center justify-center gap-1.5 py-2.5 bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-xs font-bold rounded-xl transition-colors shadow-2xs cursor-pointer"
+                    className="w-full flex items-center justify-center gap-1.5 py-2.5 bg-[#37BD71] hover:bg-[#2CA360] active:bg-[#1E7341] text-white text-xs font-bold rounded-xl transition-colors shadow-2xs cursor-pointer shadow-[#37BD71]/20"
                   >
                     <span>→</span>
                     <span>Buka Proyek</span>
@@ -421,26 +421,26 @@ export default function ExampleProjects({ exampleProjects = [] }: Props) {
           })}
 
           {/* Kartu Khusus: "Punya ide sendiri?" Sesuai Figma */}
-          <div className="border border-teal-100 bg-[#F0FDF9] rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-2xs">
-            <div className="w-12 h-12 rounded-full bg-white shadow-2xs border border-teal-100 flex items-center justify-center text-xl mb-4">
+          <div className="border border-[#37BD71]/20 bg-[#F2FBF6] rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-2xs">
+            <div className="w-12 h-12 rounded-full bg-white shadow-2xs border border-[#37BD71]/20 flex items-center justify-center text-xl mb-4">
               💡
             </div>
-            <h3 className="text-base font-extrabold text-teal-950 mb-2">
+            <h3 className="text-base font-extrabold text-[#1E7341] mb-2">
               Punya ide sendiri?
             </h3>
-            <p className="text-xs text-teal-900/70 leading-relaxed mb-6 max-w-xs">
+            <p className="text-xs text-[#1E7341]/80 leading-relaxed mb-6 max-w-xs">
               Mulai dari kanvas kosong. Gabungkan gerakan, sensor, dan imajinasimu untuk membuat robot yang unik.
             </p>
             <button
               type="button"
               onClick={handleNewProject}
-              className="w-full py-2.5 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold rounded-xl transition-colors shadow-sm cursor-pointer mb-3"
+              className="w-full py-2.5 bg-[#37BD71] hover:bg-[#2CA360] text-white text-xs font-bold rounded-xl transition-colors shadow-sm cursor-pointer mb-3 shadow-[#37BD71]/20"
             >
               + Buat proyek baru
             </button>
             <a
               href="/beranda"
-              className="text-[11px] text-teal-700 hover:underline font-medium"
+              className="text-[11px] text-[#37BD71] hover:underline font-medium"
             >
               Butuh panduan? Buka tur dari menu Bantuan.
             </a>

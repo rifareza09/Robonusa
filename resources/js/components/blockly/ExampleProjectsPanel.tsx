@@ -40,10 +40,10 @@ export const ExampleProjectsPanel: React.FC<ExampleProjectsPanelProps> = ({
       {/* Header */}
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between px-4 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 bg-[#37BD71] hover:bg-[#2CA360] text-white transition-colors cursor-pointer"
       >
         <span className="font-bold text-sm">📚 Proyek Contoh</span>
-        <span className="text-xs opacity-75">
+        <span className="text-xs opacity-85">
           {isCollapsed ? '▼ Tampilkan' : '▲ Sembunyikan'}
         </span>
       </button>
@@ -56,7 +56,7 @@ export const ExampleProjectsPanel: React.FC<ExampleProjectsPanelProps> = ({
             return (
               <div
                 key={project.id}
-                className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                className="flex items-start gap-3 px-4 py-3 hover:bg-[#E8F8F0]/30 transition-colors"
               >
                 {/* Thumbnail */}
                 {project.thumbnail ? (
@@ -66,7 +66,7 @@ export const ExampleProjectsPanel: React.FC<ExampleProjectsPanelProps> = ({
                     className="w-10 h-10 rounded object-cover flex-shrink-0"
                   />
                 ) : (
-                  <div className="w-10 h-10 rounded bg-purple-100 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[#E8F8F0] border border-[#37BD71]/30 flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">🤖</span>
                   </div>
                 )}
@@ -88,7 +88,7 @@ export const ExampleProjectsPanel: React.FC<ExampleProjectsPanelProps> = ({
                   </p>
                   <button
                     onClick={() => onLoadProject(project)}
-                    className="mt-1.5 text-xs font-semibold text-purple-600 hover:text-purple-800 transition-colors"
+                    className="mt-1.5 text-xs font-semibold text-[#1E7341] hover:text-[#37BD71] transition-colors cursor-pointer font-bold"
                   >
                     ➕ Buka Proyek Ini
                   </button>

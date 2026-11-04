@@ -36,13 +36,13 @@ export const UnsavedChangesModal: React.FC<UnsavedChangesModalProps> = ({
         <div className="p-6">
           {/* Header Icon & Judul Sesuai Figma */}
           <div className="flex items-start justify-between mb-4">
-            <div className="w-12 h-12 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-700 text-xl shadow-xs">
+            <div className="w-12 h-12 rounded-2xl bg-[#E8F8F0] border border-[#37BD71]/30 flex items-center justify-center text-[#1E7341] text-xl shadow-xs">
               {isLeave ? (
-                <svg className="w-6 h-6 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
+                <svg className="w-6 h-6 text-[#37BD71]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
                 </svg>
               ) : (
-                <svg className="w-6 h-6 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
+                <svg className="w-6 h-6 text-[#37BD71]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 00-1.883 2.542l.857 6a2.25 2.25 0 002.227 1.932H19.05a2.25 2.25 0 002.227-1.932l.857-6a2.25 2.25 0 00-1.883-2.542m-16.5 0V6A2.25 2.25 0 016 3.75h3.879a1.5 1.5 0 011.06.44l2.122 2.12a1.5 1.5 0 001.06.44H18A2.25 2.25 0 0120.25 9v.776" />
                 </svg>
               )}
@@ -66,7 +66,7 @@ export const UnsavedChangesModal: React.FC<UnsavedChangesModalProps> = ({
 
           {/* Kartu Status Proyek Sesuai Figma */}
           <div className="p-3.5 bg-gray-50/80 rounded-2xl border border-gray-200/80 mb-5 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-700 flex-shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-[#E8F8F0] border border-[#37BD71]/30 flex items-center justify-center text-[#1E7341] flex-shrink-0">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
               </svg>
@@ -100,7 +100,7 @@ export const UnsavedChangesModal: React.FC<UnsavedChangesModalProps> = ({
             <button
               type="button"
               onClick={onSaveAndProceed}
-              className="w-full py-3 px-4 bg-[#0D7D7D] hover:bg-[#0B6868] active:bg-[#095454] text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3 px-4 bg-[#37BD71] hover:bg-[#2CA360] active:bg-[#1E7341] text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-[#37BD71]/20"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.5V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
